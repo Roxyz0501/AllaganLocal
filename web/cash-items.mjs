@@ -1,0 +1,5 @@
+export function withCashItems(owners,records,catalog,tagged=[]){
+ const ids=new Set(tagged),amounts=new Map();
+ for(const r of records){if(!ids.has(r.id)||r.quantity<=0)continue;const total=amounts.get(r.owner)||{quantity:0,value:0,unknown:0};total.quantity+=r.quantity;const price=catalog.get(r.id)?.sell;if(price==null)total.unknown+=r.quantity;else total.value+=price*r.quantity;amounts.set(r.owner,total);}
+ return owners.map(o=>{const scope=o.type==='キャラクター'?[o,...owners.filter(r=>r.type==='リテイナー'&&r.parentIds?.includes(o.id))]:[o];const cash=scope.reduce((sum,r)=>{const a=amounts.get(r.id);if(a){sum.quantity+=a.quantity;sum.value+=a.value;sum.unknown+=a.unknown;}return sum;},{quantity:0,value:0,unknown:0});const retainers=scope.filter(r=>r.type==='リテイナー');return {...o,cashQuantity:cash.quantity,cashValue:cash.value,cashUnknown:cash.unknown,retainerListedStacks:retainers.reduce((n,r)=>n+(r.listedStacks||0),0),retainerListedQuantity:retainers.reduce((n,r)=>n+(r.listedQuantity||0),0)};});
+}

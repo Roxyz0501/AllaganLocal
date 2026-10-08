@@ -1,0 +1,5 @@
+{
+  "name": "allagan-local", "version": "1.0.0", "private": true,
+  "type": "module", "author": "Roxyz0501", "engines": {"node": ">=22"},
+  "scripts": {"start": "node server.mjs", "catalog": "node update-catalog.mjs", "test": "node --test"}
+}

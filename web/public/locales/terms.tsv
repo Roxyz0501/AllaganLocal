@@ -1,0 +1,266 @@
+ワークスペース	Workspace	Arbeitsbereich	Espace de travail	작업 공간	工作区	工作區
+所持アイテム	Owned items	Besitzte Gegenstände	Objets possédés	보유 아이템	持有物品	持有物品
+出品中	Listed for sale	Zum Verkauf	En vente	판매 등록 중	出售中	出售中
+キャラクター	Characters	Charaktere	Personnages	캐릭터	角色	角色
+フリーカンパニー	Free Companies	Freie Gesellschaften	Compagnies libres	자유부대	部队	部隊
+リテイナー販売履歴	Retainer sales history	Gehilfen-Verkäufe	Ventes des servants	집사 판매 기록	雇员销售记录	雇員銷售紀錄
+リテイナー所持ギル履歴	Retainer gil history	Gehilfen-Gil-Verlauf	Historique des gils des servants	집사 길 보유 기록	雇员金币记录	雇員金幣紀錄
+アイテム価格推移（マイリスト）	List value history	Listenwert-Verlauf	Valeur des listes	내 목록 가격 추이	列表物品价格走势	清單物品價格走勢
+アイテム価格推移	Item value history	Gegenstandswert-Verlauf	Valeur des objets	아이템 가격 추이	物品价格走势	物品價格走勢
+アイテム数推移	Item quantity history	Mengenverlauf	Quantité des objets	아이템 수량 추이	物品数量走势	物品數量走勢
+収支履歴	Gil history	Gil-Verlauf	Historique des gils	길 변동 기록	收支记录	收支紀錄
+FCポイント履歴	FC credit history	FG-Punkteverlauf	Historique des crédits de CL	부대 포인트 기록	部队点数记录	部隊點數紀錄
+履歴	History	Verlauf	Historique	기록	历史	歷史
+お気に入り	Favorites	Favoriten	Favoris	즐겨찾기	收藏	收藏
+新しいマイリスト	New list	Neue Liste	Nouvelle liste	새 목록	新建列表	新增清單
+マイリストを作成	Create list	Liste erstellen	Créer une liste	목록 만들기	创建列表	建立清單
+マイリスト設定で合算	Total by list settings	Summe nach Listeneinstellungen	Total selon les listes	목록 설정으로 합산	按列表设置合计	依清單設定合計
+マイリスト設定	List settings	Listeneinstellungen	Paramètres de liste	목록 설정	列表设置	清單設定
+マイリスト	My lists	Meine Listen	Mes listes	내 목록	我的列表	我的清單
+テーマ	Theme	Design	Thème	테마	主题	主題
+ダーク	Dark	Dunkel	Sombre	어둡게	深色	深色
+グリーン	Green	Grün	Vert	초록	绿色	綠色
+ホワイト	White	Weiß	Blanc	흰색	白色	白色
+グレー	Gray	Grau	Gris	회색	灰色	灰色
+接続・データ設定	Connection and data	Verbindung und Daten	Connexion et données	연결 및 데이터 설정	连接与数据设置	連線與資料設定
+ローカル保存	Local storage	Lokaler Speicher	Stockage local	로컬 저장	本地保存	本機儲存
+ライブラリ	Library	Bibliothek	Bibliothèque	라이브러리	资料库	資料庫
+このPCで接続中	Connected on this PC	Auf diesem PC verbunden	Connecté sur ce PC	이 PC에서 연결됨	已连接本机	已連線至本機
+データ更新	Data updates	Datenaktualisierung	Mise à jour des données	데이터 갱신	数据更新	資料更新
+再読み込み	Reload	Neu laden	Recharger	새로 고침	重新加载	重新載入
+ロドスト情報を更新	Refresh Lodestone	Lodestone aktualisieren	Actualiser Lodestone	로드스톤 갱신	更新Lodestone	更新Lodestone
+マーケット販売価格を更新	Update market prices	Marktpreise aktualisieren	Actualiser les prix du marché	장터 가격 갱신	更新市场价格	更新市場價格
+アイテムを登録	Add items	Gegenstände hinzufügen	Ajouter des objets	아이템 등록	添加物品	新增物品
+個数・価格の推移を見る	View quantity / value history	Mengen- / Wertverlauf	Voir quantité / valeur	수량·가격 추이 보기	查看数量及价格走势	查看數量及價格走勢
+参照価格	Valuation basis	Bewertungsbasis	Base de valorisation	참조 가격	参考价格	參考價格
+名前を変更	Rename	Umbenennen	Renommer	이름 변경	重命名	重新命名
+リストを削除	Delete list	Liste löschen	Supprimer la liste	목록 삭제	删除列表	刪除清單
+NPC売却（合計）	NPC sell total	NPC-Verkauf gesamt	Total vente PNJ	NPC 판매 합계	NPC出售合计	NPC出售合計
+NPC売却	NPC sell	NPC-Verkauf	Vente PNJ	NPC 판매	NPC出售	NPC出售
+NPC購入	NPC buy	NPC-Kauf	Achat PNJ	NPC 구매	NPC购买	NPC購買
+マーケット価格	Market price	Marktpreis	Prix du marché	장터 가격	市场价格	市場價格
+マーケット最安価格	Lowest market price	Niedrigster Marktpreis	Prix minimal du marché	장터 최저가	市场最低价	市場最低價
+マーケット販売価格順	Market price	Marktpreis	Prix du marché	장터 가격	市场价格	市場價格
+マーケット合計	Market total	Marktwert gesamt	Total du marché	장터 합계	市场合计	市場合計
+換金アイテム	Cash items	Verkaufsgegenstände	Objets à revendre	환금 아이템	变现物品	變現物品
+マーケット換算	Market valuation	Marktbewertung	Valeur de marché	장터 환산	市场估值	市場估值
+アイテム名・IDで検索	Search item name / ID	Name / ID suchen	Chercher nom / ID	아이템명·ID 검색	搜索物品名称或ID	搜尋物品名稱或ID
+名前・ワールドで検索	Search name / world	Name / Welt suchen	Chercher nom / Monde	이름·서버 검색	搜索名称或服务器	搜尋名稱或伺服器
+すべての保管者	All owners	Alle Besitzer	Tous les détenteurs	모든 보유자	所有持有者	所有持有者
+すべての保管場所	All locations	Alle Lagerorte	Tous les emplacements	모든 보관 장소	所有存放位置	所有存放位置
+保管場所	Storage location	Lagerort	Emplacement	보관 장소	存放位置	存放位置
+保管者	Owner	Besitzer	Détenteur	보유자	持有者	持有者
+保管先	Location	Lagerort	Emplacement	보관처	存放处	存放處
+ソート方向	Sort direction	Sortierrichtung	Sens du tri	정렬 방향	排序方向	排序方向
+ソート	Sort	Sortierung	Trier	정렬	排序	排序
+名前順	Name	Name	Nom	이름	名称	名稱
+ワールド順	World	Welt	Monde	서버	服务器	伺服器
+所持数順	Quantity	Menge	Quantité	보유 수량	持有数量	持有數量
+個数順	Quantity	Menge	Quantité	수량	数量	數量
+位置順	Slot	Platz	Case	슬롯	位置	位置
+タグ順	Tags	Tags	Étiquettes	태그	标签	標籤
+昇順	Ascending	Aufsteigend	Croissant	오름차순	升序	升冪
+降順	Descending	Absteigend	Décroissant	내림차순	降序	降冪
+リテイナー所持金	Retainer gil	Gehilfen-Gil	Gils des servants	집사 보유 길	雇员金币	雇員金幣
+所持金	Gil	Gil	Gils	보유 길	持有金币	持有金幣
+変更検出日時	Last change	Letzte Änderung	Dernière modification	변경 감지 시각	变更检测时间	變更偵測時間
+フィルター	Filter	Filter	Filtre	필터	筛选	篩選
+アクティブ	Active	Aktiv	Actifs	활성	活跃	啟用
+除外	Excluded	Ausgeschlossen	Exclus	제외	排除	排除
+すべて	All	Alle	Tous	전체	全部	全部
+所持数の合計	Total quantity	Gesamtmenge	Quantité totale	보유 수량 합계	持有数量合计	持有數量合計
+アイテム種類	Item types	Gegenstandsarten	Types d’objets	아이템 종류	物品种类	物品種類
+データ保存日時	Data saved	Daten gespeichert	Données enregistrées	데이터 저장 시각	数据保存时间	資料儲存時間
+出品中を除外	Exclude listed items	Angebote ausschließen	Exclure les objets en vente	판매 등록 중 제외	排除出售中	排除出售中
+出品中除外	Exclude listed items	Angebote ausschließen	Exclure les objets en vente	판매 등록 중 제외	排除出售中	排除出售中
+0個を除外	Exclude zero quantity	Nullmengen ausschließen	Exclure les quantités nulles	0개 제외	排除0个	排除0個
+アーマリーチェストを除外	Exclude Armoury Chest	Arsenal ausschließen	Exclure l’arsenal	장비함 제외	排除兵装库	排除兵裝庫
+絞り込みをクリア	Clear filters	Filter zurücksetzen	Effacer les filtres	필터 초기화	清除筛选	清除篩選
+アイテムごと	By item	Nach Gegenstand	Par objet	아이템별	按物品	依物品
+アイテム種別ごと	By category	Nach Kategorie	Par catégorie	종류별	按物品种类	依物品種類
+保管場所ごと	By location	Nach Lagerort	Par emplacement	보관 장소별	按存放位置	依存放位置
+保管者ごと	By owner	Nach Besitzer	Par détenteur	보유자별	按持有者	依持有者
+個数	Quantity	Menge	Quantité	수량	数量	數量
+所持数	Owned quantity	Besitzmenge	Quantité possédée	보유 수량	持有数量	持有數量
+アイテム	Item	Gegenstand	Objet	아이템	物品	物品
+追加	Add	Hinzufügen	Ajouter	추가	添加	新增
+合計	Total	Gesamt	Total	합계	合计	合計
+前日比	Daily change	Tagesänderung	Variation journalière	전일 대비	较前日	較前日
+比較なし	No comparison	Kein Vergleich	Sans comparaison	비교 없음	无对比	無對比
+未記録	Not recorded	Nicht erfasst	Non enregistré	기록 없음	未记录	未記錄
+未取得／出品なし	Unavailable / no listings	Nicht verfügbar / keine Angebote	Indisponible / aucune offre	미취득 / 출품 없음	未获取／无出售	未取得／無出售
+未取得	Unavailable	Nicht verfügbar	Indisponible	미취득	未获取	未取得
+日本全体	All Japan worlds	Alle japanischen Welten	Tous les Mondes japonais	일본 전체 서버	日本全服	日本全服
+プレイヤー	Player	Spieler	Joueur	플레이어	玩家	玩家
+リテイナー	Retainer	Gehilfe	Servant	집사	雇员	雇員
+所持品	Inventory	Inventar	Inventaire	소지품	背包	背包
+チョコボかばん	Chocobo saddlebag	Chocobo-Satteltasche	Sacoche chocobo	초코보 가방	陆行鸟鞍囊	陸行鳥鞍囊
+プレミアムかばん	Premium saddlebag	Premium-Satteltasche	Sacoche premium	프리미엄 가방	高级鞍囊	高級鞍囊
+装備・アーマリーチェスト	Equipment / Armoury Chest	Ausrüstung / Arsenal	Équipement / Arsenal	장비·장비함	装备／兵装库	裝備／兵裝庫
+ミラージュドレッサー	Glamour dresser	Projektionskommode	Coiffeuse mirage	투영의 옷장	幻化台	幻化台
+愛蔵品キャビネット	Armoire	Kostbarkeitenkabinett	Bahut personnel	추억의 보관함	收藏柜	收藏櫃
+装備中	Equipped	Angelegt	Équipé	장착 중	已装备	已裝備
+通貨・トークン	Currencies and tokens	Währungen und Marken	Monnaies et jetons	화폐·토큰	货币与代币	貨幣與代幣
+バトル系	Battle	Kampf	Combat	전투	战斗	戰鬥
+友好部族（蛮族）	Allied societies	Verbündete Völker	Peuples alliés	우호 부족	友好部族	友好部族
+生活・その他	Crafting and other	Handwerk und Sonstiges	Artisanat et autres	생활·기타	生产及其他	生產及其他
+メイン	Main	Hauptcharakter	Principal	메인	主角色	主角色
+サブ番号	Alt number	Nebencharakter-Nr.	Numéro secondaire	부캐 번호	副角色编号	分身編號
+サブ	Alt	Nebencharakter	Secondaire	부캐	副角色	分身
+潜水艦用	Submarine	Tauchboot	Sous-marin	잠수함용	潜水艇用	潛水艇用
+タグ	Tags	Tags	Étiquettes	태그	标签	標籤
+表示形式	View	Ansicht	Affichage	표시 형식	显示方式	顯示方式
+一覧表示	List view	Listenansicht	Vue de liste	목록 표시	列表显示	清單顯示
+リスト（詳細）	Detailed list	Detaillierte Liste	Liste détaillée	상세 목록	详细列表	詳細清單
+リスト（縦1列）	Single-column list	Einspaltige Liste	Liste à une colonne	세로 목록	单列列表	單欄清單
+タイル	Tiles	Kacheln	Tuiles	타일	平铺	磚塊
+詳細	Details	Details	Détails	상세	详细	詳細
+バッグ	Bags	Taschen	Sacs	가방	背包格子	背包格子
+閉じる	Close	Schließen	Fermer	닫기	关闭	關閉
+保存	Save	Speichern	Enregistrer	저장	保存	儲存
+キャンセル	Cancel	Abbrechen	Annuler	취소	取消	取消
+登録	Register	Registrieren	Enregistrer	등록	登记	登錄
+名前	Name	Name	Nom	이름	名称	名稱
+ワールド	World	Welt	Monde	서버	服务器	伺服器
+期間	Period	Zeitraum	Période	기간	期间	期間
+今日	Today	Heute	Aujourd’hui	오늘	今天	今天
+昨日	Yesterday	Gestern	Hier	어제	昨天	昨天
+日付指定	Specific date	Datum wählen	Date précise	날짜 지정	指定日期	指定日期
+期間指定	Date range	Datumsbereich	Plage de dates	기간 지정	指定期间	指定期間
+開始日	Start date	Startdatum	Date de début	시작일	开始日期	開始日期
+終了日	End date	Enddatum	Date de fin	종료일	结束日期	結束日期
+日付	Date	Datum	Date	날짜	日期	日期
+対象	Target	Ziel	Cible	대상	对象	對象
+表示	Display	Anzeige	Affichage	표시	显示	顯示
+変動対象	Changed items	Geänderte Gegenstände	Objets modifiés	변동 대상	变动物品	變動物品
+変動した保管先	Changed locations	Geänderte Lagerorte	Emplacements modifiés	변동 보관처	发生变动的位置	發生變動的位置
+内訳	Breakdown	Aufschlüsselung	Détail	내역	明细	明細
+増減	Change	Änderung	Variation	증감	增减	增減
+最終記録額	Last recorded value	Letzter Wert	Dernière valeur	최종 기록 금액	最后记录金额	最後紀錄金額
+前日の最終記録額	Previous daily closing value	Letzter Vortageswert	Dernière valeur de la veille	전일 최종 금액	前日最终金额	前日最終金額
+日別の最終記録額	Daily closing values	Tägliche Schlusswerte	Valeurs de clôture quotidiennes	일별 최종 금액	每日最终金额	每日最終金額
+金額の変動履歴	Value changes	Wertänderungen	Variations de valeur	금액 변동 기록	金额变动记录	金額變動紀錄
+金額	Amount	Betrag	Montant	금액	金额	金額
+件数	Records	Einträge	Enregistrements	건수	记录数	紀錄數
+販売件数	Sales count	Verkaufsanzahl	Nombre de ventes	판매 건수	销售笔数	銷售筆數
+販売数量	Quantity sold	Verkaufte Menge	Quantité vendue	판매 수량	销售数量	銷售數量
+販売金額	Sales amount	Verkaufsbetrag	Montant des ventes	판매 금액	销售金额	銷售金額
+売却単価	Unit sell price	Verkaufspreis pro Stück	Prix de vente unitaire	판매 단가	出售单价	出售單價
+単価	Unit price	Stückpreis	Prix unitaire	단가	单价	單價
+税引後	After tax	Nach Steuern	Après taxes	세후	税后	稅後
+手数料	Fee	Gebühr	Frais	수수료	手续费	手續費
+前へ	Previous	Zurück	Précédent	이전	上一页	上一頁
+次へ	Next	Weiter	Suivant	다음	下一页	下一頁
+ロドストを開く	Open Lodestone	Lodestone öffnen	Ouvrir Lodestone	로드스톤 열기	打开Lodestone	開啟Lodestone
+このキャラクターを除外する	Exclude this character	Diesen Charakter ausschließen	Exclure ce personnage	이 캐릭터 제외	排除此角色	排除此角色
+この保管先の価格を更新	Update prices here	Preise hier aktualisieren	Actualiser les prix ici	이 보관처 가격 갱신	更新此位置价格	更新此位置價格
+同じアイテムを強調	Highlight matching items	Gleiche Gegenstände hervorheben	Surligner les objets identiques	같은 아이템 강조	突出同类物品	標示相同物品
+バッグで位置を確認	Locate in bag	In Tasche anzeigen	Localiser dans le sac	가방 위치 확인	查看背包位置	查看背包位置
+誰が・どこに・何個	Who / where / how many	Wer / wo / wie viel	Qui / où / combien	누가·어디에·몇 개	谁持有／位置／数量	持有者／位置／數量
+全体で検索	Search all items	Überall suchen	Rechercher partout	전체 검색	全局搜索	全域搜尋
+エオルゼアデータベース	Eorzea Database	Eorzea-Datenbank	Base de données d’Éorzéa	에오르제아 데이터베이스	艾欧泽亚数据库	艾奧傑亞資料庫
+通常	Normal	Normal	Normal	일반	普通	普通
+収集品	Collectable	Sammlerstück	Objet collectionnable	소장품	收藏品	收藏品
+スタック	 stacks	 Stapel	 piles	 묶음	组	組
+スロット	Slot	Platz	Case	슬롯	格子	格子
+位置	Position	Position	Position	위치	位置	位置
+種類	 types	 Arten	 types	종류	种	種
+件	 records	 Einträge	 entrées	건	条	筆
+個	 units	 Stück	 unités	개	个	個
+人	 characters	 Charaktere	 personnages	명	人	人
+枠	 slots	 Plätze	 cases	칸	格	格
+ギル	Gil	Gil	Gils	길	金币	金幣
+その他	Other	Sonstiges	Autres	기타	其他	其他
+設定	Settings	Einstellungen	Paramètres	설정	设置	設定
+言語	Language	Sprache	Langue	언어	语言	語言
+ホーム	Home	Start	Accueil	홈	首页	首頁
+接続を確認中	Checking connection	Verbindung wird geprüft	Vérification de la connexion	연결 확인 중	正在检查连接	正在檢查連線
+読み込み中…	Loading…	Laden…	Chargement…	불러오는 중…	加载中…	載入中…
+まとめ方	Group by	Gruppieren nach	Regrouper par	그룹화	分组方式	分組方式
+アイテムごとに合算	Combine by item	Nach Gegenstand summieren	Regrouper par objet	아이템별 합산	按物品合并	依物品合併
+保管者・保管場所ごと	By owner and location	Nach Besitzer und Lagerort	Par détenteur et emplacement	보유자·보관처별	按持有者及位置	依持有者及位置
+登録先のリストへ戻る	Back to destination list	Zurück zur Zielliste	Retour à la liste cible	등록 목록으로 돌아가기	返回目标列表	返回目標清單
+追加先	Destination list	Zielliste	Liste cible	추가할 목록	目标列表	目標清單
+アイテムがありません	No items	Keine Gegenstände	Aucun objet	아이템 없음	没有物品	沒有物品
+すべてのアイテムから探す	Search all items	Alle Gegenstände durchsuchen	Chercher parmi tous les objets	모든 아이템에서 검색	搜索全部物品	搜尋全部物品
+アイテムを検索	Search items	Gegenstände suchen	Rechercher des objets	아이템 검색	搜索物品	搜尋物品
+顔画像を取得できないキャラクター	Characters without portraits	Charaktere ohne Porträt	Personnages sans portrait	초상화를 불러올 수 없는 캐릭터	无法获取头像的角色	無法取得頭像的角色
+リテイナー一覧	Retainers	Gehilfen	Servants	집사 목록	雇员列表	雇員清單
+キャラクター一覧へ	Back to characters	Zur Charakterliste	Retour aux personnages	캐릭터 목록으로	返回角色列表	返回角色清單
+キャラクターに戻る	Back to character	Zurück zum Charakter	Retour au personnage	캐릭터로 돌아가기	返回角色	返回角色
+バッグ表示	Bag view	Taschenansicht	Vue des sacs	가방 표시	背包视图	背包檢視
+ハイライトを解除	Clear highlight	Markierung entfernen	Effacer le surlignage	강조 해제	取消突出显示	取消標示
+全期間	All time	Gesamter Zeitraum	Toute la période	전체 기간	全部时间	全部時間
+条件をクリア	Clear conditions	Bedingungen löschen	Effacer les critères	조건 초기화	清除条件	清除條件
+販売記録	Sales records	Verkaufsaufzeichnungen	Enregistrements de ventes	판매 기록	销售记录	銷售紀錄
+販売個数	Units sold	Verkaufte Stückzahl	Unités vendues	판매 개수	销售数量	銷售數量
+売上合計（手数料控除前）	Gross sales total	Bruttoumsatz	Total brut des ventes	수수료 차감 전 매출	销售总额（手续费前）	銷售總額（手續費前）
+キャラクター・リテイナー別の売上	Sales by character / retainer	Umsatz nach Charakter / Gehilfe	Ventes par personnage / servant	캐릭터·집사별 매출	角色及雇员销售额	角色及雇員銷售額
+販売履歴	Sales history	Verkaufsverlauf	Historique des ventes	판매 기록	销售记录	銷售紀錄
+販売検出日時	Sale detected at	Verkauf erkannt am	Vente détectée le	판매 감지 시각	销售检测时间	銷售偵測時間
+販売単価	Unit sale price	Verkaufspreis pro Stück	Prix de vente unitaire	판매 단가	销售单价	銷售單價
+売上金額	Sales revenue	Verkaufserlös	Montant des ventes	매출 금액	销售金额	銷售金額
+手数料控除前	Before fees	Vor Gebühren	Avant frais	수수료 차감 전	手续费前	手續費前
+新しいマイリスト名	New list name	Neuer Listenname	Nom de la nouvelle liste	새 목록 이름	新列表名称	新清單名稱
+定期更新の間隔	Refresh interval	Aktualisierungsintervall	Intervalle d’actualisation	자동 갱신 간격	定时更新间隔	定時更新間隔
+10秒	10 seconds	10 Sekunden	10 secondes	10초	10秒	10秒
+30秒	30 seconds	30 Sekunden	30 secondes	30초	30秒	30秒
+1分（標準）	1 minute (default)	1 Minute (Standard)	1 minute (par défaut)	1분 (기본값)	1分钟（默认）	1分鐘（預設）
+2分	2 minutes	2 Minuten	2 minutes	2분	2分钟	2分鐘
+5分	5 minutes	5 Minuten	5 minutes	5분	5分钟	5分鐘
+10分	10 minutes	10 Minuten	10 minutes	10분	10分钟	10分鐘
+更新間隔を保存	Save interval	Intervall speichern	Enregistrer l’intervalle	갱신 간격 저장	保存更新间隔	儲存更新間隔
+保存して接続	Save and connect	Speichern und verbinden	Enregistrer et connecter	저장 및 연결	保存并连接	儲存並連線
+アイテム辞書	Item catalog	Gegenstandskatalog	Catalogue d’objets	아이템 사전	物品词典	物品辭典
+日本語名・NPC価格を更新	Update Japanese catalog / NPC prices	Japanischen Katalog / NPC-Preise aktualisieren	Actualiser le catalogue japonais / prix PNJ	일본어 사전·NPC 가격 갱신	更新日语物品名称及NPC价格	更新日文物品名稱及NPC價格
+保管者の表示名	Owner display names	Anzeigenamen der Besitzer	Noms des détenteurs	보유자 표시 이름	持有者显示名称	持有者顯示名稱
+削除する	Delete	Löschen	Supprimer	삭제	删除	刪除
+Allagan Tools が記録したアイテムをまとめて確認。	Browse inventory recorded by Allagan Tools.	Von Allagan Tools erfasstes Inventar ansehen.	Consultez l’inventaire enregistré par Allagan Tools.	Allagan Tools가 기록한 아이템을 확인합니다.	查看Allagan Tools记录的物品。	查看Allagan Tools記錄的物品。
+保存ファイルを読み取ります。Allagan Tools のファイルは変更しません。	Reads saved files without modifying Allagan Tools data.	Liest gespeicherte Dateien, ohne Allagan-Tools-Daten zu ändern.	Lit les fichiers enregistrés sans modifier les données Allagan Tools.	Allagan Tools 파일을 변경하지 않고 읽습니다.	只读取存档，不修改Allagan Tools的数据。	僅讀取存檔，不修改Allagan Tools的資料。
+所持品・所持金・販売履歴の保存データと画面を更新する間隔です。ロドスト・マーケット価格の取得間隔ではありません。	Updates saved inventory, gil and sales data. Lodestone and market prices are refreshed separately.	Aktualisiert Inventar, Gil und Verkäufe. Lodestone und Marktpreise werden separat aktualisiert.	Actualise l’inventaire, les gils et les ventes. Lodestone et les prix du marché sont actualisés séparément.	소지품·길·판매 기록을 갱신합니다. 로드스톤과 장터 가격은 별도로 갱신됩니다.	更新已保存的背包、金币和销售记录。Lodestone及市场价格需单独更新。	更新已儲存的背包、金幣和銷售紀錄。Lodestone及市場價格需另行更新。
+公開XIVAPIから辞書を取得します。所持品・保管者・マイリストは送信しません。取得後はオフラインでも利用できます。	Downloads the public XIVAPI catalog. Inventory, owners and lists are not sent. The downloaded catalog works offline.	Lädt den öffentlichen XIVAPI-Katalog. Inventar, Besitzer und Listen werden nicht gesendet. Danach offline nutzbar.	Télécharge le catalogue public XIVAPI sans envoyer inventaire, détenteurs ou listes. Utilisable hors ligne ensuite.	공개 XIVAPI 사전을 받습니다. 소지품·보유자·목록은 전송하지 않으며 이후 오프라인에서도 사용 가능합니다.	从公开XIVAPI下载词典，不发送背包、持有者或列表信息。下载后可离线使用。	從公開XIVAPI下載辭典，不傳送背包、持有者或清單資訊。下載後可離線使用。
+識別番号に分かりやすい名前を付けられます。	Assign a readable name to each owner ID.	Besitzer-IDs verständliche Namen geben.	Attribuez un nom lisible à chaque identifiant.	식별 번호에 알아보기 쉬운 이름을 지정합니다.	为标识号设置易读的名称。	為識別碼設定易讀的名稱。
+取得失敗は削除確定ではありません。6時間ごとに再取得し、最初の失敗から36時間で自動取得を停止します。	A failed portrait does not prove deletion. Retry every 6 hours; stop automatic retries after 36 hours.	Ein fehlendes Porträt beweist keine Löschung. Wiederholung alle 6 Stunden, Ende nach 36 Stunden.	Un échec ne confirme pas une suppression. Nouvel essai toutes les 6 heures, arrêt après 36 heures.	초상화 실패가 삭제를 의미하지는 않습니다. 6시간마다 재시도하며 36시간 후 자동 재시도를 중지합니다.	获取失败不代表角色已删除。每6小时重试，36小时后停止自动重试。	取得失敗不代表角色已刪除。每6小時重試，36小時後停止自動重試。
+Allagan Toolsが最後に保存した配置を表示します。ゲーム内での移動・並べ替えは次の保存後に反映されます。空のマスは保存データ上の未配置スロットです。未読込の保管先は表示されません。	Shows the last saved Allagan Tools layout. In-game changes appear after the next save. Empty slots reflect the saved data; unread locations are omitted.	Zeigt die zuletzt gespeicherte Allagan-Tools-Anordnung. Änderungen erscheinen nach dem Speichern. Leere Plätze entsprechen den Daten; ungelesene Orte fehlen.	Affiche la dernière disposition sauvegardée. Les changements apparaissent après la prochaine sauvegarde. Les cases vides reflètent les données ; les emplacements non lus sont omis.	마지막 저장 배치를 표시합니다. 게임 내 변경은 다음 저장 후 반영됩니다. 빈칸은 저장된 빈 슬롯이며 읽지 않은 보관처는 표시하지 않습니다.	显示Allagan Tools最后保存的排列。游戏内变动在下次保存后反映，空格按存档显示，未读取的位置不显示。	顯示Allagan Tools最後儲存的排列。遊戲內變動於下次儲存後反映，空格依存檔顯示，未讀取的位置不顯示。
+該当する販売記録がありません。期間・検索条件を確認してください。	No matching sales. Check the period and search filters.	Keine passenden Verkäufe. Zeitraum und Filter prüfen.	Aucune vente correspondante. Vérifiez la période et les filtres.	일치하는 판매 기록이 없습니다. 기간과 검색 조건을 확인하세요.	没有符合条件的销售记录，请检查期间及筛选条件。	沒有符合條件的銷售紀錄，請檢查期間及篩選條件。
+一覧からキャラクターを選び、所持品やリテイナーを確認。	Select a character to view inventory and retainers.	Charakter wählen, um Inventar und Gehilfen anzuzeigen.	Sélectionnez un personnage pour voir son inventaire et ses servants.	캐릭터를 선택해 소지품과 집사를 확인하세요.	选择角色以查看背包和雇员。	選擇角色以查看背包和雇員。
+一覧からフリーカンパニーを選び、ポイントやチェストを確認。	Select a Free Company to view credits and its chest.	Freie Gesellschaft wählen, um Punkte und Truhe anzuzeigen.	Sélectionnez une compagnie libre pour voir ses crédits et son coffre.	자유부대를 선택해 포인트와 금고를 확인하세요.	选择部队以查看点数和部队箱。	選擇部隊以查看點數和部隊箱。
+アイテムの所持数と保管先を確認。「0個を除外」をオフにすると未所持品も検索できます。	Check quantities and locations. Disable “Exclude zero quantity” to search unowned items too.	Mengen und Lagerorte prüfen. Ohne „Nullmengen ausschließen“ werden auch nicht besessene Gegenstände gefunden.	Consultez quantités et emplacements. Désactivez le filtre des quantités nulles pour trouver aussi les objets non possédés.	수량과 보관처를 확인합니다. 0개 제외를 끄면 미보유 아이템도 검색할 수 있습니다.	查看数量和存放处。关闭“排除0个”可搜索未持有物品。	查看數量和存放處。關閉「排除0個」可搜尋未持有物品。
+Allagan Tools が最後に記録した、リテイナーの出品中アイテムを確認。	View retainer listings last saved by Allagan Tools.	Zuletzt von Allagan Tools gespeicherte Gehilfen-Angebote ansehen.	Consultez les offres des servants enregistrées par Allagan Tools.	Allagan Tools가 마지막으로 기록한 집사 출품을 확인합니다.	查看Allagan Tools最后记录的雇员出售物品。	查看Allagan Tools最後記錄的雇員出售物品。
+日別の最終記録額と、金額の増減を確認。	View daily closing values and changes.	Tägliche Schlusswerte und Änderungen anzeigen.	Consultez les dernières valeurs quotidiennes et leurs variations.	일별 최종 금액과 증감을 확인합니다.	查看每日最终金额及变动。	查看每日最終金額及變動。
+キャラクター・リテイナー・FCが所持する通貨とトークンを確認。	View character, retainer and Free Company currencies and tokens.	Währungen von Charakteren, Gehilfen und Freien Gesellschaften ansehen.	Consultez les monnaies des personnages, servants et compagnies libres.	캐릭터·집사·자유부대의 화폐와 토큰을 확인합니다.	查看角色、雇员及部队的货币与代币。	查看角色、雇員及部隊的貨幣與代幣。
+気になるアイテムを、すぐ手の届く場所に。	Keep useful items close at hand.	Wichtige Gegenstände schnell wiederfinden.	Gardez vos objets utiles à portée de main.	관심 있는 아이템을 쉽게 확인하세요.	快速查看关注的物品。	快速查看關注的物品。
+キャラクター別に、売れた商品・個数・金額・検出日時を確認。	View sold items, quantities, amounts and detection times by character.	Verkäufe, Mengen, Beträge und Erkennungszeiten nach Charakter ansehen.	Consultez objets vendus, quantités, montants et heures par personnage.	캐릭터별 판매 아이템·수량·금액·감지 시각을 확인합니다.	按角色查看售出物品、数量、金额和检测时间。	依角色查看售出物品、數量、金額和偵測時間。
+該当するアイテムの配置を確認。	Locate the selected item.	Ausgewählten Gegenstand lokalisieren.	Localisez l’objet sélectionné.	해당 아이템 위치를 확인합니다.	查看此物品的位置。	查看此物品的位置。
+このリストに登録したアイテムの所持数と、NPC売却（合計）を確認。	View quantities and NPC sale totals for this list.	Mengen und NPC-Verkaufswerte dieser Liste ansehen.	Consultez quantités et totaux de vente PNJ de cette liste.	목록 아이템의 수량과 NPC 판매 합계를 확인합니다.	查看列表物品数量和NPC出售合计。	查看清單物品數量和NPC出售合計。
+Allagan Tools 接続済み	Allagan Tools connected	Allagan Tools verbunden	Allagan Tools connecté	Allagan Tools 연결됨	已连接Allagan Tools	已連線Allagan Tools
+価格更新中	Updating prices	Preise werden aktualisiert	Actualisation des prix	가격 갱신 중	价格更新中	價格更新中
+価格更新	Prices updated	Preise aktualisiert	Prix actualisés	가격 갱신	价格更新	價格更新
+変更検出	Change detected	Änderung erkannt	Modification détectée	변경 감지	检测到变更	偵測到變更
+観測開始	First observed	Erstmals erfasst	Première observation	관측 시작	开始观测	開始觀測
+更新日時不明	Update time unknown	Aktualisierungszeit unbekannt	Date de mise à jour inconnue	갱신 시각 불명	更新时间未知	更新時間未知
+手動除外	Manually excluded	Manuell ausgeschlossen	Exclu manuellement	수동 제외	手动排除	手動排除
+1週間以上更新なし	No changes for a week	Eine Woche unverändert	Aucun changement depuis une semaine	1주 이상 변경 없음	一周以上无更新	一週以上無更新
+アクティブキャラクター数	Active characters	Aktive Charaktere	Personnages actifs	활성 캐릭터 수	活跃角色数	啟用角色數
+全体所持金額	Total gil	Gesamt-Gil	Total des gils	전체 보유 길	全部持有金币	全部持有金幣
+キャラクター全体の所持金額	Character gil total	Charakter-Gil gesamt	Total des gils des personnages	캐릭터 전체 보유 길	角色金币合计	角色金幣合計
+リテイナー全体の所持金額	Retainer gil total	Gehilfen-Gil gesamt	Total des gils des servants	집사 전체 보유 길	雇员金币合计	雇員金幣合計
+リテイナー全体の出品数	Total retainer listings	Gehilfen-Angebote gesamt	Total des offres des servants	집사 전체 출품 수	雇员出售数量合计	雇員出售數量合計
+未設定	Not set	Nicht festgelegt	Non défini	미설정	未设置	未設定
+全体の所有数	Total owned	Gesamtbesitz	Total possédé	전체 보유 수량	全部持有数量	全部持有數量
+キャラクター・リテイナーの所有数	Character and retainers owned	Besitz von Charakter und Gehilfen	Possession du personnage et des servants	캐릭터·집사 보유 수량	角色及雇员持有数量	角色及雇員持有數量
+キャラクターの所有数	Character owned	Charakterbesitz	Possession du personnage	캐릭터 보유 수량	角色持有数量	角色持有數量
+リテイナーの所有数	Retainer owned	Gehilfenbesitz	Possession du servant	집사 보유 수량	雇员持有数量	雇員持有數量
+保管先の内訳を見る	View locations	Lagerorte anzeigen	Voir les emplacements	보관처 내역 보기	查看存放明细	查看存放明細
+保管先・除外設定	Locations / exclusions	Lagerorte / Ausschlüsse	Emplacements / exclusions	보관처·제외 설정	存放处及排除设置	存放處及排除設定
+合計金額	Total amount	Gesamtbetrag	Montant total	합계 금액	合计金额	合計金額
+ページ	page	Seite	page	페이지	页	頁
+全保管先・出品中を含む	Includes all locations and listings	Alle Lagerorte und Angebote	Tous les emplacements et offres inclus	모든 보관처·출품 포함	包含全部位置及出售中	包含全部位置及出售中
+の最安値	 lowest price	 niedrigster Preis	 prix minimal	 최저가	最低价	最低價
+所持数は Allagan Tools の最終保存時点の記録です。設定した間隔で保存ファイルを確認します（初期値：1分）。	Quantities reflect the last Allagan Tools save. Saved files are checked at the configured interval (default: one minute).	Mengen entsprechen dem letzten Allagan-Tools-Speicherstand. Dateien werden im eingestellten Intervall geprüft (Standard: eine Minute).	Les quantités reflètent la dernière sauvegarde Allagan Tools. Les fichiers sont vérifiés à l’intervalle choisi (une minute par défaut).	수량은 Allagan Tools의 마지막 저장 기준입니다. 설정한 간격으로 파일을 확인합니다 (기본 1분).	数量以Allagan Tools最后保存为准。按设定间隔检查文件，默认1分钟。	數量以Allagan Tools最後儲存為準。依設定間隔檢查檔案，預設1分鐘。
+記録開始後の金額を表示します。日別の金額は、その日にこのアプリが最後に記録した額です。未起動の日や記録開始前の金額は復元しません。マイリストは除外設定を反映したNPC売却です。	Daily values use this app’s final observation of each day. No backfill is available for days before recording or while the app was closed. List exclusions apply to valuations.	Tageswerte stammen aus der letzten Erfassung des Tages. Zeiten vor der Erfassung oder bei geschlossener App werden nicht rekonstruiert. Listenausschlüsse gelten für Bewertungen.	Les valeurs quotidiennes sont les dernières observations du jour. Aucun historique antérieur ou pendant la fermeture n’est reconstitué. Les exclusions des listes sont appliquées.	일별 금액은 앱의 마지막 기록입니다. 기록 전이나 앱이 꺼진 기간은 복원하지 않으며 목록 제외 설정을 반영합니다.	每日金额为应用当天的最后记录。记录前或未运行期间的数据不予补全，估值遵循列表排除设置。	每日金額為應用程式當天的最後紀錄。紀錄前或未執行期間的資料不予補全，估值遵循清單排除設定。
+ギル・トークン・クリスタル・FCポイントは通常のアイテムとは分けて表示します。所持数は保存時点の記録です。	Gil, tokens, crystals and FC credits are shown separately from ordinary items. Quantities reflect saved data.	Gil, Marken, Kristalle und FG-Punkte werden getrennt von normalen Gegenständen angezeigt. Mengen entsprechen den gespeicherten Daten.	Gils, jetons, cristaux et crédits de CL sont séparés des objets ordinaires. Les quantités proviennent des données sauvegardées.	길·토큰·크리스탈·부대 포인트는 일반 아이템과 구분합니다. 수량은 저장 시점 기준입니다.	金币、代币、水晶及部队点数与普通物品分开显示。数量以存档为准。	金幣、代幣、水晶及部隊點數與普通物品分開顯示。數量以存檔為準。
+「除外」は手動で除外したキャラクター、または1週間以上更新のないキャラクターです。顔画像の取得失敗は下の別枠に表示します。更新判定は、このアプリが検出した本人・所属リテイナーの所持データの変更日時です。初回読込や、内容が変わらない保存では日時を更新しません。更新日時不明の場合は、観測開始から1週間は表示します。	Excluded characters are manually excluded or unchanged for a week. Portrait failures appear separately. Activity is based on changes detected in character or retainer inventory, not unchanged saves. Unknown activity stays visible for one week after first observation.	Ausgeschlossen sind manuell markierte oder seit einer Woche unveränderte Charaktere. Porträtfehler erscheinen separat. Aktivität basiert auf erkannten Inventaränderungen, nicht unveränderten Speicherungen. Unbekannte Aktivität bleibt ab Ersterfassung eine Woche sichtbar.	Les exclus sont marqués manuellement ou inchangés depuis une semaine. Les échecs de portrait sont séparés. L’activité dépend des changements d’inventaire détectés, pas des sauvegardes identiques. Une activité inconnue reste visible une semaine après la première observation.	수동 제외 또는 1주 이상 변경이 없는 캐릭터를 제외합니다. 초상화 오류는 별도로 표시합니다. 활동은 캐릭터·집사 소지품의 실제 변경 감지 기준이며 동일한 저장은 갱신하지 않습니다. 시각 불명은 관측 시작 후 1주간 표시합니다.	排除包括手动排除或一周无变动的角色。头像失败单独显示。活跃时间按角色及雇员物品的实际变动计算，不因相同内容保存而更新。时间未知者从首次观测起显示一周。	排除包含手動排除或一週無變動的角色。頭像失敗另行顯示。活動時間依角色及雇員物品的實際變動計算，不因相同內容儲存而更新。時間未知者自首次觀測起顯示一週。
+NPC売却はNQの基本価格。売却合計はHQ・収集品もNQ単価で換算した参考額です。マイリスト上部は検索・保管先の絞り込みに関わらず除外設定を反映したリスト全体を集計します。NPC購入はギルショップ掲載品の通常価格で、解放条件・割引は反映しません。「—」は通常のギルショップに掲載なし。	NPC sale estimates use NQ base prices, including HQ and collectables. List totals apply exclusions but ignore temporary search/location filters. NPC buy prices are regular gil-shop prices, without unlocks or discounts. “—” means no regular gil-shop entry.	NPC-Verkaufswerte nutzen NQ-Basispreise, auch für HQ und Sammlerstücke. Listensummen beachten Ausschlüsse, nicht temporäre Suchfilter. NPC-Kaufpreise sind reguläre Gil-Shop-Preise ohne Freischaltungen oder Rabatte. „—“ bedeutet keinen regulären Shop-Eintrag.	Les estimations PNJ utilisent les prix NQ, même pour HQ et collectionnables. Les totaux de liste appliquent les exclusions mais ignorent les filtres temporaires. Les achats PNJ sont aux prix normaux, sans déblocages ni remises. « — » indique aucune offre en boutique de gils.	NPC 판매 추정치는 HQ·소장품도 NQ 기본가를 사용합니다. 목록 합계는 제외 설정을 반영하되 임시 검색 필터는 반영하지 않습니다. NPC 구매가는 해금·할인 미반영 일반 길 상점 가격이며 —는 등록 없음입니다.	NPC出售估值使用NQ基础单价，HQ和收藏品亦然。列表合计遵循排除设置但忽略临时搜索筛选。NPC购买为普通金币商店原价，不计解锁或折扣；—表示未列入普通商店。	NPC出售估值使用NQ基礎單價，HQ和收藏品亦然。清單合計遵循排除設定但忽略臨時搜尋篩選。NPC購買為普通金幣商店原價，不計解鎖或折扣；—表示未列入普通商店。
+履歴元: AllaganMarket ／ 名前・所有者: Allagan Tools と AllaganMarket。日時は販売を検出したPCローカル時刻、金額は手数料控除前です。ゲーム側の正確な販売時刻・手取り額を示すものではありません。	Source: AllaganMarket; names and owners: Allagan Tools / AllaganMarket. Times are local PC detection times and amounts are before fees, not exact game transaction times or net proceeds.	Quelle: AllaganMarket; Namen und Besitzer: Allagan Tools / AllaganMarket. Zeiten sind lokale Erkennungszeiten, Beträge vor Gebühren; keine exakten Spieltransaktionszeiten oder Nettoerlöse.	Source : AllaganMarket ; noms et détenteurs : Allagan Tools / AllaganMarket. Heures locales de détection et montants avant frais, pas les heures exactes en jeu ni les recettes nettes.	출처는 AllaganMarket, 이름·보유자는 Allagan Tools/AllaganMarket입니다. PC의 판매 감지 시각과 수수료 전 금액이며 게임의 정확한 거래 시각·실수령액이 아닙니다.	记录来自AllaganMarket，名称和归属来自Allagan Tools及AllaganMarket。时间为本机检测时刻，金额为手续费前，并非游戏准确成交时刻或净收入。	紀錄來自AllaganMarket，名稱和歸屬來自Allagan Tools及AllaganMarket。時間為本機偵測時刻，金額為手續費前，並非遊戲準確成交時刻或淨收入。
+AllaganMarketが保存した販売判定記録をそのまま読み込みます。未記録の取引は復元できません。設定した間隔で保存ファイルを確認します（初期値：1分）。キャラクターとの関連付けがない履歴は「所有キャラクター不明」と表示します。	Reads AllaganMarket’s saved sale detections without reconstructing missing trades. Files are checked at the configured interval (default one minute). Unlinked records show an unknown character owner.	Liest gespeicherte Verkaufserkennungen von AllaganMarket ohne fehlende Transaktionen zu rekonstruieren. Prüfung im eingestellten Intervall (Standard eine Minute). Nicht zugeordnete Einträge zeigen einen unbekannten Charakterbesitzer.	Lit les ventes détectées par AllaganMarket sans reconstituer les transactions manquantes. Vérification à l’intervalle choisi (une minute par défaut). Les entrées non liées indiquent un personnage inconnu.	AllaganMarket의 저장된 판매 감지 기록을 읽으며 미기록 거래는 복원하지 않습니다. 설정 간격 (기본 1분)으로 확인합니다. 연결되지 않은 기록은 소유 캐릭터 불명으로 표시합니다.	读取AllaganMarket保存的销售判定，不补全未记录交易。按设定间隔检查，默认1分钟。未关联角色的记录显示所属角色未知。	讀取AllaganMarket儲存的銷售判定，不補全未記錄交易。依設定間隔檢查，預設1分鐘。未關聯角色的紀錄顯示所屬角色未知。

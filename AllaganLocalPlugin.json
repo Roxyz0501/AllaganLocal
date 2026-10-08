@@ -1,0 +1,19 @@
+{
+  "Author": "Roxyz0501",
+  "Name": "Allagan Local",
+  "InternalName": "AllaganLocalPlugin",
+  "AssemblyVersion": "0.1.0.0",
+  "DalamudApiLevel": 15,
+  "ApplicableVersion": "any",
+  "Punchline": "Local inventory, gil and market history dashboard",
+  "Description": "Requires Allagan Tools for inventory and gil data; AllaganMarket is additionally required for market sales history. These source plugins must record and save data. Settings show their installed/running status. Starts the bundled local website when loaded; open it from settings or /allaganlocal. Seven interface languages.",
+  "RepoUrl": "https://github.com/Roxyz0501/AllaganLocal",
+  "IconUrl": "https://raw.githubusercontent.com/Roxyz0501/AllaganLocal/main/images/icon.png",
+  "Tags": [
+    "inventory",
+    "retainer",
+    "market",
+    "local",
+    "dashboard"
+  ]
+}
