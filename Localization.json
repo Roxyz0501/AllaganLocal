@@ -1,0 +1,218 @@
+{
+  "ui.1": {
+    "ja": "データ取得元プラグイン",
+    "en": "Data source plugins",
+    "de": "Datenquellen-Plugins",
+    "fr": "Plugins sources de données",
+    "ko": "데이터 제공 플러그인",
+    "zh-Hans": "数据来源插件",
+    "zh-Hant": "資料來源外掛"
+  },
+  "ui.2": {
+    "ja": "所持品・所持金の取得には Allagan Tools が必要です。マーケット販売履歴を利用する場合は AllaganMarket も必要です。",
+    "en": "Allagan Tools is required for inventory and gil data. AllaganMarket is also required to use market sales history.",
+    "de": "Allagan Tools wird für Inventar- und Gil-Daten benötigt. Für den Marktverkaufsverlauf wird zusätzlich AllaganMarket benötigt.",
+    "fr": "Allagan Tools est requis pour les inventaires et les gils. AllaganMarket est également requis pour l’historique des ventes.",
+    "ko": "소지품과 길 데이터를 가져오려면 Allagan Tools가 필요합니다. 시장 판매 내역에는 AllaganMarket도 필요합니다.",
+    "zh-Hans": "获取背包和金币数据需要 Allagan Tools。使用市场销售记录还需要 AllaganMarket。",
+    "zh-Hant": "取得背包和金幣資料需要 Allagan Tools。使用市場銷售記錄還需要 AllaganMarket。"
+  },
+  "ui.3": {
+    "ja": "導入済みでも、取得元でデータを記録・保存する必要があります。未導入・停止中でも保存済みの記録は閲覧できます。",
+    "en": "Source plugins must record and save data. Saved records remain viewable when a source is missing or stopped.",
+    "de": "Die Quell-Plugins müssen Daten aufzeichnen und speichern. Gespeicherte Daten bleiben auch ohne aktive Quelle sichtbar.",
+    "fr": "Les plugins sources doivent enregistrer les données. Les données sauvegardées restent consultables sans source active.",
+    "ko": "제공 플러그인에서 데이터를 기록하고 저장해야 합니다. 미설치 또는 중지 상태에서도 저장된 기록은 볼 수 있습니다.",
+    "zh-Hans": "来源插件需要记录并保存数据。未安装或已停止时仍可查看已保存的记录。",
+    "zh-Hant": "來源外掛需要記錄並儲存資料。未安裝或已停止時仍可查看已儲存的記錄。"
+  },
+  "ui.4": {
+    "ja": "未導入",
+    "en": "Not installed",
+    "de": "Nicht installiert",
+    "fr": "Non installé",
+    "ko": "미설치",
+    "zh-Hans": "未安装",
+    "zh-Hant": "未安裝"
+  },
+  "ui.5": {
+    "ja": "導入済み・稼働中",
+    "en": "Installed · running",
+    "de": "Installiert · aktiv",
+    "fr": "Installé · actif",
+    "ko": "설치됨 · 실행 중",
+    "zh-Hans": "已安装 · 运行中",
+    "zh-Hant": "已安裝 · 執行中"
+  },
+  "ui.6": {
+    "ja": "導入済み・停止中",
+    "en": "Installed · stopped",
+    "de": "Installiert · inaktiv",
+    "fr": "Installé · arrêté",
+    "ko": "설치됨 · 중지됨",
+    "zh-Hans": "已安装 · 已停止",
+    "zh-Hant": "已安裝 · 已停止"
+  },
+  "ui.7": {
+    "ja": "設定",
+    "en": "Settings",
+    "de": "Einstellungen",
+    "fr": "Paramètres",
+    "ko": "설정",
+    "zh-Hans": "设置",
+    "zh-Hant": "設定"
+  },
+  "ui.8": {
+    "ja": "再起動",
+    "en": "Restart",
+    "de": "Neu starten",
+    "fr": "Redémarrer",
+    "ko": "다시 시작",
+    "zh-Hans": "重新启动",
+    "zh-Hant": "重新啟動"
+  },
+  "ui.9": {
+    "ja": "読み込み時にサイトを起動",
+    "en": "Start on plugin load",
+    "de": "Beim Laden starten",
+    "fr": "Démarrer au chargement",
+    "ko": "플러그인 로드 시 시작",
+    "zh-Hans": "加载插件时启动",
+    "zh-Hant": "載入插件時啟動"
+  },
+  "ui.10": {
+    "ja": "既存データのフォルダー（空欄なら専用保存先）。変更後はプラグインを再読み込み。",
+    "en": "Existing data folder (blank: plugin storage). Reload plugin after changing.",
+    "de": "Datenordner (leer: Plugin-Speicher). Danach Plugin neu laden.",
+    "fr": "Dossier de données (vide : stockage du plugin). Rechargez après modification.",
+    "ko": "기존 데이터 폴더 (빈칸: 플러그인 저장소). 변경 후 다시 로드하세요.",
+    "zh-Hans": "现有数据目录（留空使用插件目录）。修改后重新加载插件。",
+    "zh-Hant": "現有資料目錄（留空使用外掛目錄）。修改後重新載入外掛。"
+  },
+  "ui.11": {
+    "ja": "保存",
+    "en": "Save",
+    "de": "Speichern",
+    "fr": "Enregistrer",
+    "ko": "저장",
+    "zh-Hans": "保存",
+    "zh-Hant": "儲存"
+  },
+  "ui.12": {
+    "ja": "支援",
+    "en": "Support",
+    "de": "Unterstützung",
+    "fr": "Soutien",
+    "ko": "후원",
+    "zh-Hans": "支持",
+    "zh-Hant": "支持"
+  },
+  "ui.13": {
+    "ja": "支援は任意です。",
+    "en": "Support is optional.",
+    "de": "Unterstützung ist freiwillig.",
+    "fr": "Le soutien est facultatif.",
+    "ko": "후원은 선택 사항입니다.",
+    "zh-Hans": "支持完全自愿。",
+    "zh-Hant": "支持完全自願。"
+  },
+  "open": {
+    "ja": "サイトを開く",
+    "en": "Open dashboard",
+    "de": "Dashboard öffnen",
+    "fr": "Ouvrir le tableau de bord",
+    "ko": "사이트 열기",
+    "zh-Hans": "打开网站",
+    "zh-Hant": "開啟網站"
+  },
+  "status.Running": {
+    "ja": "稼働中",
+    "en": "Running",
+    "de": "Aktiv",
+    "fr": "En cours d’exécution",
+    "ko": "실행 중",
+    "zh-Hans": "运行中",
+    "zh-Hant": "執行中"
+  },
+  "status.Stopped": {
+    "ja": "停止中",
+    "en": "Stopped",
+    "de": "Gestoppt",
+    "fr": "Arrêté",
+    "ko": "중지됨",
+    "zh-Hans": "已停止",
+    "zh-Hant": "已停止"
+  },
+  "status.Starting": {
+    "ja": "起動中…",
+    "en": "Starting…",
+    "de": "Wird gestartet…",
+    "fr": "Démarrage…",
+    "ko": "시작 중…",
+    "zh-Hans": "正在启动…",
+    "zh-Hant": "正在啟動…"
+  },
+  "status.Restarting": {
+    "ja": "再起動中…",
+    "en": "Restarting…",
+    "de": "Wird neu gestartet…",
+    "fr": "Redémarrage…",
+    "ko": "다시 시작 중…",
+    "zh-Hans": "正在重新启动…",
+    "zh-Hant": "正在重新啟動…"
+  },
+  "status.Error": {
+    "ja": "サイトを起動できません。保存先のdashboard.logを確認してください。",
+    "en": "Could not start the dashboard. Check dashboard.log in the data folder.",
+    "de": "Das Dashboard konnte nicht gestartet werden. Prüfen Sie dashboard.log im Datenordner.",
+    "fr": "Impossible de démarrer le site. Consultez dashboard.log dans le dossier de données.",
+    "ko": "사이트를 시작할 수 없습니다. 데이터 폴더의 dashboard.log를 확인하세요.",
+    "zh-Hans": "无法启动网站。请检查数据目录中的 dashboard.log。",
+    "zh-Hant": "無法啟動網站。請檢查資料目錄中的 dashboard.log。"
+  },
+  "status.ExternalServer": {
+    "ja": "外部で起動されたサイトを利用中です。再起動する場合は先にそのサイトを停止してください。",
+    "en": "Using an externally started server. Stop it before restarting here.",
+    "de": "Ein extern gestarteter Server wird verwendet. Beenden Sie ihn vor dem Neustart hier.",
+    "fr": "Un serveur externe est utilisé. Arrêtez-le avant de redémarrer ici.",
+    "ko": "외부에서 시작한 서버를 사용 중입니다. 여기서 다시 시작하려면 먼저 해당 서버를 중지하세요.",
+    "zh-Hans": "正在使用外部启动的服务器。在此重新启动前请先停止该服务器。",
+    "zh-Hant": "正在使用外部啟動的伺服器。在此重新啟動前請先停止該伺服器。"
+  },
+  "status.RepeatedExits": {
+    "ja": "終了が繰り返されたため自動復旧を停止しました。dashboard.logを確認して再起動してください。",
+    "en": "Automatic recovery stopped after repeated exits. Check dashboard.log, then restart.",
+    "de": "Die automatische Wiederherstellung wurde nach wiederholten Abbrüchen gestoppt. Prüfen Sie dashboard.log und starten Sie neu.",
+    "fr": "La récupération automatique a été arrêtée après plusieurs interruptions. Consultez dashboard.log, puis redémarrez.",
+    "ko": "반복 종료로 자동 복구가 중지되었습니다. dashboard.log를 확인한 후 다시 시작하세요.",
+    "zh-Hans": "由于反复退出，自动恢复已停止。请检查 dashboard.log 后重新启动。",
+    "zh-Hant": "由於反覆結束，自動復原已停止。請檢查 dashboard.log 後重新啟動。"
+  },
+  "command-help": {
+    "ja": "Allagan Localの設定を開きます。",
+    "en": "Open Allagan Local settings.",
+    "de": "Allagan Local-Einstellungen öffnen.",
+    "fr": "Ouvrir les paramètres d’Allagan Local.",
+    "ko": "Allagan Local 설정을 엽니다.",
+    "zh-Hans": "打开 Allagan Local 设置。",
+    "zh-Hant": "開啟 Allagan Local 設定。"
+  },
+  "browser-error": {
+    "ja": "ブラウザーを開けませんでした。既定のブラウザー設定を確認してください。",
+    "en": "Could not open the browser. Check your default browser settings.",
+    "de": "Der Browser konnte nicht geöffnet werden. Prüfen Sie den Standardbrowser.",
+    "fr": "Impossible d’ouvrir le navigateur. Vérifiez le navigateur par défaut.",
+    "ko": "브라우저를 열 수 없습니다. 기본 브라우저 설정을 확인하세요.",
+    "zh-Hans": "无法打开浏览器。请检查默认浏览器设置。",
+    "zh-Hant": "無法開啟瀏覽器。請檢查預設瀏覽器設定。"
+  },
+  "language-save-error": {
+    "ja": "Web側の言語設定を保存できません。保存先のアクセス権を確認してください。",
+    "en": "Could not save the website language. Check data folder permissions.",
+    "de": "Die Website-Sprache konnte nicht gespeichert werden. Prüfen Sie die Zugriffsrechte des Datenordners.",
+    "fr": "Impossible d’enregistrer la langue du site. Vérifiez les droits du dossier de données.",
+    "ko": "웹사이트 언어를 저장할 수 없습니다. 데이터 폴더의 접근 권한을 확인하세요.",
+    "zh-Hans": "无法保存网站语言。请检查数据目录权限。",
+    "zh-Hant": "無法儲存網站語言。請檢查資料目錄權限。"
+  }
+}

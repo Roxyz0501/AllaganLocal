@@ -38,7 +38,7 @@ public sealed class DashboardHost : IDisposable
      lock(lifetime){intentionalStops.Add(previousProcess);previousProcess.Kill(entireProcessTree:true);}
      await previousProcess.WaitForExitAsync(lifetime.Token);owned=null;
     }else if(await IsRunning(lifetime.Token)){
-     Status="External server is running. Stop it before restarting from this plugin.";return;
+     Status="ExternalServer";return;
     }
     failures=0;
    }
@@ -59,7 +59,7 @@ public sealed class DashboardHost : IDisposable
    var process=owned;monitor=MonitorAsync(process);
    for(var i=0;i<30;i++){await Task.Delay(300,lifetime.Token);if(await IsRunning(lifetime.Token)){Status="Running";return;}if(process.HasExited)break;}
    throw new InvalidOperationException("Dashboard did not start. Check dashboard.log.");
-  }catch(OperationCanceledException){}catch(Exception e){Status=e.Message;log(e.ToString());}
+  }catch(OperationCanceledException){}catch(Exception e){Status="Error";log(e.ToString());}
   finally{gate.Release();}
  }
  private void WriteLog(string text){try{lock(http){File.AppendAllText(Path.Combine(data,"dashboard.log"),DateTimeOffset.Now.ToString("O")+" "+text+Environment.NewLine);}}catch{} }
@@ -68,7 +68,7 @@ public sealed class DashboardHost : IDisposable
   try{await process.WaitForExitAsync(lifetime.Token);WriteLog("Server exited: "+process.ExitCode);
    lock(lifetime){if(intentionalStops.Remove(process))return;}
    Status="Stopped";
-   if(!lifetime.IsCancellationRequested){if(++failures>5){Status="Repeated exits; restart manually after checking dashboard.log.";return;}await Task.Delay(5000,lifetime.Token);await StartAsync();}
+   if(!lifetime.IsCancellationRequested){if(++failures>5){Status="RepeatedExits";return;}await Task.Delay(5000,lifetime.Token);await StartAsync();}
   }catch(OperationCanceledException){}catch(Exception e){log(e.ToString());}
  }
  public void Dispose()

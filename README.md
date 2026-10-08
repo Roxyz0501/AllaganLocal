@@ -27,15 +27,19 @@ Start on plugin load is enabled by default. Restart stops and replaces the owned
 
 ## Languages and tags
 
-Interface language selector: Japanese, English, German, French, Korean, Simplified Chinese and Traditional Chinese. Plugin settings pass the preferred language when opening the website; the site also saves its selection. Some detailed help and errors still remain in Japanese. Game item names currently use the site's Japanese item catalog, independent of interface language. User-created names are not translated. This language support does not assert that the same Dalamud build runs on every regional game client.
+Use **言語 / Language** in plugin settings to select Japanese, English, German, French, Korean, Simplified Chinese or Traditional Chinese. The first load resolves an unset/invalid language from the game, then Dalamud UI, then English, and saves the concrete choice. Existing English/Japanese and later manual choices are preserved across reloads and character changes. No Auto setting is stored. There is no public launcher-language API in the targeted SDK, so that stage is omitted.
+
+Changing Config updates open dashboard pages without reloading or losing input. The website also has a native-language selector. On first migration, an existing explicit browser choice is preserved; a later Config change takes precedence. Opening the website with the plugin's button explicitly applies its Config choice. Subsequent website choices persist until the next Config change. Game item names and game-derived categories currently use the Japanese catalog, independently of interface language; user-created names are not translated. This language support does not assert that the same Dalamud build runs on every regional game client.
+
+Bundled, renamed Noto CJK subsets provide Japanese, Korean, Simplified Chinese and Traditional Chinese glyphs for plugin-owned UI. Browsers fall back to system fonts for game/user data outside the subset. See [localization implementation and verification](LOCALIZATION_IMPLEMENTATION.md).
 
 Main characters are configured with the **Main** tag on each character's page. No specific character is built into the plugin. Tag ordering: Main, Alt (number order), Submarine, untagged. Multiple tags are allowed; Alt takes precedence over Submarine.
 
 ## Build
 
-`dotnet build -c Release` requires the installed Dalamud API 15 development assemblies. Run `prepare-runtime.ps1` to download and checksum-verify the official Node.js x64 runtime, then run `package.ps1`. The packager uses an explicit allowlist and never copies site `data/`, histories, portraits, user configuration or logs. The complete website source is included in `web/`.
+`dotnet build -c Release` requires the installed Dalamud API 15 development assemblies. Run `prepare-runtime.ps1` to download and checksum-verify the official Node.js x64 runtime, then run `package.ps1`. The packager uses an explicit allowlist and never copies site `data/`, histories, portraits, user configuration or logs. The complete website source is included in `web/`. Generate Web resources using `node build-locales.mjs`. Fonts are committed; after adding UI characters, install fontTools 4.66.1, run `prepare-fonts.ps1` (pinned, checksum-verified sources), and inspect `fonts/coverage.json`.
 
-Source and issues: https://github.com/Roxyz0501/AllaganLocal . This preview has managed and local-server verification; in-game acceptance and complete translation coverage remain pending.
+Source and issues: https://github.com/Roxyz0501/AllaganLocal . This preview has managed, local-server and browser verification. Native in-game rendering and operation remain unverified.
 
 ## Optional support
 

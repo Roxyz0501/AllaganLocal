@@ -1,0 +1,9 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {parseCsv,parseInventory,aggregate,parseCharacters} from '../inventory.mjs';
+function row({id=5,quantity=4,flags=0,slot=0,owner='18014398549107456',category=1}={}){const r=Array(27).fill('0');r[2]=id;r[3]=quantity;r[6]=flags;r[21]=category;r[22]=slot;r[23]=owner;r[25]='';r[26]='';return r.join(',');}
+test('quoted CSV, BOM, CRLF and escaped quotes',()=>{assert.deepEqual(parseCsv('\uFEFF1,"gear, set","a""b"\r\n'),[['1','gear, set','a"b']]);assert.throws(()=>parseCsv('1,"incomplete'));});
+test('owner IDs retain full precision; NQ, HQ, collectables are distinct',()=>{const rows=parseInventory([row(),row({flags:1,quantity:2,slot:1}),row({flags:8,quantity:3,slot:2}),row({owner:'18014398549107457',quantity:9})].join('\n'));assert.notEqual(rows[0].owner,rows[3].owner);const all=aggregate(rows).get(5);assert.equal(all.quantity,18);assert.equal(all.nq,13);assert.equal(all.hq,2);assert.equal(all.collectable,3);assert.equal(aggregate(rows,rows[0].owner).get(5).quantity,9);});
+test('unknown layouts and duplicate slots fail rather than silently double count',()=>{assert.throws(()=>parseInventory('1,2,3'));assert.throws(()=>parseInventory(row()+'\n'+row()));});
+test('location filter and empty slots',()=>{const records=parseInventory([row(),row({id:0,slot:1}),row({category:4,slot:2,quantity:7})].join('\n'));assert.equal(records.length,2);assert.equal(aggregate(records,'','4').get(5).quantity,7);});
+test('character and retainer association preserves 64-bit JSON owner IDs',()=>{const chars=parseCharacters('{"SavedCharacters":{"18014398549107457":{"Name":"Player Test","WorldId":23},"30000000000000001":{"Name":"Retainer Test","OwnerId":18014398549107457,"WorldId":23}}}',{23:'Asura'});assert.deepEqual(chars.get('30000000000000001').parentNames,['Player Test']);assert.equal(chars.get('30000000000000001').world,'Asura');});

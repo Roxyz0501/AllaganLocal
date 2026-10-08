@@ -5,3 +5,5 @@ runtime/
 web/data/
 *.user
 runtime-download/
+
+web/test-results/

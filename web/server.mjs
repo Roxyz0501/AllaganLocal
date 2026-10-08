@@ -1,4 +1,6 @@
 import {historyOrigins} from './history-origins.mjs';
+import {createTranslator} from './public/translation.js';
+import {normalize as normalizeLanguage} from './public/language-policy.js';
 import {marketValue,marketSummary} from './market-valuation.mjs';
 import {createMarketPrices} from './market-prices.mjs';
 import {withOwnerAssets} from './owner-assets.mjs';
@@ -20,6 +22,14 @@ import {updateCatalog} from './update-catalog.mjs';
 import {valueItem,summarize,applyExclusions} from './valuation.mjs';
 import {parseSoldItems,parseMarketCharacters,salesView} from './sales.mjs';
 const root=path.dirname(fileURLToPath(import.meta.url)),data=process.env.ALLAGAN_DATA_DIR||path.join(root,'data');
+async function directError(req,res,status,message){
+ let language=normalizeLanguage((req.headers.cookie||'').match(/(?:^|;\s*)allaganLanguage=([^;]+)/)?.[1]);
+ if(!language)try{language=normalizeLanguage(JSON.parse(await readFile(path.join(data,'ui-language.json'),'utf8')).language);}catch{}
+ language||='en';
+ const dictionary=JSON.parse(await readFile(path.join(root,'public/locales',language+'.json'),'utf8'));
+ res.writeHead(status,{'Content-Type':'text/plain; charset=utf-8','Content-Language':language,'Cache-Control':'no-store'});
+ return res.end(createTranslator(dictionary,language)(message));
+}
 await mkdir(data,{recursive:true});
 // Seed only public catalog data on a new installation; never overwrite existing data.
 if(process.env.ALLAGAN_SEED_DIR)for(const name of ['catalog.json','worlds.json']){
@@ -182,10 +192,10 @@ const server=http.createServer(async(req,res)=>{
     const url=new URL(req.url,`http://127.0.0.1:${port}`);
     const omitted=new Set([...excludedGilKeys(url.searchParams)].map(key=>key.split(':')[1]));const activeRecords=records.filter(r=>!omitted.has(r.owner));
     if(req.method==='GET'&&/^\/api\/item-link\/\d+$/.test(url.pathname)){
-      const id=Number(url.pathname.split('/').at(-1)),item=catalogMap.get(id);if(!item)return send(res,404,{error:'アイテムが見つかりません。'});
-      try{const target=await getItemLink(id,item.name);res.writeHead(302,{Location:target,'Cache-Control':'no-store'});return res.end();}catch(error){res.writeHead(502,{'Content-Type':'text/plain; charset=utf-8'});return res.end(error.message);}
+      const id=Number(url.pathname.split('/').at(-1)),item=catalogMap.get(id);if(!item)return directError(req,res,404,'アイテムが見つかりません。');
+      try{const target=await getItemLink(id,item.name);res.writeHead(302,{Location:target,'Cache-Control':'no-store'});return res.end();}catch(error){return directError(req,res,502,error.message);}
     }
-    if(req.method==='GET'&&/^\/api\/character-link\/\d+$/.test(url.pathname)){const owner=characters.get(url.pathname.split('/').at(-1));if(!owner||owner.type!=='キャラクター')return send(res,404,{error:'キャラクターが見つかりません。'});try{const target=await getPortrait.profile(owner);res.writeHead(302,{Location:target,'Cache-Control':'no-store'});return res.end();}catch(error){res.writeHead(502,{'Content-Type':'text/plain; charset=utf-8'});return res.end(error.message);}}
+    if(req.method==='GET'&&/^\/api\/character-link\/\d+$/.test(url.pathname)){const owner=characters.get(url.pathname.split('/').at(-1));if(!owner||owner.type!=='キャラクター')return directError(req,res,404,'キャラクターが見つかりません。');try{const target=await getPortrait.profile(owner);res.writeHead(302,{Location:target,'Cache-Control':'no-store'});return res.end();}catch(error){return directError(req,res,502,error.message);}}
     if(req.method==='GET'&&/^\/api\/avatar\/\d+$/.test(url.pathname)){
       const owner=characters.get(url.pathname.split('/').at(-1));if(!owner)return send(res,404,{error:'キャラクターが見つかりません。'});
       const portrait=await getPortrait(owner);res.writeHead(200,{'Content-Type':portrait.type,'Cache-Control':portrait.type==='image/jpeg'?'private, max-age=86400':'private, max-age=300'});return res.end(portrait.bytes);
@@ -194,6 +204,16 @@ const server=http.createServer(async(req,res)=>{
       const id=Number(url.pathname.split('/').at(-1));
       if(!catalogMap.has(id)&&!records.some(r=>r.id===id)&&!salesRecords.some(r=>r.itemId===id))return send(res,404,{error:'アイテムが見つかりません。'});
       const icon=await getIcon(id);res.writeHead(200,{'Content-Type':icon.type,'Cache-Control':icon.type==='image/png'?'private, max-age=604800':'no-store'});return res.end(icon.bytes);
+    }
+    if(req.method==='GET'&&url.pathname==='/api/ui-language'){
+      let choice={};try{const input=JSON.parse(await readFile(path.join(data,'ui-language.json'),'utf8'));if(['ja','en','de','fr','ko','zh-Hans','zh-Hant'].includes(input.language)&&typeof input.revision==='string')choice={language:input.language,revision:input.revision};}catch{}
+      return send(res,200,choice);
+    }
+    if(req.method==='GET'&&url.pathname==='/language-policy.js'){
+      res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store'});return res.end(await readFile(path.join(root,'public/language-policy.js')));
+    }
+    if(req.method==='GET'&&/^\/fonts\/(jp|kr|sc|tc)\.otf$/.test(url.pathname)){
+      res.writeHead(200,{'Content-Type':'font/otf','Cache-Control':'public, max-age=86400'});return res.end(await readFile(path.join(root,'..',url.pathname.slice(1))));
     }
     if(req.method==='GET'&&url.pathname==='/migration-settings.js'){
       if(req.headers['sec-fetch-site']&&req.headers['sec-fetch-site']!=='same-origin')return send(res,403,{error:'同じサイトから開いてください。'});
@@ -261,7 +281,7 @@ const server=http.createServer(async(req,res)=>{
         return send(res,202,catalogJob);
       }
     }
-    const assets={'/i18n.js':'i18n.js',...Object.fromEntries(['ja','en','de','fr','ko','zh-Hans','zh-Hant'].map(l=>['/locales/'+l+'.json','locales/'+l+'.json'])),'/':'index.html','/theme.js':'theme.js','/app.js':'app.js','/sales.js':'sales.js','/storage.js':'storage.js','/images.js':'images.js','/currencies.js':'currencies.js','/money.js':'money.js','/style.css':'style.css','/favicon.svg':'favicon.svg'};
+    const assets={'/translation.js':'translation.js','/i18n.js':'i18n.js',...Object.fromEntries(['ja','en','de','fr','ko','zh-Hans','zh-Hant'].map(l=>['/locales/'+l+'.json','locales/'+l+'.json'])),'/':'index.html','/theme.js':'theme.js','/app.js':'app.js','/sales.js':'sales.js','/storage.js':'storage.js','/images.js':'images.js','/currencies.js':'currencies.js','/money.js':'money.js','/style.css':'style.css','/favicon.svg':'favicon.svg'};
     if(req.method==='GET'&&assets[url.pathname]){
       const file=assets[url.pathname],types={json:'application/json',html:'text/html',js:'text/javascript',css:'text/css',svg:'image/svg+xml'};
       res.writeHead(200,{'Content-Type':types[file.split('.').at(-1)]+'; charset=utf-8','Cache-Control':'no-cache'});res.end(await readFile(path.join(root,'public',file)));return;

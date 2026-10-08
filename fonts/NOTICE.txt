@@ -1,0 +1,4 @@
+© 2014-2021 Adobe (http://www.adobe.com/).
+Noto Sans CJK, SIL OFL 1.1.
+Source: https://github.com/notofonts/noto-cjk/tree/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans
+Modified by Roxyz0501: subset for UI glyphs and renamed Allagan UI.

@@ -17,6 +17,15 @@ try{
  for(let i=0;i<50;i++){try{ready=(await fetch(base+'/api/health')).ok;if(ready)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  assert(ready,output);assert.equal((await (await fetch(base+'/api/health')).json()).app,'allagan-local');
  assert((await (await fetch(base+'/')).text()).includes('/i18n.js'));
+ assert((await fetch(base+'/translation.js')).ok);
+ assert((await fetch(base+'/language-policy.js')).ok);
+ assert.deepEqual(await (await fetch(base+'/api/ui-language')).json(),{});
+ await writeFile(path.join(data,'ui-language.json'),JSON.stringify({language:'ko',revision:'test'}));
+ assert.deepEqual(await (await fetch(base+'/api/ui-language')).json(),{language:'ko',revision:'test'});
+ assert.equal(await (await fetch(base+'/api/item-link/999999999',{headers:{Cookie:'allaganLanguage=fr'}})).text(),'Objet introuvable.');
+ for(const region of ['jp','kr','sc','tc']){const r=await fetch(base+'/fonts/'+region+'.otf');assert.equal(r.status,200);assert.equal(r.headers.get('content-type'),'font/otf');assert((await r.arrayBuffer()).byteLength>100000);}
+ assert((await readFile(path.join(stage,'fonts','OFL.txt'),'utf8')).includes('SIL OPEN FONT LICENSE'));
+ assert((await readFile(path.join(stage,'fonts','NOTICE.txt'),'utf8')).includes('Adobe'));
  assert.equal((await fetch(base+'/migration-settings.js')).status,200);
  await writeFile(path.join(data,'browser-settings.json'),JSON.stringify({'allagan.characterTags':'{"test":["main"]}','allagan.theme':'dark','unrelated':'ignore'}));
  const seedResponse=await fetch(base+'/migration-settings.js');assert.equal(seedResponse.headers.get('cross-origin-resource-policy'),'same-origin');
@@ -26,7 +35,7 @@ try{
  let keys;
  for(const code of ['ja','en','de','fr','ko','zh-Hans','zh-Hant']){const response=await fetch(base+'/locales/'+code+'.json');assert(response.ok);const dictionary=await response.json();const current=Object.keys(dictionary).sort();if(keys)assert.deepEqual(current,keys);keys=current;assert(Object.values(dictionary).every(s=>typeof s==='string'&&s.length));}
  const bootstrap=await (await fetch(base+'/api/bootstrap')).json();assert.equal(bootstrap.state.source,path.join(data,'missing.csv'));assert.equal(bootstrap.state.favorites.length,0);
- const manifest=JSON.parse(await readFile(path.join(stage,'AllaganLocalPlugin.json'),'utf8'));assert.equal(manifest.Author,'Roxyz0501');assert(manifest.RepoUrl&&manifest.IconUrl);
+ const manifest=JSON.parse(await readFile(path.join(stage,'AllaganLocalPlugin.json'),'utf8'));assert.equal(manifest.Author,'Roxyz0501');assert.equal(manifest.AssemblyVersion,'0.2.0.0');assert(manifest.RepoUrl&&manifest.IconUrl);
  assert(!(await readdir(path.join(stage,'web'))).includes('data'));
  console.log(`PASS: packaged server, seven dictionaries (${keys.length} terms), isolated fresh data, manifest URLs, no bundled user data`);
 }finally{child.kill();}
