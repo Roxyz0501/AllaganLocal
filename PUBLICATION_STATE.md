@@ -1,5 +1,14 @@
 # Publication state
 
+## 2026-10-08 Allagan Local 0.1.0.1
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v0.1.0.1
+- ZIP: https://github.com/Roxyz0501/AllaganLocal/releases/download/v0.1.0.1/AllaganLocalPlugin-0.1.0.1.zip
+- SHA-256: `5ACEE10D54FFB8B202BA09A5C6504AF2BA03ED438A660E82708A0616ED220FE0`.
+- Startup remains enabled by default. Restart replaces only the owned server and also starts a stopped server. External processes remain untouched.
+- Optional local browser-settings migration seed restores missing preferences; no private seed/data is distributed.
+- Clean build, nine lifecycle checks, packaged startup and migration-preservation/cross-origin checks passed. Public ZIP hash/manifest verified. Native restart button has not been exercised in game.
+
 2026-10-08: User requested public release of this standalone plugin.
 
 Version 0.1.0.0 is prepared as an initial public preview. Clean Release build: zero warnings/errors. Six host lifecycle checks and packaged server/seven-language asset checks passed. Original website regression suite: 39 passed. No user data, histories, cached game assets or credentials are packaged.
