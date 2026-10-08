@@ -195,6 +195,14 @@ const server=http.createServer(async(req,res)=>{
       if(!catalogMap.has(id)&&!records.some(r=>r.id===id)&&!salesRecords.some(r=>r.itemId===id))return send(res,404,{error:'アイテムが見つかりません。'});
       const icon=await getIcon(id);res.writeHead(200,{'Content-Type':icon.type,'Cache-Control':icon.type==='image/png'?'private, max-age=604800':'no-store'});return res.end(icon.bytes);
     }
+    if(req.method==='GET'&&url.pathname==='/migration-settings.js'){
+      if(req.headers['sec-fetch-site']&&req.headers['sec-fetch-site']!=='same-origin')return send(res,403,{error:'同じサイトから開いてください。'});
+      let settings={};try{settings=JSON.parse(await readFile(path.join(data,'browser-settings.json'),'utf8'));}catch{}
+      if(!settings||typeof settings!=='object'||Array.isArray(settings))settings={};
+      settings=Object.fromEntries(Object.entries(settings).filter(([key,value])=>typeof value==='string'&&(key.startsWith('allagan.')||['characterSort','characterSortDirection','characterManualOrder','ownerDirectoryLayout'].includes(key))));
+      res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','Cross-Origin-Resource-Policy':'same-origin'});
+      return res.end('(()=>{try{const settings='+JSON.stringify(settings)+';for(const [key,value] of Object.entries(settings)){if(localStorage.getItem(key)===null)localStorage.setItem(key,value);}}catch{}})();');
+    }
     if(req.method==='GET'&&url.pathname==='/api/health')return send(res,200,{app:'allagan-local',version:'1.0.0'});
     if(req.method==='GET'&&url.pathname==='/api/bootstrap')return send(res,200,{token,state,status:status()});
     if(req.method==='GET'&&url.pathname==='/api/status')return send(res,200,status());

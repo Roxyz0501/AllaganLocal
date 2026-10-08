@@ -12,6 +12,6 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'runtime/node.exe'),(Join-Path $
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.md'),(Join-Path $PSScriptRoot 'LICENSE'),(Join-Path $PSScriptRoot 'THIRD_PARTY_NOTICES.md') -Destination $stage
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'images') -Destination $stage -Recurse
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.ja.md') -Destination $stage
-$zip=Join-Path $PSScriptRoot 'artifacts/AllaganLocalPlugin-0.1.0.0.zip'
+$zip=Join-Path $PSScriptRoot 'artifacts/AllaganLocalPlugin-0.1.0.1.zip'
 Compress-Archive -Path ($stage+'/*') -DestinationPath $zip -Force
 Write-Output $zip

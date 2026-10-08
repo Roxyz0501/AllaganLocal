@@ -23,7 +23,7 @@ The default data directory is `server-data` under the plugin's configuration dir
 
 To use an existing Allagan Local installation, enter its **data** directory in plugin settings, save, stop the standalone server, then reload the plugin. Do not point two servers at the same data directory. If the dashboard is already running on port 47831, the plugin reuses it without claiming ownership or stopping it when unloaded.
 
-The plugin stops its own child server on unload. Unexpected server exits are logged and retried after 5 seconds (up to 5 retries per plugin session). It only listens on loopback. Server output and errors are written to `dashboard.log` in the data directory. Market and Lodestone updates remain explicit website operations.
+Start on plugin load is enabled by default. Restart stops and replaces the owned server, or starts it if stopped. Servers started externally are not terminated. The plugin stops its own child server on unload. Unexpected server exits are logged and retried after 5 seconds (up to 5 retries per plugin session). It only listens on loopback. Server output and errors are written to `dashboard.log` in the data directory. Market and Lodestone updates remain explicit website operations.
 
 ## Languages and tags
 

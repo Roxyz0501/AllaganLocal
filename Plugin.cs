@@ -73,7 +73,7 @@ public sealed class Plugin : IDalamudPlugin
    if(ImGui.BeginTabBar("tabs")){
     if(ImGui.BeginTabItem(T("設定","Settings","Einstellungen","Paramètres","설정","设置","設定"))){
      if(ImGui.Button(open[Lang]))OpenSite();ImGui.SameLine();
-     if(ImGui.Button(T("起動","Start","Starten","Démarrer","시작","启动","啟動")))_=host.StartAsync();
+     if(ImGui.Button(T("再起動","Restart","Neu starten","Redémarrer","다시 시작","重新启动","重新啟動")))_=host.RestartAsync();
      ImGui.TextWrapped(host.Status);
      DrawSources();
      var lang=Lang;if(ImGui.Combo("Language",ref lang,Languages,Languages.Length)){config.Language=Codes[lang];pi.SavePluginConfig(config);}

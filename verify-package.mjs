@@ -1,4 +1,5 @@
-import {readdir,mkdtemp,readFile} from 'node:fs/promises';
+import {readdir,mkdtemp,readFile,writeFile} from 'node:fs/promises';
+import {runInNewContext} from 'node:vm';
 import {spawn} from 'node:child_process';
 import {createServer} from 'node:net';
 import path from 'node:path';
@@ -16,6 +17,12 @@ try{
  for(let i=0;i<50;i++){try{ready=(await fetch(base+'/api/health')).ok;if(ready)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  assert(ready,output);assert.equal((await (await fetch(base+'/api/health')).json()).app,'allagan-local');
  assert((await (await fetch(base+'/')).text()).includes('/i18n.js'));
+ assert.equal((await fetch(base+'/migration-settings.js')).status,200);
+ await writeFile(path.join(data,'browser-settings.json'),JSON.stringify({'allagan.characterTags':'{"test":["main"]}','allagan.theme':'dark','unrelated':'ignore'}));
+ const seedResponse=await fetch(base+'/migration-settings.js');assert.equal(seedResponse.headers.get('cross-origin-resource-policy'),'same-origin');
+ const local=new Map([['allagan.theme','white']]);runInNewContext(await seedResponse.text(),{localStorage:{getItem:k=>local.has(k)?local.get(k):null,setItem:(k,v)=>local.set(k,v)}});
+ assert.equal(local.get('allagan.characterTags'),'{"test":["main"]}');assert.equal(local.get('allagan.theme'),'white');assert.equal(local.has('unrelated'),false);
+ assert.equal((await fetch(base+'/migration-settings.js',{headers:{'sec-fetch-site':'cross-site'}})).status,403);
  let keys;
  for(const code of ['ja','en','de','fr','ko','zh-Hans','zh-Hant']){const response=await fetch(base+'/locales/'+code+'.json');assert(response.ok);const dictionary=await response.json();const current=Object.keys(dictionary).sort();if(keys)assert.deepEqual(current,keys);keys=current;assert(Object.values(dictionary).every(s=>typeof s==='string'&&s.length));}
  const bootstrap=await (await fetch(base+'/api/bootstrap')).json();assert.equal(bootstrap.state.source,path.join(data,'missing.csv'));assert.equal(bootstrap.state.favorites.length,0);

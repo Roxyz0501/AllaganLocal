@@ -1,18 +1,10 @@
-# Allagan Local 0.1.0.0 — Public preview
+# Allagan Local 0.1.0.1
 
-プラグイン読み込み時にローカルの所持品・所持金・販売履歴サイトを起動し、設定または `/allaganlocal` から開けます。
+- 「起動」ボタンを「再起動」に変更。稼働中ならプラグイン自身が起動したサーバーを停止して再起動し、停止中なら起動します。
+- 「読み込み時にサイトを起動」は引き続き初期状態でONです。通常はボタンを押す必要はありません。
+- 他の方法で起動されたサーバーは勝手に停止しません。
+- 移行用のbrowser-settings.jsonがある場合、新しいブラウザーにタグ・サブ番号・表示設定を引き継ぎます。既存設定は上書きしません。個人データは配布ZIPに含めません。
 
-- データ取得には **Allagan Tools** が必要です。販売履歴を使う場合は **AllaganMarket** も必要です。取得元によるデータ保存が前提です。
-- 設定で取得元の未導入／停止中／稼働中とバージョンを確認できます。
-- 7言語の表示切替、メインキャラクターのタグ設定に対応しています。
-- 個人データは同梱せず、保存先はプラグインの設定フォルダー内です。初回はサイト設定からアイテム辞書を更新してください。
-- 既存サイトのデータを使う場合は、プラグイン設定の保存先を既存の data フォルダーに設定してください。
-- Windowsの定期タスクを追加しません。サイトを既に起動している場合はそのサーバーを利用します。
+Release build: zero warnings/errors. Nine host lifecycle checks and packaged startup/settings-migration checks passed. Native in-game restart UI has not been exercised by automated testing. Existing data remains in the plugin configuration directory.
 
-**検証範囲**：Releaseビルド（警告・エラーなし）、サイト39テスト、サーバー起動・終了・復旧6チェック、配布パッケージの単独起動を確認済み。ゲーム内での実動作は未確認です。一部の説明・エラーとゲームアイテム名は日本語です。
-
-Initial public preview. Requires Allagan Tools for inventory/gil collection and AllaganMarket for sales history. Source plugins must save data. In-game acceptance is unverified; some help/errors and game item names remain Japanese.
-
-Shared custom repository: https://raw.githubusercontent.com/Roxyz0501/DalamudPluginRepo/main/repo.json
-
-Author: Roxyz0501. Optional support: https://ko-fi.com/roxyz0501
+Requires Allagan Tools for inventory/gil data; AllaganMarket is additionally required for market sales history. Some descriptions and game item names remain Japanese.

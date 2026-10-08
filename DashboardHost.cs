@@ -13,6 +13,7 @@ public sealed class DashboardHost : IDisposable
  private int failures;
  private Process? owned;
  private Task? monitor;
+ private readonly HashSet<Process> intentionalStops = [];
  private readonly Action<string> log;
  public string Status { get; private set; } = "Stopped";
  public const string Url = "http://127.0.0.1:47831/";
@@ -25,10 +26,22 @@ public sealed class DashboardHost : IDisposable
    throw new InvalidOperationException("Port 47831 is occupied by another application.");
   } catch(HttpRequestException) { return false; } catch(TaskCanceledException) when(!ct.IsCancellationRequested) { return false; }
  }
- public async Task StartAsync()
+ public Task StartAsync()=>RunStartAsync(false);
+ public Task RestartAsync()=>RunStartAsync(true);
+ private async Task RunStartAsync(bool restart)
  {
   try{await gate.WaitAsync(lifetime.Token);}catch(OperationCanceledException){return;}
   try {
+   if(restart){
+    if(owned is {HasExited:false} previousProcess){
+     Status="Restarting";
+     lock(lifetime){intentionalStops.Add(previousProcess);previousProcess.Kill(entireProcessTree:true);}
+     await previousProcess.WaitForExitAsync(lifetime.Token);owned=null;
+    }else if(await IsRunning(lifetime.Token)){
+     Status="External server is running. Stop it before restarting from this plugin.";return;
+    }
+    failures=0;
+   }
    if(await IsRunning(lifetime.Token)){Status="Running";return;}
    if(owned is {HasExited:false}){Status="Starting";return;}
    if(!File.Exists(runtime)||!File.Exists(Path.Combine(web,"server.mjs")))throw new FileNotFoundException("Bundled website/runtime is missing. Install the complete ZIP.");
@@ -52,7 +65,9 @@ public sealed class DashboardHost : IDisposable
  private void WriteLog(string text){try{lock(http){File.AppendAllText(Path.Combine(data,"dashboard.log"),DateTimeOffset.Now.ToString("O")+" "+text+Environment.NewLine);}}catch{} }
  private async Task MonitorAsync(Process process)
  {
-  try{await process.WaitForExitAsync(lifetime.Token);WriteLog("Server exited: "+process.ExitCode);Status="Stopped";
+  try{await process.WaitForExitAsync(lifetime.Token);WriteLog("Server exited: "+process.ExitCode);
+   lock(lifetime){if(intentionalStops.Remove(process))return;}
+   Status="Stopped";
    if(!lifetime.IsCancellationRequested){if(++failures>5){Status="Repeated exits; restart manually after checking dashboard.log.";return;}await Task.Delay(5000,lifetime.Token);await StartAsync();}
   }catch(OperationCanceledException){}catch(Exception e){log(e.ToString());}
  }
