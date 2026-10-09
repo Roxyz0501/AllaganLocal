@@ -13,6 +13,6 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.md'),(Join-Path $PSScrip
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'images') -Destination $stage -Recurse
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fonts') -Destination $stage -Recurse
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.ja.md'),(Join-Path $PSScriptRoot 'LOCALIZATION_IMPLEMENTATION.md') -Destination $stage
-$zip=Join-Path $PSScriptRoot 'artifacts/AllaganLocalPlugin-0.2.0.0.zip'
+$zip=Join-Path $PSScriptRoot 'artifacts/AllaganLocalPlugin-0.2.0.1.zip'
 Compress-Archive -Path ($stage+'/*') -DestinationPath $zip -Force
 Write-Output $zip

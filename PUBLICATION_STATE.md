@@ -32,3 +32,10 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - ZIP: https://github.com/Roxyz0501/AllaganLocal/releases/download/v0.2.0.0/AllaganLocalPlugin-0.2.0.0.zip
 - Source commit: `450260521c130dc75730732a27057c39a49ab173`. SHA-256: `80EACB814A60EFFC8FDC33D3125E28EC9DFC10B2A2DCC32FB0E6553F5D810C1F`.
 - Anonymous repo/icon HTTP 200 (image/png); public ZIP hash and packaged metadata verified. Shared registration `1e165529bccec42614860284ef74397f6ce9655f` verified at both commit-pinned and normal main URLs (six entries, five other entries unchanged).
+
+## 2026-10-09 Allagan Local 0.2.0.1 — local crash-fix preparation, not published
+
+- Routes font additions through the real SDK OnPreBuild helper; the toolkit can implement both phase interfaces, so interface type tests are not phase checks.
+- 44 real-SDK delegate lifecycle checks passed; the old implementation fails the same regression test. 410 localization checks and clean Release rebuild (zero warnings/errors) passed; isolated package validation passed.
+- No installed DLL replacement, GitHub release, or shared index change. The public release remains 0.2.0.0. Native in-game startup/rendering are unverified.
+- Prepared ZIP SHA-256: `3537016F371A047E54DE79E3A42F90F5DA69C68F5BA2A2C21F607E0B9BAC81A3`. Packaged DLL matches the fixed Release DLL; all four regional fonts retained.
