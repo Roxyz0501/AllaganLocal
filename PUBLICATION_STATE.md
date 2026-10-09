@@ -46,5 +46,5 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - User explicitly authorized publication. Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v0.2.0.1
 - ZIP: https://github.com/Roxyz0501/AllaganLocal/releases/download/v0.2.0.1/AllaganLocalPlugin-0.2.0.1.zip
 - Source 33a5983; shared registration ee5098524dc99e270bb44b0ee17e0356f8c5d755.
-- SHA-256: `3537016F371A047E54DE79E3A42F90F5DA69C68F5BA2A2C21F607E0B9BAC81A3`. Anonymous ZIP hash and repository/icon HTTP 200 verified. Shared pinned and normal main URLs both verified: six entries, five other entries unchanged.
+- SHA-256: `3537016F371A047E54DE79E3A42F90F5DA69C68F5BA2A2C21F607E0B9BAC81A3`. Anonymous ZIP hash and repository/icon HTTP 200 verified. Shared commit-pinned URL verified: six entries, five other entries unchanged. Normal main URL still returned cached 0.2.0.0 at verification; installer visibility may be delayed by CDN caching.
 - 44 font lifecycle checks, 410 localization checks, Release build zero warnings/errors and package checks passed. Native in-game startup remains unverified. Installed DLL was not replaced.
