@@ -39,3 +39,12 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - 44 real-SDK delegate lifecycle checks passed; the old implementation fails the same regression test. 410 localization checks and clean Release rebuild (zero warnings/errors) passed; isolated package validation passed.
 - No installed DLL replacement, GitHub release, or shared index change. The public release remains 0.2.0.0. Native in-game startup/rendering are unverified.
 - Prepared ZIP SHA-256: `3537016F371A047E54DE79E3A42F90F5DA69C68F5BA2A2C21F607E0B9BAC81A3`. Packaged DLL matches the fixed Release DLL; all four regional fonts retained.
+
+
+## 2026-10-09 Allagan Local 0.2.0.1 — published
+
+- User explicitly authorized publication. Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v0.2.0.1
+- ZIP: https://github.com/Roxyz0501/AllaganLocal/releases/download/v0.2.0.1/AllaganLocalPlugin-0.2.0.1.zip
+- Source 33a5983; shared registration ee5098524dc99e270bb44b0ee17e0356f8c5d755.
+- SHA-256: `3537016F371A047E54DE79E3A42F90F5DA69C68F5BA2A2C21F607E0B9BAC81A3`. Anonymous ZIP hash and repository/icon HTTP 200 verified. Shared pinned and normal main URLs both verified: six entries, five other entries unchanged.
+- 44 font lifecycle checks, 410 localization checks, Release build zero warnings/errors and package checks passed. Native in-game startup remains unverified. Installed DLL was not replaced.
