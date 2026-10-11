@@ -214,5 +214,50 @@
     "ko": "웹사이트 언어를 저장할 수 없습니다. 데이터 폴더의 접근 권한을 확인하세요.",
     "zh-Hans": "无法保存网站语言。请检查数据目录权限。",
     "zh-Hant": "無法儲存網站語言。請檢查資料目錄權限。"
+  },
+  "language-tab": {
+    "ja": "言語設定",
+    "en": "Language settings",
+    "de": "Spracheinstellungen",
+    "fr": "Paramètres de langue",
+    "ko": "언어 설정",
+    "zh-Hans": "语言设置",
+    "zh-Hant": "語言設定"
+  },
+  "language-label": {
+    "ja": "言語",
+    "en": "Language",
+    "de": "Sprache",
+    "fr": "Langue",
+    "ko": "언어",
+    "zh-Hans": "语言",
+    "zh-Hant": "語言"
+  },
+  "language-help": {
+    "ja": "表示言語を選択します。選択は保存され、サイトにも反映されます。",
+    "en": "Choose the display language. Your choice is saved and applied to the website.",
+    "de": "Wähle die Anzeigesprache. Die Auswahl wird gespeichert und auf die Website angewendet.",
+    "fr": "Choisissez la langue d’affichage. Le choix est enregistré et appliqué au site.",
+    "ko": "표시 언어를 선택합니다. 선택 사항은 저장되며 웹사이트에도 적용됩니다.",
+    "zh-Hans": "选择显示语言。选择会被保存并应用于网站。",
+    "zh-Hant": "選擇顯示語言。選擇會被儲存並套用至網站。"
+  },
+  "support-recipient": {
+    "ja": "支援先: Roxyz0501",
+    "en": "Recipient: Roxyz0501",
+    "de": "Empfänger: Roxyz0501",
+    "fr": "Bénéficiaire : Roxyz0501",
+    "ko": "후원 대상: Roxyz0501",
+    "zh-Hans": "支持对象：Roxyz0501",
+    "zh-Hant": "支持對象：Roxyz0501"
+  },
+  "support-button": {
+    "ja": "Ko-fiで支援する",
+    "en": "Support on Ko-fi",
+    "de": "Auf Ko-fi unterstützen",
+    "fr": "Soutenir sur Ko-fi",
+    "ko": "Ko-fi에서 후원하기",
+    "zh-Hans": "在 Ko-fi 上支持",
+    "zh-Hant": "在 Ko-fi 上支持"
   }
 }

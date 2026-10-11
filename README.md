@@ -27,9 +27,9 @@ Start on plugin load is enabled by default. Restart stops and replaces the owned
 
 ## Languages and tags
 
-Use **言語 / Language** in plugin settings to select Japanese, English, German, French, Korean, Simplified Chinese or Traditional Chinese. The first load resolves an unset/invalid language from the game, then Dalamud UI, then English, and saves the concrete choice. Existing English/Japanese and later manual choices are preserved across reloads and character changes. No Auto setting is stored. There is no public launcher-language API in the targeted SDK, so that stage is omitted.
+Use the independent **Language settings** tab to select Japanese, English, German, French, Korean, Simplified Chinese or Traditional Chinese. The first load resolves an unset/invalid language from the game, then Dalamud UI, then English, and saves the concrete choice. Existing English/Japanese and later manual choices are preserved across reloads and character changes. No Auto setting is stored. There is no public launcher-language API in the targeted SDK, so that stage is omitted.
 
-Changing Config updates open dashboard pages without reloading or losing input. The website also has a native-language selector. On first migration, an existing explicit browser choice is preserved; a later Config change takes precedence. Opening the website with the plugin's button explicitly applies its Config choice. Subsequent website choices persist until the next Config change. Game item names and game-derived categories currently use the Japanese catalog, independently of interface language; user-created names are not translated. This language support does not assert that the same Dalamud build runs on every regional game client.
+Changing the language updates open dashboard pages without reloading or losing input. The website also has a native-language selector. On first migration, an existing explicit browser choice is preserved; a later Config change takes precedence. Opening the website with the plugin's button explicitly applies its Config choice. Subsequent website choices persist until the next Config change. Game item names and game-derived categories currently use the Japanese catalog, independently of interface language; user-created names are not translated. This language support does not assert that the same Dalamud build runs on every regional game client.
 
 Bundled, renamed Noto CJK subsets provide Japanese, Korean, Simplified Chinese and Traditional Chinese glyphs for plugin-owned UI. Browsers fall back to system fonts for game/user data outside the subset. See [localization implementation and verification](LOCALIZATION_IMPLEMENTATION.md).
 
@@ -48,3 +48,6 @@ Support is optional: [Roxyz0501 on Ko-fi](https://ko-fi.com/roxyz0501).
 See THIRD_PARTY_NOTICES.md for integration references and third-party terms.
 
 Referenced integrations by Critical-Impact: [Allagan Tools](https://github.com/Critical-Impact/InventoryTools) (GPL-3.0), saved inventory CSV and character metadata; [CriticalCommonLib](https://github.com/Critical-Impact/CriticalCommonLib) (GPL-3.0), CSV layout and inventory category conventions; [AllaganMarket](https://github.com/Critical-Impact/AllaganMarket) (AGPL-3.0), saved sales records. Their plugin code and binaries are not bundled.
+
+
+Version 1.0.0.0 uses the canonical Language settings and Support tabs. Change the global language in Language settings; the web language selector and live synchronization remain available. Native in-game acceptance remains unverified.

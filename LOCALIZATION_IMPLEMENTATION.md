@@ -1,4 +1,4 @@
-# Localization implementation — 0.2.0.0
+# Localization implementation — 1.0.0.0
 
 Seven explicit languages are supported: ja, en, de, fr, ko, zh-Hans, zh-Hant. No Auto selection is stored or shown.
 
@@ -6,7 +6,7 @@ Seven explicit languages are supported: ja, en, de, fr, ko, zh-Hans, zh-Hant. No
 
 A valid saved Configuration.Language wins. Otherwise the plugin resolves IClientState.ClientLanguage, then IDalamudPluginInterface.UiLanguage, then English, and persists the result once. Regional codes and underscores are normalized; ambiguous zh is not guessed. No supported public launcher-language API was identified in the targeted SDK, so no private launcher configuration is read.
 
-The Config selector uses native language names and stable ImGui IDs. Switching persists the language and writes a revisioned ui-language.json for the local website. Other settings, including an explicit AutoStart=false, are retained. Plugin-owned labels, status messages, help and errors use Localization.json (24 keys per language).
+The independent Language settings tab uses the verbatim StandardPluginTabs.cs canonical selector. Support uses the same canonical class. Stable tab IDs are ###LanguageSettings and ###Support. Switching persists the language and writes a revisioned ui-language.json for the local website. Other settings, including an explicit AutoStart=false, are retained. Plugin-owned labels, status messages, help and errors use Localization.json (29 keys per language).
 
 ## Website
 
@@ -20,11 +20,13 @@ Four renamed Allagan UI font subsets derive from the pinned official Noto CJK so
 
 ## Verification and limits
 
-- Localization contract: 410 checks, covering initial selection, normalization, migration, persistence, seven dictionaries and placeholder compatibility.
-- Website regression and localization suite: 42 tests.
-- Host lifecycle suite: nine checks.
+- Localization contract: 485 checks, covering initial selection, normalization, migration, persistence, seven dictionaries and placeholder compatibility.
+- Website regression and localization suite: 43 tests.
+- Host lifecycle suite: 13 checks.
 - Browser checks: seven languages, long German labels, Korean and Chinese glyphs, retained search input, refresh persistence and Config revision synchronization.
 - Package checks: isolated startup, language resources, fonts and notices, language API, localized direct-link error, migration preservation and cross-origin rejection.
 - Clean Release build and release package validation are required before publication.
 
 Native in-game font rendering, Config switching and actual restart clicks have not been exercised in the game. They remain acceptance limitations; the automated managed checks and website checks do not replace those checks.
+
+Canonical source SHA-256: 9A3E69FB6C51605E978C70F5786AC72A9F0E6B85DEDB53D8B126B562CC386E7B. Integration adds no data/API reads or periodic requests. The existing browser language selector remains available; no new Web support surface was necessary.

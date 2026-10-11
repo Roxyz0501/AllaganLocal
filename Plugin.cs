@@ -1,3 +1,4 @@
+using Roxyz0501.Dalamud.CommonUi;
 using System.Diagnostics;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
@@ -20,7 +21,6 @@ public sealed class Plugin : IDalamudPlugin
  private readonly CommandInfo command;
  private string? uiError;
  private bool visible;
- private int Lang=>Array.IndexOf(LanguagePolicy.Codes,config.Language);
  private string T(string key)=>Localization.Text(config.Language,key);
  public Plugin(IDalamudPluginInterface pi,ICommandManager commands,IPluginLog log,IClientState client)
  {
@@ -70,7 +70,7 @@ public sealed class Plugin : IDalamudPlugin
   if(ImGui.Begin("Allagan Local###AllaganLocalSettings",ref visible)){
    if(ImGui.BeginTabBar("tabs")){
     if(ImGui.BeginTabItem(T("ui.7")+"###settings")){
-     var lang=Lang;if(ImGui.Combo("言語 / Language###language",ref lang,LanguagePolicy.Names,LanguagePolicy.Names.Length)){config.Language=LanguagePolicy.Codes[lang];config.WebLanguageRevision=Guid.NewGuid().ToString("N");pi.SavePluginConfig(config);command.HelpMessage=T("command-help");PublishLanguage();}
+
      if(ImGui.Button(T("open")+"###open"))OpenSite();
      if(ImGui.Button(T("ui.8")+"###restart"))_=host.RestartAsync();
      ImGui.TextWrapped(T("status."+host.Status));
@@ -82,11 +82,16 @@ public sealed class Plugin : IDalamudPlugin
      if(ImGui.Button(T("ui.11")+"###save"))pi.SavePluginConfig(config);
      ImGui.EndTabItem();
     }
-    ImGui.PushStyleColor(ImGuiCol.Text,new Vector4(1f,.78f,.3f,1));
-    ImGui.PushStyleColor(ImGuiCol.TabHovered,new Vector4(.5f,.32f,.08f,1));
-    ImGui.PushStyleColor(ImGuiCol.TabActive,new Vector4(.38f,.24f,.05f,1));
-    var support=ImGui.BeginTabItem(T("ui.12")+"###support");ImGui.PopStyleColor(3);
-    if(support){ImGui.TextUnformatted("Roxyz0501");ImGui.TextWrapped(T("ui.13"));if(ImGui.Button("Ko-fi / Roxyz0501###kofi"))OpenLink("https://ko-fi.com/roxyz0501");if(uiError!=null)ImGui.TextWrapped(T(uiError));ImGui.EndTabItem();}
+    if(ImGui.BeginTabItem(T("language-tab")+"###LanguageSettings")){
+     var changed=StandardPluginTabs.DrawLanguageSelector(T("language-label"),T("language-help"),config.Language!);
+     if(changed!=null&&changed!=config.Language){config.Language=changed;config.WebLanguageRevision=Guid.NewGuid().ToString("N");pi.SavePluginConfig(config);command.HelpMessage=T("command-help");PublishLanguage();}
+     if(uiError!=null)ImGui.TextWrapped(T(uiError));
+     ImGui.EndTabItem();
+    }
+    StandardPluginTabs.PushSupportTabStyle();
+    var support=ImGui.BeginTabItem(T("ui.12")+"###Support");
+    StandardPluginTabs.PopSupportTabStyle();
+    if(support){StandardPluginTabs.DrawSupportContent(T("ui.12"),T("ui.13"),T("support-recipient"),T("support-button"));ImGui.EndTabItem();}
     ImGui.EndTabBar();
    }
   }ImGui.End();
