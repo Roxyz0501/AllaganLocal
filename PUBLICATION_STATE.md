@@ -72,3 +72,9 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Public repository/icon HTTP 200 (image/png), downloaded ZIP hash verified. Only Allagan Local index entry changed; all other entries preserved.
 
 - Shared registration `cd0374b415897d0137aa26f735208506e543a1f6` verified at the anonymous commit-pinned URL (HTTP 200, seven entries, all other six preserved). Normal main URL returned cached 0.2.0.2 at verification.
+
+## 2026-10-12 local follow-up — not published
+
+- Updated canonical StandardPluginTabs and routed Settings, Language settings, Support through one final DrawStandardTrailingTabs call. Existing visible order is unchanged.
+- Canonical equality/order integration test passed, 485 localization checks passed, Release rebuild zero warnings/errors. No data access or Web changes. In-game rendering unverified.
+- Public version and ZIP remain 1.0.0.0 without replacement. This change is pending a future release.

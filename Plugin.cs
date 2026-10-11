@@ -69,8 +69,15 @@ public sealed class Plugin : IDalamudPlugin
   ImGui.SetNextWindowSize(new Vector2(640,550),ImGuiCond.FirstUseEver);
   if(ImGui.Begin("Allagan Local###AllaganLocalSettings",ref visible)){
    if(ImGui.BeginTabBar("tabs")){
-    if(ImGui.BeginTabItem(T("ui.7")+"###settings")){
-
+    StandardPluginTabs.DrawStandardTrailingTabs(
+     T("ui.7"),"settings",DrawSettings,
+     T("language-tab"),DrawLanguageSettings,
+     T("ui.12"),DrawSupport);
+    ImGui.EndTabBar();
+   }
+  }ImGui.End();
+ }
+ private void DrawSettings(){
      if(ImGui.Button(T("open")+"###open"))OpenSite();
      if(ImGui.Button(T("ui.8")+"###restart"))_=host.RestartAsync();
      ImGui.TextWrapped(T("status."+host.Status));
@@ -80,21 +87,12 @@ public sealed class Plugin : IDalamudPlugin
      ImGui.TextWrapped(T("ui.10"));
      var directory=config.DataDirectory;if(ImGui.InputText("##data",ref directory,2048))config.DataDirectory=directory;
      if(ImGui.Button(T("ui.11")+"###save"))pi.SavePluginConfig(config);
-     ImGui.EndTabItem();
-    }
-    if(ImGui.BeginTabItem(T("language-tab")+"###LanguageSettings")){
+ }
+ private void DrawLanguageSettings(){
      var changed=StandardPluginTabs.DrawLanguageSelector(T("language-label"),T("language-help"),config.Language!);
      if(changed!=null&&changed!=config.Language){config.Language=changed;config.WebLanguageRevision=Guid.NewGuid().ToString("N");pi.SavePluginConfig(config);command.HelpMessage=T("command-help");PublishLanguage();}
      if(uiError!=null)ImGui.TextWrapped(T(uiError));
-     ImGui.EndTabItem();
-    }
-    StandardPluginTabs.PushSupportTabStyle();
-    var support=ImGui.BeginTabItem(T("ui.12")+"###Support");
-    StandardPluginTabs.PopSupportTabStyle();
-    if(support){StandardPluginTabs.DrawSupportContent(T("ui.12"),T("ui.13"),T("support-recipient"),T("support-button"));ImGui.EndTabItem();}
-    ImGui.EndTabBar();
-   }
-  }ImGui.End();
  }
+ private void DrawSupport()=>StandardPluginTabs.DrawSupportContent(T("ui.12"),T("ui.13"),T("support-recipient"),T("support-button"));
  public void Dispose(){pi.UiBuilder.Draw-=Draw;pi.UiBuilder.OpenConfigUi-=Open;pi.UiBuilder.OpenMainUi-=Open;commands.RemoveHandler("/allaganlocal");host.Dispose();fonts.Dispose();}
 }

@@ -29,4 +29,7 @@ Four renamed Allagan UI font subsets derive from the pinned official Noto CJK so
 
 Native in-game font rendering, Config switching and actual restart clicks have not been exercised in the game. They remain acceptance limitations; the automated managed checks and website checks do not replace those checks.
 
-Canonical source SHA-256: 9A3E69FB6C51605E978C70F5786AC72A9F0E6B85DEDB53D8B126B562CC386E7B. Integration adds no data/API reads or periodic requests. The existing browser language selector remains available; no new Web support surface was necessary.
+Canonical source SHA-256: 062372ECBF0030427BCDFE471592C6691CE3A3D3F8835A7438EA95C7763B25E9. Integration adds no data/API reads or periodic requests. The existing browser language selector remains available; no new Web support surface was necessary.
+
+2026-10-12 follow-up (local only): copied the updated canonical DrawStandardTrailingTabs helper and invoke it once at the end of the tab bar. Settings, Language settings, Support keep their existing order and stable IDs. node --test standard-tabs.test.mjs verifies canonical source equality and call placement in this workspace. Release rebuild has zero warnings/errors; 485 localization checks pass. Published 1.0.0.0 assets are unchanged.
+
