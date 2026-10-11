@@ -32,4 +32,3 @@ Native in-game font rendering, Config switching and actual restart clicks have n
 Canonical source SHA-256: 062372ECBF0030427BCDFE471592C6691CE3A3D3F8835A7438EA95C7763B25E9. Integration adds no data/API reads or periodic requests. The existing browser language selector remains available; no new Web support surface was necessary.
 
 2026-10-12 follow-up (local only): copied the updated canonical DrawStandardTrailingTabs helper and invoke it once at the end of the tab bar. Settings, Language settings, Support keep their existing order and stable IDs. node --test standard-tabs.test.mjs verifies canonical source equality and call placement in this workspace. Release rebuild has zero warnings/errors; 485 localization checks pass. Published 1.0.0.0 assets are unchanged.
-
