@@ -60,3 +60,15 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Public repository/icon HTTP 200 (image/png) and downloaded ZIP hash verified. Five other entries unchanged.
 
 - Shared registration `89bda8d2eb1a77433f3100e5f5c0abda1601224a` verified at both commit-pinned and normal main URLs: HTTP 200, six entries, Allagan Local 0.2.0.2.
+
+
+## 2026-10-11 Allagan Local 1.0.0.0
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.0.0.0
+- ZIP: https://github.com/Roxyz0501/AllaganLocal/releases/download/v1.0.0.0/AllaganLocalPlugin-1.0.0.0.zip
+- Source `976f6d492286cdf882bc236c4a68a442479d0f1b`; SHA-256 `0C3D7A7975181825B085230AD22BF5119571F09296297BB3198A95E8EB6E5B34`.
+- Canonical StandardPluginTabs.cs copied byte-for-byte; separate LanguageSettings and Support tabs. Saved language, migration, browser sync and persistent server preserved. No new data/API requests.
+- 485 localization, 44 font, 43 Web and 13 host checks passed. 1,361 codepoints covered by four fonts. Release zero warnings/errors; package startup/manifest verified. Native in-game acceptance unverified.
+- Public repository/icon HTTP 200 (image/png), downloaded ZIP hash verified. Only Allagan Local index entry changed; all other entries preserved.
+
+- Shared registration `cd0374b415897d0137aa26f735208506e543a1f6` verified at the anonymous commit-pinned URL (HTTP 200, seven entries, all other six preserved). Normal main URL returned cached 0.2.0.2 at verification.
