@@ -1,4 +1,4 @@
-import {loadMoney} from './money.js';
+import {loadMoney,cancelMoneyLoad,selectNavigation} from './money.js';
 import {translateText} from './i18n.js';
 import {loadCurrencies} from './currencies.js';
 import './images.js';
@@ -40,6 +40,7 @@ $('excludeZero').checked=localStorage.getItem('allagan.excludeZero')!=='false';
 $('excludeArmoury').checked=localStorage.getItem('allagan.excludeArmoury')==='true';
 $('excludeMarket').checked=localStorage.getItem('allagan.excludeMarket')==='true';
 function renderNav(){
+ cancelMoneyLoad();
  for(const id of ['title','breadcrumb'])$(id).setAttribute('translate',view==='list'?'no':'yes');
  $('excludeZeroLabel').hidden=view!=='catalog';
  if(['money','sales'].includes(view))$('historyMenu').open=true;
@@ -47,8 +48,8 @@ function renderNav(){
   $('moneyView').hidden=view!=='money';
   $('currenciesView').hidden=view!=='currencies';
   $('storageView').hidden=!['storage','characters','companies'].includes(view);$('salesView').hidden=view!=='sales';for(const el of document.querySelectorAll('main > .stats,main > .collection,main > .footnote'))el.hidden=['sales','storage','characters','companies','currencies','money'].includes(view);
-  document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===view);b.setAttribute('aria-current',b.dataset.view===view?'page':'false');});
   $('lists').innerHTML=state.lists.map(l=>`<button class="nav ${view==='list'&&l.id===listId?'active':''}" data-list="${esc(l.id)}"><span>≡</span>${esc(l.name)} <small>${l.items.length}</small></button>`).join('');
+  selectNavigation(view,$('moneyEntity').value,$('itemHistoryMetric').value,listId);
   const selected=addingTo||$('destination').value;
   $('destination').innerHTML=state.lists.map(l=>`<option value="${esc(l.id)}">${esc(l.name)}</option>`).join('');
   if(state.lists.some(l=>l.id===selected))$('destination').value=selected;

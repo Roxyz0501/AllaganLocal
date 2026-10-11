@@ -44,18 +44,16 @@ public sealed class DashboardHost : IDisposable
    }
    if(await IsRunning(lifetime.Token)){Status="Running";return;}
    if(owned is {HasExited:false}){Status="Starting";return;}
-   if(!File.Exists(runtime)||!File.Exists(Path.Combine(web,"server.mjs")))throw new FileNotFoundException("Bundled website/runtime is missing. Install the complete ZIP.");
+   if(!File.Exists(runtime)||!File.Exists(Path.Combine(web,"server.mjs"))||!File.Exists(Path.Combine(web,"server-runner.mjs")))throw new FileNotFoundException("Bundled website/runtime is missing. Install the complete ZIP.");
    Directory.CreateDirectory(data);
-   var start=new ProcessStartInfo(runtime){WorkingDirectory=web,UseShellExecute=false,CreateNoWindow=true,RedirectStandardError=true,RedirectStandardOutput=true};
-   start.ArgumentList.Add(Path.Combine(web,"server.mjs"));
+   var start=new ProcessStartInfo(runtime){WorkingDirectory=web,UseShellExecute=false,CreateNoWindow=true};
+   start.ArgumentList.Add(Path.Combine(web,"server-runner.mjs"));
    start.Environment["PORT"]=new Uri(address).Port.ToString();
    start.Environment["ALLAGAN_DATA_DIR"]=data;start.Environment["ALLAGAN_CATALOG_DIR"]=data;
    start.Environment["ALLAGAN_SEED_DIR"]=Path.Combine(web,"seed");
    owned=new Process{StartInfo=start};
-   owned.OutputDataReceived+=(_,e)=>{if(e.Data!=null)WriteLog(e.Data);};
-   owned.ErrorDataReceived+=(_,e)=>{if(e.Data!=null)WriteLog("ERROR "+e.Data);};
    lock(lifetime){lifetime.Token.ThrowIfCancellationRequested();if(!owned.Start())throw new InvalidOperationException("Could not start the dashboard.");}
-   owned.BeginOutputReadLine();owned.BeginErrorReadLine();Status="Starting";
+   Status="Starting";
    var process=owned;monitor=MonitorAsync(process);
    for(var i=0;i<30;i++){await Task.Delay(300,lifetime.Token);if(await IsRunning(lifetime.Token)){Status="Running";return;}if(process.HasExited)break;}
    throw new InvalidOperationException("Dashboard did not start. Check dashboard.log.");
@@ -73,7 +71,8 @@ public sealed class DashboardHost : IDisposable
  }
  public void Dispose()
  {
-  lock(lifetime){lifetime.Cancel();try{if(owned is {HasExited:false})owned.Kill(entireProcessTree:true);}catch(Exception e){log(e.Message);}}
-  // An external server was never assigned to owned and is left running.
+  // Keep the independent server alive after plugin unload/game exit. No redirected
+  // pipes or plugin callbacks remain necessary for its logging or operation.
+  lock(lifetime){lifetime.Cancel();}
  }
 }
