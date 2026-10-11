@@ -78,3 +78,13 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Updated canonical StandardPluginTabs and routed Settings, Language settings, Support through one final DrawStandardTrailingTabs call. Existing visible order is unchanged.
 - Canonical equality/order integration test passed, 485 localization checks passed, Release rebuild zero warnings/errors. No data access or Web changes. In-game rendering unverified.
 - Public version and ZIP remain 1.0.0.0 without replacement. This change is pending a future release.
+
+
+## 2026-10-12 Allagan Local 1.0.0.1
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.0.0.1
+- ZIP: https://github.com/Roxyz0501/AllaganLocal/releases/download/v1.0.0.1/AllaganLocalPlugin-1.0.0.1.zip
+- Source 85d9aee; shared registration `1b04fe414fd37cebfe0956ce4e95860917295fa6`.
+- SHA-256: `23FB31B1EFBC1245A78F4B1FAF00FF2147E2BE25CB7ED46D086DAA3B1242C387`.
+- Canonical trailing tab helper and order integration test passed; 485 localization checks and Release build zero warnings/errors. Package startup/manifest/resources verified. Native in-game rendering remains unverified. Existing 1.0.0.0 asset unchanged.
+- Public repo/icon HTTP 200 (image/png), downloaded ZIP hash verified. Connector and pinned public index show 1.0.0.1; normal main raw URL retained cached 1.0.0.0. All other index entries preserved.
