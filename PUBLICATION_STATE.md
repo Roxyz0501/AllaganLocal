@@ -48,3 +48,15 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Source 33a5983; shared registration ee5098524dc99e270bb44b0ee17e0356f8c5d755.
 - SHA-256: `3537016F371A047E54DE79E3A42F90F5DA69C68F5BA2A2C21F607E0B9BAC81A3`. Anonymous ZIP hash and repository/icon HTTP 200 verified. Shared commit-pinned URL verified: six entries, five other entries unchanged. Normal main URL still returned cached 0.2.0.0 at verification; installer visibility may be delayed by CDN caching.
 - 44 font lifecycle checks, 410 localization checks, Release build zero warnings/errors and package checks passed. Native in-game startup remains unverified. Installed DLL was not replaced.
+
+
+## 2026-10-11 Allagan Local 0.2.0.2
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v0.2.0.2
+- ZIP: https://github.com/Roxyz0501/AllaganLocal/releases/download/v0.2.0.2/AllaganLocalPlugin-0.2.0.2.zip
+- Source 3b54367; SHA-256 `771AF4E1C8CE6CF7DEEC50088190863D01B0C54777BD5D052B8270BA47C57C5C`.
+- Keeps server alive across plugin/game exit, reuses existing instance, writes logs independently of parent pipes. Fixes exclusive sidebar selection and stale history responses.
+- 13 host checks including actual parent process exit/reuse, 43 Web checks, clean Release zero warnings/errors and packaged runner validation passed. Native in-game acceptance unverified.
+- Public repository/icon HTTP 200 (image/png) and downloaded ZIP hash verified. Five other entries unchanged.
+
+- Shared registration `89bda8d2eb1a77433f3100e5f5c0abda1601224a` verified at both commit-pinned and normal main URLs: HTTP 200, six entries, Allagan Local 0.2.0.2.
