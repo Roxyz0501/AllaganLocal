@@ -1,5 +1,19 @@
-export function japanDay(date=new Date()){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);}
+const japanDateFormat=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'});
+export function japanDay(date=new Date()){return japanDateFormat.format(date);}
 export function previousDay(day){return new Date(Date.parse(day+'T00:00:00Z')-86400000).toISOString().slice(0,10);}
+function combinedTimeline(sources,sum){
+ const events=new Map();
+ sources.forEach((s,i)=>{for(const p of [...s.changes,...Object.values(s.days)]){if(!events.has(p.at))events.set(p.at,new Map());events.get(p.at).set(i,p);}});
+ const latest=new Map(),changes=[];let day='';
+ for(const at of [...events.keys()].sort()){
+  const nextDay=japanDay(new Date(at));
+  if(nextDay!==day){for(const i of latest.keys())if(!sources[i].days[nextDay])latest.delete(i);day=nextDay;}
+  for(const [i,p] of events.get(at))latest.set(i,p);
+  const amounts=sum(sources.map((_,i)=>latest.get(i)));
+  if(!changes.length||japanDay(new Date(changes.at(-1).at))!==day||JSON.stringify(changes.at(-1).amounts)!==JSON.stringify(amounts))changes.push({at,amounts});
+ }
+ return changes;
+}
 export function recordMoney(ledger,observations,now=new Date()){
  const day=japanDay(now),at=now.toISOString();let changed=false;const series={...ledger.series};
  for(const observation of observations){
@@ -28,10 +42,7 @@ export function withMoneyTotals(ledger,excludedKeys=new Set()){
   const dates=[...new Set(sources.flatMap(s=>Object.keys(s.days)))].sort();
   const sum=points=>{const known=points.filter(p=>p?.amounts.value!=null);return {value:known.length?known.reduce((n,p)=>n+p.amounts.value,0):null,personal:null,retainers:null,missing:points.length-known.length,total:points.length};};
   const days=Object.fromEntries(dates.map(date=>{const points=sources.map(s=>s.days[date]);return [date,{at:points.filter(Boolean).map(p=>p.at).sort().at(-1),amounts:sum(points)}];}));
-  const times=[...new Set(sources.flatMap(s=>s.changes.map(p=>p.at)))].sort(),latest=new Map(),events=new Map();
-  sources.forEach((s,i)=>s.changes.forEach(p=>{if(!events.has(p.at))events.set(p.at,[]);events.get(p.at).push([i,p]);}));
-  const changes=[];
-  for(const at of times){for(const [i,p] of events.get(at))latest.set(i,p);const amounts=sum(sources.map((_,i)=>latest.get(i)));if(!changes.length||JSON.stringify(changes.at(-1).amounts)!==JSON.stringify(amounts))changes.push({at,amounts});}
+  const changes=combinedTimeline(sources,sum);
   series[key]={label,days,changes};
  }
  return {...ledger,series};
@@ -55,7 +66,7 @@ export function characterItemLedger(ledger,character){
 export function scopedItems(ledger,character,omitted=new Set(),selectedKey=''){
  if(character)return omitted.has(character)?{...ledger,series:{}}:characterItemLedger(ledger,character);
  const grouped=new Map();for(const [key,s] of Object.entries(ledger.series)){const m=key.match(/^item-owner:(\d+):(\d+|all)$/);if(!m||omitted.has(m[1])||(selectedKey&&m[2]!== (selectedKey==='all:items'?'all':selectedKey.slice(5))))continue;const target=m[2]==='all'?'all:items':'item:'+m[2];if(!grouped.has(target))grouped.set(target,[]);grouped.get(target).push(s);}
- const series={};for(const [key,sources] of grouped){const dates=[...new Set(sources.flatMap(s=>Object.keys(s.days)))].sort(),days={},changes=[];for(const day of dates){const points=sources.map(s=>s.days[day]).filter(Boolean),amounts={personal:null,retainers:null};for(const field of ['value','price','market','cash','marketUnknown'])amounts[field]=points.some(p=>p.amounts[field]==null)?null:points.reduce((n,p)=>n+p.amounts[field],0);const point={at:points.map(p=>p.at).sort().at(-1),amounts};days[day]=point;changes.push(point);}const events=new Map();sources.forEach((s,i)=>s.changes.forEach(p=>{if(!events.has(p.at))events.set(p.at,[]);events.get(p.at).push([i,p]);}));const latest=new Map(),timeline=[];for(const at of [...events.keys()].sort()){for(const [i,p] of events.get(at))latest.set(i,p);const points=[...latest.values()],amounts={personal:null,retainers:null};for(const field of ['value','price','market','cash','marketUnknown'])amounts[field]=points.some(p=>p.amounts[field]==null)?null:points.reduce((n,p)=>n+p.amounts[field],0);timeline.push({at,amounts});}series[key]={label:sources[0].label,days,changes:timeline};}return {...ledger,series};
+ const series={};for(const [key,sources] of grouped){const dates=[...new Set(sources.flatMap(s=>Object.keys(s.days)))].sort(),days={},changes=[];for(const day of dates){const points=sources.map(s=>s.days[day]).filter(Boolean),amounts={personal:null,retainers:null};for(const field of ['value','price','market','cash','marketUnknown'])amounts[field]=points.some(p=>p.amounts[field]==null)?null:points.reduce((n,p)=>n+p.amounts[field],0);const point={at:points.map(p=>p.at).sort().at(-1),amounts};days[day]=point;changes.push(point);}const timeline=combinedTimeline(sources,rows=>{const points=rows.filter(Boolean),amounts={personal:null,retainers:null};for(const field of ['value','price','market','cash','marketUnknown'])amounts[field]=points.some(p=>p.amounts[field]==null)?null:points.reduce((n,p)=>n+p.amounts[field],0);return amounts;});series[key]={label:sources[0].label,days,changes:timeline};}return {...ledger,series};
 }
 
 // Filter at read time so restoring a character also restores its recorded history.

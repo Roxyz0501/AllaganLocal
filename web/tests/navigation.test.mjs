@@ -17,5 +17,7 @@ test('sidebar selection is exclusive across all routes; stale history cannot rep
  for(const route of routes){context.selectNavigation(...route);assert.equal(buttons.filter(b=>b.active).length,1,JSON.stringify(route));assert.equal(buttons.filter(b=>b.attrs['aria-current']==='page').length,1);}
  const pending=context.loadMoney('all:retainers');context.cancelMoneyLoad();context.selectNavigation('sales');get('title').textContent='sales';resolveFetch({ok:true,json:async()=>({})});await pending;
  assert.equal(get('title').textContent,'sales');assert.equal(buttons.find(b=>b.active).dataset.view,'sales');
+ context.renderMoneyChart({key:'all:gil',label:'gil',unit:'G',day:'2026-10-18',previous:100,value:150,at:'2026-10-18T01:00:00Z',amounts:{value:150},changes:[{at:'2026-10-18T01:00:00Z',amounts:{value:150}}]},'today');
+ assert.equal((get('moneyChart').innerHTML.match(/<circle /g)||[]).length,2,'show the starting balance and first change');
 });
 

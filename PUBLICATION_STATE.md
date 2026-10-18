@@ -88,3 +88,14 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - SHA-256: `23FB31B1EFBC1245A78F4B1FAF00FF2147E2BE25CB7ED46D086DAA3B1242C387`.
 - Canonical trailing tab helper and order integration test passed; 485 localization checks and Release build zero warnings/errors. Package startup/manifest/resources verified. Native in-game rendering remains unverified. Existing 1.0.0.0 asset unchanged.
 - Public repo/icon HTTP 200 (image/png), downloaded ZIP hash verified. Connector and pinned public index show 1.0.0.1; normal main raw URL retained cached 1.0.0.0. All other index entries preserved.
+
+## 2026-10-18 local history repair — not published
+
+- Confirmed live money-history.json was truncated/zero-filled from byte 106,954,752 (28,962,265 zero bytes). The API reported history load failure and stopped capture. Exact cause of the on-disk corruption is unknown.
+- Preserved original in server-data and ignored artifacts/history-repair-20261018. Explicit offline salvage recovered 24,827 complete series through October 15; merged the valid October 8 migration snapshot for missing series (31,806 total). Missing dates are not fabricated.
+- Added flushed atomic history snapshots and one previous-generation backup (hard link on NTFS, flushed copy fallback). Startup can recover a valid backup while preserving damaged main. No unbounded backup rotation; corruption files are only created on actual recovery.
+- Fixed aggregate timeline/daily mismatch when an entity has missing dates, included unchanged daily observations, and added previous-day starting balance to the intraday chart. Reused the JST date formatter.
+- Removed internal item-owner and asset-summary series from history entity choices/API transfer.
+- 48 Web tests passed; API integration rerun passed after response filtering. Actual plugin runtime patched locally and restarted (no old standalone server or autostart enabled). Public 1.0.0.1 asset is unchanged.
+- Live APIs confirmed October 18 capture and restored previous-day comparisons on October 15 for retainers, lists and items. October 16–17 were not recorded, so October 18 comparison remains unavailable.
+- Measured 8 history reads including repeat/navigation/concurrent requests: HTTP 200, no history-file writes, 190–385ms, 29–789KB per response. Current all-gil response 41.5KB; 18-day pre-filter response was 3.29MB (different date ranges, not a direct ratio). One backup exists. Goal: no writes on unchanged reads; no new DB/external calls. First startup recovery/changed inventory intentionally writes a snapshot; raw item-location detail remains a larger legacy response. Evidence in ignored repair artifact directory.

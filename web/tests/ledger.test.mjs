@@ -10,6 +10,14 @@ test('character totals include only their own retainers and do not treat missing
  const c=new Map([['a',{id:'a',name:'A',type:'キャラクター'}],['r',{id:'r',name:'R',type:'リテイナー',parentIds:['a']}]]);let o=ownerDirectory([{owner:'a',id:1,container:2000,quantity:100},{owner:'r',id:1,container:12000,quantity:200}],c);assert.equal(o.find(x=>x.id==='a').totalGil,300);o=ownerDirectory([{owner:'a',id:1,container:2000,quantity:100}],c);assert.equal(o.find(x=>x.id==='a').totalGil,100);assert.equal(o.find(x=>x.id==='a').retainerUnknown,1);
 });
 import {withMoneyTotals} from '../ledger.mjs';
+test('aggregate intraday closing agrees with daily totals across missing and unchanged days',()=>{
+ let l={series:{}};
+ l=recordMoney(l,[{key:'character:a',label:'A',value:100},{key:'fc:b',label:'B',value:50}],new Date('2026-10-01T01:00:00Z')).ledger;
+ l=recordMoney(l,[{key:'character:a',label:'A',value:120}],new Date('2026-10-02T01:00:00Z')).ledger;
+ l=recordMoney(l,[{key:'character:a',label:'A',value:120}],new Date('2026-10-03T01:00:00Z')).ledger;
+ for(const day of ['2026-10-02','2026-10-03']){const v=moneyView(withMoneyTotals(l),'all:gil',day);assert.equal(v.changes[0].amounts.value,v.value);}
+ assert.equal(moneySummary(withMoneyTotals(l),'all:gil','2026-10-03').change,0);
+});
 test('overall totals separate cash and list valuations, and preserve gaps',()=>{
  let l={version:1,series:{}};
  const obs=[{key:'character:a',label:'A',value:100},{key:'fc:f',label:'FC',value:50},{key:'list:l',label:'List',value:900}];
@@ -37,6 +45,23 @@ test('item history retains quantity and historical NPC value including zero hold
  assert.equal(moneySummary(itemMetricLedger(l,'price'),'item:5','2026-10-03').value,49);
 });
 import {listMetricLedger} from '../ledger.mjs';
+import {visibleHistory,scopedItems} from '../ledger.mjs';
+test('mylist NPC/market/count previous days and restored exclusions use the same owners',()=>{
+ let l={series:{}};for(const [day,n] of [['2026-10-01',1],['2026-10-02',2]])l=recordMoney(l,[{key:'list:l',label:'L',value:30*n,quantity:3*n,owners:{a:{value:10*n,market:100*n,quantity:n},b:{value:20*n,market:200*n,quantity:2*n}}}],new Date(day+'T01:00:00Z')).ledger;
+ for(const [metric,expected] of [['npc',10],['market',100]]){
+  const filtered=visibleHistory(l,new Set(['character:b']),new Map([['list:l',metric]]));
+  assert.equal(moneySummary(filtered,'list:l','2026-10-02').change,expected);
+  assert.equal(moneySummary(listMetricLedger(filtered,'count'),'list:l','2026-10-02').change,1);
+  assert.equal(moneySummary(visibleHistory(l,new Set(),new Map([['list:l',metric]])),'list:l','2026-10-02').change,expected*3);
+ }
+});
+test('scoped item daily and intraday totals agree across a missing owner day',()=>{
+ let l={series:{}};const obs=(id,value)=>({key:'item-owner:'+id+':5',label:'item',value,price:value*2,cash:0,market:value*3,marketUnknown:0});
+ l=recordMoney(l,[obs('1',5),obs('2',10)],new Date('2026-10-01T01:00:00Z')).ledger;
+ l=recordMoney(l,[obs('1',6)],new Date('2026-10-02T01:00:00Z')).ledger;
+ const v=moneyView(itemMetricLedger(scopedItems(l,'',new Set(),'item:5'),'market'),'item:5','2026-10-02');
+ assert.equal(v.value,18);assert.equal(v.changes[0].amounts.value,18);assert.equal(v.change,-27);
+});
 test('list quantities never invent unrecorded past counts and retain price history',()=>{
  let l={version:1,series:{}};l=recordMoney(l,[{key:'list:a',label:'A',value:30}],new Date('2026-10-03T01:00:00Z')).ledger;l=recordMoney(l,[{key:'list:a',label:'A',value:50,quantity:5}],new Date('2026-10-04T01:00:00Z')).ledger;
  assert.equal(moneySummary(listMetricLedger(l,'count'),'list:a','2026-10-03').value,null);assert.equal(moneySummary(listMetricLedger(l,'count'),'list:a','2026-10-04').value,5);assert.equal(moneySummary(listMetricLedger(l,'price'),'list:a','2026-10-03').value,30);

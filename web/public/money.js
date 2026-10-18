@@ -26,6 +26,7 @@ function renderMoneyChart(d,mode){
  const daily=mode==='range';
  const points=(daily?d.days.map(p=>({at:p.date+'T00:00:00+09:00',value:p.value,label:new Date(p.at).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})+(p.amounts.missing?'（一部未記録）':'')})):d.changes.map(p=>({at:p.at,value:p.amounts.value,label:new Date(p.at).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})}))).toReversed();
  if(!daily&&!points.length&&d.amounts)points.push({at:d.at,value:d.value,label:'最終記録'});
+ if(!daily&&d.previous!=null&&d.amounts){const at=d.day+'T00:00:00+09:00';if(!points.length||Date.parse(points[0].at)>Date.parse(at))points.unshift({at,value:d.previous,label:d.day+' 00:00'});}
  const valid=points.filter(p=>p.value!=null);const host=$('moneyChart');
  if(!valid.length){host.innerHTML='<h2>金額の推移</h2><p>この期間にはグラフに表示できる金額の記録がありません。</p>';return;}
  const width=1000,height=290,left=100,right=30,top=25,bottom=55;
