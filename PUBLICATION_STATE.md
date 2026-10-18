@@ -99,3 +99,12 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - 48 Web tests passed; API integration rerun passed after response filtering. Actual plugin runtime patched locally and restarted (no old standalone server or autostart enabled). Public 1.0.0.1 asset is unchanged.
 - Live APIs confirmed October 18 capture and restored previous-day comparisons on October 15 for retainers, lists and items. October 16–17 were not recorded, so October 18 comparison remains unavailable.
 - Measured 8 history reads including repeat/navigation/concurrent requests: HTTP 200, no history-file writes, 190–385ms, 29–789KB per response. Current all-gil response 41.5KB; 18-day pre-filter response was 3.29MB (different date ranges, not a direct ratio). One backup exists. Goal: no writes on unchanged reads; no new DB/external calls. First startup recovery/changed inventory intentionally writes a snapshot; raw item-location detail remains a larger legacy response. Evidence in ignored repair artifact directory.
+
+## 2026-10-18 Allagan Local 1.0.0.2 published
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.0.0.2
+- Source: 051e4a4d2385db2ce2b65d969b7ee6e32d9e7d33; shared index: db122e5e1d5c4a2c85f30f56a459135f7902334f.
+- ZIP SHA-256: 35D3A5AFD690F2B18754768676F7DC97AB925618A59A14FC48AD3300C90D45CD.
+- Release build: zero warnings/errors. 48 Web tests and subsequent API integration verification passed. Packaged server, seven dictionaries, fonts, isolated data, and 1.0.0.2 manifest verified.
+- Anonymous repository HTTP 200, public ZIP download hash matches, commit-pinned public distribution index verified. Only AllaganLocalPlugin index entry changed; all other plugins retained. No private history or recovery artifacts included.
+- A running older server may need a website restart after plugin update. Automatic recovery requires a valid backup; already-lost history is not reconstructed by installing this release.
