@@ -1,3 +1,4 @@
+import {createPurchaseService} from './purchases-service.mjs';
 import {loadHistory,saveHistory} from './history-store.mjs';
 import {historyOrigins} from './history-origins.mjs';
 import {createTranslator} from './public/translation.js';
@@ -17,7 +18,7 @@ import http from 'node:http';
 import {readFile,writeFile,rename,mkdir,stat} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {randomUUID} from 'node:crypto';
+import {randomUUID,createHash} from 'node:crypto';
 import {parseInventory,aggregate,categories,parseCharacters} from './inventory.mjs';
 import {updateCatalog} from './update-catalog.mjs';
 import {valueItem,summarize,applyExclusions} from './valuation.mjs';
@@ -40,6 +41,7 @@ const getPortrait=createPortraitCache(path.join(data,'portraits'));
 const getIcon=createIconCache(path.join(data,'icons'));
 const getItemLink=createItemLinkCache(path.join(data,'item-links'));
 const marketPrices=await createMarketPrices(path.join(data,'market-prices.json'));
+const purchaseHistory=createPurchaseService(process.env.ALLAGAN_PURCHASE_SOURCE||path.join(process.env.APPDATA||'', 'XIVLauncher','pluginConfigs','MarketLedger','market-ledger.db'));
 const statePath=path.join(data,'state.json');
 const ledgerPath=path.join(data,'money-history.json');let ledger={version:1,series:{}},ledgerError='';
 try{ledger=(await loadHistory(ledgerPath)).ledger;}catch{ledgerError='金額履歴を読み込めません。元ファイルを保持し、追記を停止しています。';}
@@ -101,6 +103,7 @@ let catalog={items:[]},catalogMap=new Map(),records=[],savedSlots=[],sourceStamp
 let catalogJob={running:false,message:''},refreshing=false;
 let characters=new Map(),charactersStamp='',charactersError='',worlds={};
 try{worlds=JSON.parse(await readFile(path.join(process.env.ALLAGAN_CATALOG_DIR||data,'worlds.json'),'utf8'));}catch{}
+const exportRevision=()=>createHash('sha256').update(sourceStamp+charactersStamp+JSON.stringify(state)+(marketPrices.status().updatedAt||'')).digest('hex');
 const token=randomUUID();const port=Number(process.env.PORT||47831);
 let salesRecords=[],salesStamp='',salesUpdated=null,salesError='',marketCharacters=new Map(),marketStamp='',marketError='';
 function salesPath(){return process.env.ALLAGAN_SALES_SOURCE||path.join(path.dirname(path.dirname(state.source)),'AllaganMarket','SoldItems.csv');}
@@ -234,6 +237,23 @@ const server=http.createServer(async(req,res)=>{
  for(const c of view.containers)for(const r of c.items){r.sell=catalogMap.get(r.id)?.sell??null;r.buy=catalogMap.get(r.id)?.buy??null;r.market=marketPrices.item(r.id,byId.get(c.owner)?.world||'');r.cashItem=(state.cashItems||[]).includes(r.id);}
  return send(res,200,{...view,updatedAt:sourceUpdated});
 }
+    if(req.method==='GET'&&url.pathname==='/api/storage-csv'){
+      const p=new URLSearchParams(url.searchParams);p.delete('paged');const owners=directory(),byId=new Map(owners.map(o=>[o.id,o]));
+      const view=storageView(savedSlots.filter(r=>!omitted.has(r.owner)),owners,catalogMap,p);
+      const rows=view.containers.filter(c=>!p.has('container')||String(c.id)===p.get('container')).flatMap(c=>c.items.map(r=>({...r,containerName:c.name||String(c.id),ownerName:byId.get(c.owner)?.name||c.owner})));
+      const pages=Math.max(1,Math.ceil(rows.length/500)),page=Math.max(1,Math.min(pages,Math.floor(Number(p.get('page')))||1));
+      const items=rows.slice((page-1)*500,page*500).map(r=>({...r,sell:catalogMap.get(r.id)?.sell??null,buy:catalogMap.get(r.id)?.buy??null,market:marketPrices.item(r.id,byId.get(r.owner)?.world||''),cashItem:(state.cashItems||[]).includes(r.id)}));
+      return send(res,200,{items,page,pages,revision:exportRevision()});
+    }
+    if(req.method==='GET'&&url.pathname==='/api/purchases'){
+      const result=await purchaseHistory.query(Object.fromEntries(url.searchParams),[...omitted].sort(),req.headers['if-none-match']||'');
+      res.setHeader('Cache-Control','private, no-cache');res.setHeader('ETag',result.etag);
+      if(result.notModified){res.writeHead(304);return res.end();}return send(res,200,result.data);
+    }
+    if(req.method==='GET'&&url.pathname==='/api/purchases.csv'){
+      const stream=purchaseHistory.csv(Object.fromEntries(url.searchParams),[...omitted].sort());
+      try{for await(const chunk of stream){if(res.destroyed)break;if(!res.headersSent)res.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="purchases.csv"','Cache-Control':'no-store'});if(!res.write(chunk))await new Promise(resolve=>{const done=()=>{res.off('drain',done);res.off('close',done);resolve();};res.once('drain',done);res.once('close',done);});}res.end();}catch(e){if(res.headersSent)res.destroy();else throw e;}return;
+    }
     if(req.method==='GET'&&url.pathname==='/api/sales')return send(res,200,{...salesView(salesRecords.filter(r=>!omitted.has(r.retainerId)&&!(marketCharacters.get(r.retainerId)?.parentIds||[]).some(id=>omitted.has(id))),characters,marketCharacters,catalogMap,worlds,url.searchParams),source:salesPath(),updatedAt:salesUpdated,error:salesError,nameWarning:marketError});
     if(req.method==='GET'&&url.pathname==='/api/currencies'){
       const p=url.searchParams,owner=p.get('owner')||'',q=(p.get('q')||'').normalize('NFKC').toLocaleLowerCase('ja');
@@ -267,8 +287,9 @@ const server=http.createServer(async(req,res)=>{
  const marketSort=new Map();if(sort==='market')for(const i of items){const m=marketPrices.item(i.id,''),quotes=[m.region?.nq?.price,m.region?.hq?.price].filter(Number.isFinite);marketSort.set(i.id,quotes.length?Math.min(...quotes):null);}
  items.sort((a,b)=>{const av=sort==='quantity'?a.quantity:sort==='sell'?a.sell:sort==='buy'?a.buy:marketSort.get(a.id),bv=sort==='quantity'?b.quantity:sort==='sell'?b.sell:sort==='buy'?b.buy:marketSort.get(b.id);if(sort!=='name'){if(av==null||bv==null)return av==null?(bv==null?a.id-b.id:1):-1;return direction*(av-bv)||a.id-b.id;}return direction*a.name.localeCompare(b.name,'ja')||a.id-b.id;});
       if(p.get('group')==='category')items.sort((a,b)=>(a.category||'').localeCompare(b.category||'','ja'));
-      const total=items.length, page=Math.max(1,Math.min(Number(p.get('page'))||1,Math.max(1,Math.ceil(total/60))));
-      return send(res,200,{items:items.slice((page-1)*60,page*60).map(item=>{const locations=item.locations||[],names=[...new Set(locations.map(l=>characters.get(l.owner)?.world).filter(Boolean))];const price=marketPrices.item(item.id,''),tagged=(state.cashItems||[]).includes(item.id);return {...item,market:{region:price.region,total:marketValue(item,price.region,tagged,price.marketable),worlds:names.map(world=>{const p=marketPrices.item(item.id,world);return {...p,total:marketValue(item,p.local,tagged,p.marketable)};})}};}),page,pages:Math.max(1,Math.ceil(total/60)),total,summary,listSummary,listDayChange:list?moneySummary(visibleHistory(ledger,excludedGilKeys(url.searchParams)),'list:'+list.id).change:null});
+      const pageSize=p.get('export')==='1'?500:60;
+      const total=items.length, page=Math.max(1,Math.min(Number(p.get('page'))||1,Math.max(1,Math.ceil(total/pageSize))));
+      return send(res,200,{items:items.slice((page-1)*pageSize,page*pageSize).map(item=>{const locations=item.locations||[],names=[...new Set(locations.map(l=>characters.get(l.owner)?.world).filter(Boolean))];const price=marketPrices.item(item.id,''),tagged=(state.cashItems||[]).includes(item.id);return {...item,market:{region:price.region,total:marketValue(item,price.region,tagged,price.marketable),worlds:names.map(world=>{const p=marketPrices.item(item.id,world);return {...p,total:marketValue(item,p.local,tagged,p.marketable)};})}};}),page,pages:Math.max(1,Math.ceil(total/pageSize)),total,summary,listSummary,revision:exportRevision(),listDayChange:list?moneySummary(visibleHistory(ledger,excludedGilKeys(url.searchParams)),'list:'+list.id).change:null});
     }
     if(req.method==='POST'){
       if(req.headers['x-app-token']!==token)return send(res,403,{error:'ページを再読み込みしてください。'});
@@ -282,7 +303,7 @@ const server=http.createServer(async(req,res)=>{
         return send(res,202,catalogJob);
       }
     }
-    const assets={'/translation.js':'translation.js','/i18n.js':'i18n.js',...Object.fromEntries(['ja','en','de','fr','ko','zh-Hans','zh-Hant'].map(l=>['/locales/'+l+'.json','locales/'+l+'.json'])),'/':'index.html','/theme.js':'theme.js','/app.js':'app.js','/sales.js':'sales.js','/storage.js':'storage.js','/images.js':'images.js','/currencies.js':'currencies.js','/money.js':'money.js','/style.css':'style.css','/favicon.svg':'favicon.svg'};
+    const assets={'/translation.js':'translation.js','/i18n.js':'i18n.js',...Object.fromEntries(['ja','en','de','fr','ko','zh-Hans','zh-Hant'].map(l=>['/locales/'+l+'.json','locales/'+l+'.json'])),'/':'index.html','/theme.js':'theme.js','/app.js':'app.js','/csv-export.js':'csv-export.js','/csv-sources.js':'csv-sources.js','/purchases.js':'purchases.js','/sales.js':'sales.js','/storage.js':'storage.js','/images.js':'images.js','/currencies.js':'currencies.js','/money.js':'money.js','/style.css':'style.css','/favicon.svg':'favicon.svg'};
     if(req.method==='GET'&&assets[url.pathname]){
       const file=assets[url.pathname],types={json:'application/json',html:'text/html',js:'text/javascript',css:'text/css',svg:'image/svg+xml'};
       res.writeHead(200,{'Content-Type':types[file.split('.').at(-1)]+'; charset=utf-8','Cache-Control':'no-cache'});res.end(await readFile(path.join(root,'public',file)));return;

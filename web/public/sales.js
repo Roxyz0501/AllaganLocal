@@ -1,4 +1,6 @@
+import {pagedSource,salesColumns,salesRow} from './csv-sources.js';
 const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('ja-JP').format(n),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let csvData,csvParams;
 let page=1,seq=0,timer,lastPayload='',activeQuery='',activeController;
 function select(id,options){const value=$(id).value;$(id).innerHTML='<option value="">すべて</option>'+options.map(x=>`<option value="${esc(x.id)}">${esc(x.name)} @ ${esc(x.world)}</option>`).join('');if(value&&!options.some(x=>x.id===value))$(id).add(new Option('選択した対象（履歴なし）',value));$(id).value=value;}
 export async function loadSales(){
@@ -11,7 +13,7 @@ export async function loadSales(){
     const res=await fetch('/api/sales?'+p,{signal:AbortSignal.any([controller.signal,AbortSignal.timeout(15000)])}),data=await res.json();if(!res.ok)throw new Error(data.error||'販売履歴を読み込めません。');if(request!==seq)return;
     $('salesWarning').hidden=!data.error&&!data.nameWarning;$('salesWarning').textContent=[data.error,data.nameWarning].filter(Boolean).join(' ');
     const signature=JSON.stringify(data);if(signature===lastPayload)return;
-    page=data.page;select('salesCharacter',data.characters);select('salesRetainer',data.retainers);
+    csvData=data;csvParams=p;page=data.page;select('salesCharacter',data.characters);select('salesRetainer',data.retainers);
     $('salesWarning').hidden=!data.error&&!data.nameWarning;$('salesWarning').textContent=[data.error,data.nameWarning].filter(Boolean).join(' ');
     $('salesCount').textContent=fmt(data.summary.count);$('salesQuantity').textContent=fmt(data.summary.quantity);$('salesGross').textContent=fmt(data.summary.gross);const fee=Math.floor(data.summary.gross*0.1);$('salesFee').textContent=`手数料10%（概算） ${fmt(fee)} G ／ 差引 ${fmt(data.summary.gross-fee)} G`;
     renderSalesChart(data);
@@ -57,3 +59,5 @@ function renderSalesChart(data){
 const salesTip=document.createElement('div');salesTip.className='money-tooltip';salesTip.hidden=true;salesTip.setAttribute('role','tooltip');document.body.append(salesTip);
 function showSalesTip(e){const p=e.target.closest('circle');if(!p)return;const rect=p.getBoundingClientRect();salesTip.textContent=p.getAttribute('aria-label');salesTip.hidden=false;salesTip.style.left=Math.max(8,Math.min(innerWidth-300,e.clientX||rect.x))+'px';salesTip.style.top=Math.max(8,(e.clientY||rect.y)-55)+'px';}
 $('salesChart').addEventListener('pointerover',showSalesTip);$('salesChart').addEventListener('focusin',showSalesTip);for(const event of ['pointerout','focusout'])$('salesChart').addEventListener(event,()=>salesTip.hidden=true);
+
+export const salesCsvSource=()=>pagedSource('sales','リテイナー販売履歴',salesColumns,'/api/sales',csvParams,csvData,salesRow);

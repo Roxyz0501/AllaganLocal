@@ -46,6 +46,7 @@ public sealed class Plugin : IDalamudPlugin
   ImGui.TextWrapped(T("ui.2"));
   DrawSource("InventoryTools","Allagan Tools");
   DrawSource("AllaganMarket","AllaganMarket");
+  DrawSource("MarketLedger","Gil Ledger");
   ImGui.TextWrapped(T("ui.3"));
   ImGui.Separator();
  }

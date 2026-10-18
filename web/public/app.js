@@ -1,9 +1,12 @@
+import {openCsvExport,csvColumns,tableCsvSources} from './csv-export.js';
+import {pagedSource} from './csv-sources.js';
+import {loadPurchases,openPurchases,purchaseNavigation,restorePurchases,cancelPurchaseLoad,purchaseCsvSource} from './purchases.js';
 import {loadMoney,cancelMoneyLoad,selectNavigation} from './money.js';
 import {translateText} from './i18n.js';
-import {loadCurrencies} from './currencies.js';
+import {loadCurrencies,currencyCsvSource} from './currencies.js';
 import './images.js';
-import {refreshOpenSales,loadStorage,openStorage,resetStorage,storageNavigation,restoreStorageNavigation} from './storage.js';
-import {loadSales,openRetainerSales,salesNavigation,restoreSalesNavigation} from './sales.js';
+import {refreshOpenSales,loadStorage,openStorage,resetStorage,storageNavigation,restoreStorageNavigation,storageCsvSources} from './storage.js';
+import {loadSales,openRetainerSales,salesNavigation,restoreSalesNavigation,salesCsvSource} from './sales.js';
 const $=id=>document.getElementById(id);
 const targetDrafts=new Map();
 const fmt=n=>new Intl.NumberFormat('ja-JP').format(n);
@@ -11,7 +14,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let token,state,status,view='catalog',listId='',page=1,result,request=0,nameMode='create',addingTo='',toastTimer,polling=false,loadedStamp='',loadedCatalog='',loadedCharacters='';
 let historyReady=false,restoringHistory=false;
 const historyFields=['itemHistoryCharacter','excludeZero','itemHistoryMetric','itemHistorySearch','retainer','salesDay','excludeArmoury','excludeMarket','search','owner','location','sort','sortDirection','group','destination','storageSearch','storageDirectoryLayout','characterSort','characterStatusFilter','salesSearch','salesCharacter','salesRetainer','salesFrom','salesTo','currencySearch','currencyOwner','moneyEntity','moneyPeriod','moneyDay','moneyFrom','moneyTo','salesPeriod'];
-function navigationSnapshot(){return {allagan:true,view,listId,page,addingTo,storage:storageNavigation(),sales:salesNavigation(),fields:Object.fromEntries(historyFields.map(id=>[id,$(id).type==='checkbox'?$(id).checked:$(id).value]))};}
+function navigationSnapshot(){return {allagan:true,view,listId,page,addingTo,storage:storageNavigation(),sales:salesNavigation(),purchases:purchaseNavigation(),fields:Object.fromEntries(historyFields.map(id=>[id,$(id).type==='checkbox'?$(id).checked:$(id).value]))};}
 const listFilterFields=['search','owner','location','retainer','sort','sortDirection','group','excludeMarket'];
 function saveListFilters(){if(view!=='list'||!listId)return;try{localStorage.setItem('allagan.listFilters.'+listId,JSON.stringify(Object.fromEntries(listFilterFields.map(id=>[id,$(id).type==='checkbox'?$(id).checked:$(id).value]))));}catch{}}
 function restoreListFilters(id){let saved={};try{saved=JSON.parse(localStorage.getItem('allagan.listFilters.'+id)||'{}')||{};}catch{}const defaults={search:'',owner:'',location:'',retainer:'',sort:'name',sortDirection:'asc',group:'item',excludeMarket:false};for(const field of listFilterFields){const value=saved[field]??defaults[field];if($(field).type==='checkbox')$(field).checked=!!value;else{if(value&&$(field).tagName==='SELECT'&&!Array.from($(field).options).some(o=>o.value===value))$(field).add(new Option(value,value));$(field).value=value;}}}
@@ -22,9 +25,9 @@ for(const event of ['input','change'])document.addEventListener(event,()=>queueM
 document.addEventListener('storage-will-navigate',saveHistory);document.addEventListener('storage-did-navigate',pushHistory);
 async function restoreNavigation(saved){
  if(!saved?.allagan)return;restoringHistory=true;request++;
- try{if(!['catalog','inventory','market','favorites','list','storage','characters','companies','sales','money','currencies'].includes(saved.view))throw new Error('保存された画面は利用できません');if(saved.view==='list'&&!state.lists.some(l=>l.id===saved.listId))throw new Error('マイリストが見つかりません');view=saved.view;listId=saved.listId;page=saved.page;addingTo=saved.addingTo;
+ try{if(!['catalog','inventory','market','favorites','list','storage','characters','companies','sales','purchases','money','currencies'].includes(saved.view))throw new Error('保存された画面は利用できません');if(saved.view==='list'&&!state.lists.some(l=>l.id===saved.listId))throw new Error('マイリストが見つかりません');view=saved.view;listId=saved.listId;page=saved.page;addingTo=saved.addingTo;
  renderNav();renderStatus();for(const [id,value] of Object.entries(saved.fields||{})){if(!$(id))continue;if($(id).type==='checkbox')$(id).checked=value;else {if($(id).tagName==='SELECT'&&value&&!Array.from($(id).options).some(o=>o.value===value))$(id).add(new Option(value,value));$(id).value=value;}}
- if(['storage','characters','companies'].includes(view)&&saved.storage)await restoreStorageNavigation(saved.storage);else if(view==='sales')await restoreSalesNavigation(saved.sales);else await load();
+ if(['storage','characters','companies'].includes(view)&&saved.storage)await restoreStorageNavigation(saved.storage);else if(view==='purchases')await restorePurchases(saved.purchases);else if(view==='sales')await restoreSalesNavigation(saved.sales);else await load();
  }finally{restoringHistory=false;}
 }
 window.addEventListener('popstate',e=>restoreNavigation(e.state).catch(error=>toast(error.message)));
@@ -40,22 +43,22 @@ $('excludeZero').checked=localStorage.getItem('allagan.excludeZero')!=='false';
 $('excludeArmoury').checked=localStorage.getItem('allagan.excludeArmoury')==='true';
 $('excludeMarket').checked=localStorage.getItem('allagan.excludeMarket')==='true';
 function renderNav(){
- cancelMoneyLoad();
+ cancelMoneyLoad();if(view!=='purchases')cancelPurchaseLoad();$('purchasesView').hidden=view!=='purchases';
  for(const id of ['title','breadcrumb'])$(id).setAttribute('translate',view==='list'?'no':'yes');
  $('excludeZeroLabel').hidden=view!=='catalog';
- if(['money','sales'].includes(view))$('historyMenu').open=true;
+ if(['money','sales','purchases'].includes(view))$('historyMenu').open=true;
  $('excludeArmouryLabel').hidden=!['catalog','inventory'].includes(view);$('excludeMarketLabel').hidden=!['catalog','list'].includes(view);$('location').disabled=view==='market';
   $('moneyView').hidden=view!=='money';
   $('currenciesView').hidden=view!=='currencies';
-  $('storageView').hidden=!['storage','characters','companies'].includes(view);$('salesView').hidden=view!=='sales';for(const el of document.querySelectorAll('main > .stats,main > .collection,main > .footnote'))el.hidden=['sales','storage','characters','companies','currencies','money'].includes(view);
+  $('storageView').hidden=!['storage','characters','companies'].includes(view);$('salesView').hidden=view!=='sales';for(const el of document.querySelectorAll('main > .stats,main > .collection,main > .footnote'))el.hidden=['purchases','sales','storage','characters','companies','currencies','money'].includes(view);
   $('lists').innerHTML=state.lists.map(l=>`<button class="nav ${view==='list'&&l.id===listId?'active':''}" data-list="${esc(l.id)}"><span>≡</span>${esc(l.name)} <small>${l.items.length}</small></button>`).join('');
   selectNavigation(view,$('moneyEntity').value,$('itemHistoryMetric').value,listId);
   const selected=addingTo||$('destination').value;
   $('destination').innerHTML=state.lists.map(l=>`<option value="${esc(l.id)}">${esc(l.name)}</option>`).join('');
   if(state.lists.some(l=>l.id===selected))$('destination').value=selected;
-  const l=state.lists.find(x=>x.id===listId);const titles={market:'出品中',money:'収支履歴',currencies:'通貨・トークン',inventory:'所持アイテム',catalog:'所持アイテム',favorites:'お気に入り',sales:'リテイナー販売履歴',storage:'アイテムの保管先',characters:'キャラクター',companies:'フリーカンパニー',list:l?.name||'マイリスト'};
+  const l=state.lists.find(x=>x.id===listId);const titles={purchases:'購入履歴',market:'出品中',money:'収支履歴',currencies:'通貨・トークン',inventory:'所持アイテム',catalog:'所持アイテム',favorites:'お気に入り',sales:'リテイナー販売履歴',storage:'アイテムの保管先',characters:'キャラクター',companies:'フリーカンパニー',list:l?.name||'マイリスト'};
   $('title').textContent=$('breadcrumb').textContent=titles[view];
-  $('subtitle').textContent={market:'Allagan Tools が最後に記録した、リテイナーの出品中アイテムを確認。',money:'日別の最終記録額と、金額の増減を確認。',currencies:'キャラクター・リテイナー・FCが所持する通貨とトークンを確認。',inventory:'Allagan Tools が記録したアイテムをまとめて確認。',catalog:'アイテムの所持数と保管先を確認。「0個を除外」をオフにすると未所持品も検索できます。',favorites:'気になるアイテムを、すぐ手の届く場所に。',sales:'キャラクター別に、売れた商品・個数・金額・検出日時を確認。',storage:'該当するアイテムの配置を確認。',characters:'一覧からキャラクターを選び、所持品やリテイナーを確認。',companies:'一覧からフリーカンパニーを選び、ポイントやチェストを確認。',list:'このリストに登録したアイテムの所持数と、NPC売却（合計）を確認。'}[view];
+  $('subtitle').textContent={purchases:'Gil Ledgerが記録した購入・支出を、全体またはキャラクター別に確認。',market:'Allagan Tools が最後に記録した、リテイナーの出品中アイテムを確認。',money:'日別の最終記録額と、金額の増減を確認。',currencies:'キャラクター・リテイナー・FCが所持する通貨とトークンを確認。',inventory:'Allagan Tools が記録したアイテムをまとめて確認。',catalog:'アイテムの所持数と保管先を確認。「0個を除外」をオフにすると未所持品も検索できます。',favorites:'気になるアイテムを、すぐ手の届く場所に。',sales:'キャラクター別に、売れた商品・個数・金額・検出日時を確認。',storage:'該当するアイテムの配置を確認。',characters:'一覧からキャラクターを選び、所持品やリテイナーを確認。',companies:'一覧からフリーカンパニーを選び、ポイントやチェストを確認。',list:'このリストに登録したアイテムの所持数と、NPC売却（合計）を確認。'}[view];
   $('listPricingLabel').hidden=view!=='list';$('listPricing').value=l?.pricing||'npc';$('renameList').hidden=$('deleteList').hidden=$('listMoneyHistory').hidden=view!=='list';$('listMoneyHistory').dataset.moneyHistory='list:'+listId;$('listMoneyHistory').textContent='個数・価格の推移を見る';$('addDestination').hidden=true;
   $('addToList').hidden=view!=='list';$('backToList').hidden=view!=='catalog'||!addingTo;$('totalNote').hidden=view!=='list';
   $('lastHeader').textContent=view==='list'?'削除':'マイリスト';
@@ -76,7 +79,7 @@ function renderStatus(){
   $('catalogInfo').textContent=`${fmt(status.catalogItems)}アイテム · 更新 ${date(status.catalogUpdated)}${status.catalogJob.message?' · '+status.catalogJob.message:''}`;
   $('updateCatalog').disabled=status.catalogJob.running;
 }
-let lastItemsPayload='';
+let lastItemsPayload='',csvItemParams;
 async function load(){
  for(const b of document.querySelectorAll('[data-sort-direction]'))b.setAttribute('aria-pressed',String(b.dataset.sortDirection===$('sortDirection').value));
  renderRetainerFilter();
@@ -84,10 +87,11 @@ async function load(){
   if(view==='currencies'){request++;await loadCurrencies();return;}
   if(['storage','characters','companies'].includes(view)){request++;await loadStorage();return;}
   if(view==='sales'){request++;await loadSales();return;}
+  if(view==='purchases'){request++;await loadPurchases();return;}
   const seq=++request;
   const p=new URLSearchParams({excludeArmoury:['catalog','inventory'].includes(view)&&$('excludeArmoury').checked?'1':'0',excludeZero:$('excludeZero').checked?'1':'0',excludeMarket:$('excludeMarket').checked?'1':'0',view,list:listId,page:String(page),q:$('search').value,character:$('owner').value,retainer:(view==='market'||['4','7','9'].includes($('location').value))?$('retainer').value:'',location:$('location').value,sort:$('sort').value,direction:$('sortDirection').value,group:$('group').value});
   $('items').setAttribute('aria-busy','true');
-  try{const next=await api('/api/items?'+p);if(seq!==request)return;result=next;page=result.page;const signature=JSON.stringify([view,listId,$('group').value,$('destination').value,status.charactersStamp,next]);if(signature!==lastItemsPayload){lastItemsPayload=signature;renderItems();}}
+  try{const next=await api('/api/items?'+p);if(seq!==request)return;result=next;csvItemParams=new URLSearchParams(p);page=result.page;const signature=JSON.stringify([view,listId,$('group').value,$('destination').value,status.charactersStamp,next]);if(signature!==lastItemsPayload){lastItemsPayload=signature;renderItems();}}
   finally{if(seq===request)$('items').removeAttribute('aria-busy');}
 }
 function price(n){return n==null?'<span class="price-missing">—</span>':`${fmt(n)}<span class="gil">G</span>`;}
@@ -115,6 +119,7 @@ document.addEventListener('click',run(async e=>{
   if(b.dataset.searchItemName){for(const d of document.querySelectorAll('dialog[open]'))d.close();await navigate('catalog');$('owner').value=$('location').value=$('retainer').value='';$('excludeMarket').checked=false;$('search').value=b.dataset.searchItemName;page=1;await load();saveHistory();return;}
   if(b.dataset.copyItemName){try{await navigator.clipboard.writeText(b.dataset.copyItemName);toast('アイテム名をコピーしました');}catch{toast('コピーできませんでした。アイテム名を選択してコピーしてください。');}return;}
   if(b.dataset.close){$(b.dataset.close).close();return;}
+  if(b.dataset.purchaseCharacter){saveHistory();view='purchases';renderNav();await openPurchases(b.dataset.purchaseCharacter);pushHistory();return;}
   if(b.dataset.retainerSales){saveHistory();view='sales';renderNav();await openRetainerSales(b.dataset.retainerSales,b.dataset.salesOwner||'');pushHistory();return;}
   if(b.dataset.moneyHistory){$('itemHistoryMetric').value=b.dataset.itemMetric||(b.dataset.moneyHistory.startsWith('list:')||b.dataset.moneyHistory==='all:lists'?'list':'count');if(b.dataset.historyCharacter&&!Array.from($('itemHistoryCharacter').options).some(o=>o.value===b.dataset.historyCharacter))$('itemHistoryCharacter').add(new Option(ownerName(b.dataset.historyCharacter),b.dataset.historyCharacter));$('itemHistoryCharacter').value=b.dataset.historyCharacter||'';for(const d of document.querySelectorAll('dialog[open]'))d.close();saveHistory();view='money';renderNav();await loadMoney(b.dataset.moneyHistory);pushHistory();return;}
   if(b.dataset.view)return navigate(b.dataset.view);
@@ -188,7 +193,7 @@ for(const id of ['owner','location','retainer','sort','sortDirection','group'])$
 $('destination').onchange=()=>{if(addingTo)addingTo=$('destination').value;renderItems();};$('prev').onclick=run(async()=>{saveHistory();page--;await load();pushHistory();});$('next').onclick=run(async()=>{saveHistory();page++;await load();pushHistory();});
 $('browseCatalog').onclick=run(()=>navigate('catalog'));
 $('updateMarket').onclick=run(async()=>{await api('/api/market-update',{});status=await api('/api/status');renderStatus();toast('マーケット価格の更新を開始しました。更新中も操作できます。');});
-$('refresh').onclick=run(async()=>{status=await api('/api/refresh',{});renderStatus();await load();toast(status.sourceError||'保存データを再読み込みしました');});
+$('refresh').onclick=run(async()=>{status=await api('/api/refresh',{});renderStatus();if(view==='purchases')await loadPurchases(true);else await load();toast(status.sourceError||'保存データを再読み込みしました');});
 $('settingsButton').onclick=()=>{$('refreshInterval').value=String(status.refreshSeconds||60);$('sourcePath').value=status.source;$('ownerNames').innerHTML=status.owners.map(o=>`<form class="owner-row" data-owner="${esc(o.id)}"><label>${esc(o.id)}<input value="${esc(o.name)}" required maxlength="80" aria-label="保管者 ${esc(o.id)}の表示名"></label><button type="submit">保存</button></form>`).join('');$('settingsDialog').showModal();};
 $('sourceForm').onsubmit=run(async e=>{e.preventDefault();await action({action:'source',path:$('sourcePath').value});toast('接続先を保存しました');});
 $('ownerNames').onsubmit=run(async e=>{e.preventDefault();await action({action:'owner-name',owner:e.target.dataset.owner,name:e.target.querySelector('input').value});toast('表示名を保存しました');});
@@ -197,7 +202,7 @@ document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA','SE
 try{const boot=await api('/api/bootstrap');({token,state,status}=boot);const localExcluded=JSON.parse(localStorage.getItem('allagan.excludedCharacters')||'[]');if(JSON.stringify(localExcluded)!==JSON.stringify(state.excludedCharacters||[])){const synced=await api('/api/action',{action:'excluded-characters',ids:localExcluded});state=synced.state;status=synced.status;}const saved=history.state;if(saved?.allagan){try{await restoreNavigation(saved);}catch{view='catalog';listId='';page=1;renderNav();renderStatus();await load();}}else{renderNav();renderStatus();await load();}loadedStamp=status.lastRead;loadedCatalog=status.catalogUpdated;loadedCharacters=status.charactersStamp;historyReady=true;history.replaceState(navigationSnapshot(),'');}
 catch(e){$('warning').hidden=false;$('warning').textContent='接続できません: '+e.message;}
 let lastAutomaticRefresh=Date.now();
-setInterval(async()=>{if(polling||!state||document.hidden||Date.now()-lastAutomaticRefresh<(status.refreshSeconds||60)*1000)return;lastAutomaticRefresh=Date.now();polling=true;try{const next=await api('/api/status');if(view==='sales')await loadSales();if(['characters','storage','companies'].includes(view))await refreshOpenSales();const changed=next.lastRead!==loadedStamp||next.catalogUpdated!==loadedCatalog||next.charactersStamp!==loadedCharacters;status=next;renderStatus();if(changed&&!document.activeElement.classList.contains('target')){await load();loadedStamp=status.lastRead;loadedCatalog=status.catalogUpdated;loadedCharacters=status.charactersStamp;}}catch(e){$('connectionText').textContent='サーバーに接続できません';$('connectionDot').classList.add('error');}finally{polling=false;}},1000);
+setInterval(async()=>{if(polling||!state||document.hidden||Date.now()-lastAutomaticRefresh<(status.refreshSeconds||60)*1000)return;lastAutomaticRefresh=Date.now();polling=true;try{const next=await api('/api/status');if(view==='sales')await loadSales();if(view==='purchases')await loadPurchases(true);if(['characters','storage','companies'].includes(view))await refreshOpenSales();const changed=next.lastRead!==loadedStamp||next.catalogUpdated!==loadedCatalog||next.charactersStamp!==loadedCharacters;status=next;renderStatus();if(changed&&!document.activeElement.classList.contains('target')){await load();loadedStamp=status.lastRead;loadedCatalog=status.catalogUpdated;loadedCharacters=status.charactersStamp;}}catch(e){$('connectionText').textContent='サーバーに接続できません';$('connectionDot').classList.add('error');}finally{polling=false;}},1000);
 if(document.modelContext?.registerTool){
   let lifecycle;window.addEventListener('pagehide',()=>lifecycle?.abort(),{once:true});
   const register=()=>{lifecycle?.abort();lifecycle=new AbortController();
@@ -246,3 +251,16 @@ $('refreshLodestone').onclick=run(async()=>{status=await api('/api/lodestone-ref
 $('listPricing').onchange=run(async()=>{await action({action:'list-pricing',listId,pricing:$('listPricing').value});await load();toast('マイリストの参照価格を保存しました');});
 
 $('refreshIntervalForm').onsubmit=run(async e=>{e.preventDefault();await action({action:'refresh-interval',seconds:Number($('refreshInterval').value)});lastAutomaticRefresh=Date.now();toast('定期更新の間隔を保存しました');});
+
+document.addEventListener('purchase-state-change',saveHistory);
+
+function csvSources(){
+ if(view==='purchases')return [purchaseCsvSource()];if(view==='sales')return [salesCsvSource()];if(view==='currencies')return [currencyCsvSource()];
+ if(['storage','characters','companies'].includes(view))return storageCsvSources();
+ if(view==='money')return tableCsvSources($('moneyView')).map((s,i)=>({...s,id:'money-'+i,label:i?'変動履歴':'日別の最終記録'}));
+ const columns=[['name','アイテム'],['quantity','所持数'],['sell','NPC売却'],['sellTotal','NPC売却（合計）'],['buy','NPC購入'],['marketPrice','マーケット最安価格'],['marketTotal','マーケット価格（合計）'],['id','アイテムID',false],['category','アイテム種別',false],['nq','NQ個数',false],['hq','HQ個数',false],['holders','保管先',false],['favorite','お気に入り',false],['target','目標数',false]];
+ const quote=q=>q?q.price+' G · '+q.world:'未取得／出品なし';
+ const row=x=>({...x,holders:(x.locations||[]).map(l=>ownerName(l.owner)+' / '+(status.categories[l.category]||'その他')+' ×'+l.quantity).join(' / '),marketPrice:($('group').value==='location'?(x.market?.worlds||[]).map(w=>w.world+' NQ '+quote(w.local?.nq)+' HQ '+quote(w.local?.hq)).join(' / ')+' / ':'')+'日本全体 NQ '+quote(x.market?.region?.nq)+' HQ '+quote(x.market?.region?.hq),marketTotal:($('group').value==='location'?(x.market?.worlds||[]).map(w=>w.world+' '+w.total?.value+' G').join(' / ')+' / ':'')+'日本全体 '+(x.market?.total?.value??'—')+' G'});
+ return [pagedSource('items-'+$('group').value,$('title').textContent,columns,'/api/items',csvItemParams,result,row)];
+}
+$('exportCsv').onclick=()=>openCsvExport(csvSources());

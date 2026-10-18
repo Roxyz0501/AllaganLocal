@@ -108,3 +108,10 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Release build: zero warnings/errors. 48 Web tests and subsequent API integration verification passed. Packaged server, seven dictionaries, fonts, isolated data, and 1.0.0.2 manifest verified.
 - Anonymous repository HTTP 200, public ZIP download hash matches, commit-pinned public distribution index verified. Only AllaganLocalPlugin index entry changed; all other plugins retained. No private history or recovery artifacts included.
 - A running older server may need a website restart after plugin update. Automatic recovery requires a valid backup; already-lost history is not reconstructed by installing this release.
+
+## 2026-10-19 Allagan Local 1.1.0.0 — release preparation
+
+- Purchase history interoperates read-only with Gil Ledger; global/character summaries, filters, charts and character-detail entry. Shared CSV export supports column order/selection and multiple browser-local presets.
+- Settings lists Gil Ledger installation/running status. Seven dictionaries include new purchase/export terms; 1,397 codepoints covered by all four font subsets.
+- Release rebuild zero warnings/errors; 54 Web/shared-tab checks, 485 localization checks, 44 font checks passed. Native game settings rendering remains unverified.
+- Public package excludes personal inventories, histories, databases, caches and local verification artifacts. Purchase history still requires recorded source data; a running older site must be restarted after updating.

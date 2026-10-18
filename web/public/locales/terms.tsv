@@ -430,7 +430,7 @@ AllaganMarketが保存した販売判定記録をそのまま読み込みます�
 この条件の販売記録はありません。	No sales match these filters.	Keine Verkäufe für diese Filter.	Aucune vente ne correspond aux filtres.	이 조건의 판매 기록이 없습니다.	没有符合条件的销售记录。	沒有符合條件的銷售紀錄。
 時台	:00 hour	-Uhr-Stunde	 h	시대	时段	時段
 時間帯別	By hour	Nach Stunde	Par heure	시간대별	按时段	依時段
-日別	By day	Nach Tag	Par jour	일별	按日	依日
+日別	Daily	Täglich	Par jour	일별	按日	按日
 記録された販売分を集計しています。	Totals include recorded sales.	Summen enthalten erfasste Verkäufe.	Les totaux incluent les ventes enregistrées.	기록된 판매분을 집계합니다.	合计已记录销售。	合計已紀錄銷售。
 週間以上更新なし	+ weeks without changes	+ Wochen ohne Änderungen	+ semaines sans changement	주 이상 변경 없음	周以上无更新	週以上無更新
 読込に失敗しました	Loading failed	Laden fehlgeschlagen	Échec du chargement	읽기 실패	加载失败	載入失敗
@@ -645,3 +645,70 @@ query は200文字以内の文字列で指定してください。	query must be
 リテイナー所持数	Retainer quantity	Gehilfenmenge	Quantité des servants	집사 보유 수량	雇员持有数量	雇員持有數量
 リテイナー {0}人	{0} retainers	{0} Gehilfen	{0} servants	집사 {0}명	{0}名雇员	{0}名雇員
 {0}対象中{1}対象の金額が不明です。確認できる金額だけを合計しています。対象数の変化も増減に含まれます。	{1} of {0} records have unknown values. Totals include known values only; changes in the record count also affect totals.	{1} von {0} Einträgen haben unbekannte Werte. Nur bekannte Werte werden summiert; Änderungen der Eintragszahl beeinflussen die Summe.	{1} entrées sur {0} ont une valeur inconnue. Seules les valeurs connues sont totalisées ; le nombre d’entrées influe aussi sur le total.	{0}대상 중 {1}대상의 금액이 불명입니다. 확인된 금액만 합산하며 대상 수 변화도 반영됩니다.	{0}个对象中{1}个金额未知。仅合计已知金额，对象数量变化也影响合计。	{0}個對象中{1}個金額未知。僅合計已知金額，對象數量變化也影響合計。
+購入履歴	Purchase history	Kaufverlauf	Historique des achats	구매 내역	购买记录	購買記錄
+購入履歴を見る	View purchases	Käufe anzeigen	Voir les achats	구매 내역 보기	查看购买记录	查看購買記錄
+購入先	Purchase source	Kaufquelle	Type d’achat	구매 유형	购买来源	購買來源
+購入（マーケット・NPC）	Purchases (market/NPC)	Käufe (Markt/NPC)	Achats (marché/PNJ)	구매 (장터/NPC)	购买（市场/NPC）	購買（市場/NPC）
+マーケット	Market	Markt	Marché	장터	市场	市場
+未分類	Unclassified	Nicht zugeordnet	Non classé	미분류	未分类	未分類
+資金移動	Transfers	Übertragungen	Transferts	자금 이동	资金转移	資金轉移
+購入元	Seller	Verkäufer	Vendeur	판매자	卖方	賣方
+購入ワールド	Purchase world	Kaufwelt	Monde d’achat	구매 서버	购买服务器	購買伺服器
+購入日時	Purchase date	Kaufzeitpunkt	Date d’achat	구매 일시	购买时间	購買時間
+品質	Quality	Qualität	Qualité	품질	品质	品質
+最低金額	Minimum amount	Mindestbetrag	Montant minimum	최소 금액	最低金额	最低金額
+最高金額	Maximum amount	Höchstbetrag	Montant maximum	최대 금액	最高金额	最高金額
+税抜	Before tax	Ohne Steuer	Hors taxe	세전	未税	未稅
+税額	Tax	Steuer	Taxe	세금	税额	稅額
+支払総額	Total paid	Gezahlter Gesamtbetrag	Total payé	총 지불액	支付总额	支付總額
+税額不明の支出	Expenses with unknown tax	Ausgaben mit unbekannter Steuer	Dépenses à taxe inconnue	세금 미상 지출	税额未知的支出	稅額未知的支出
+月別	Monthly	Monatlich	Par mois	월별	按月	按月
+累積	Cumulative	Kumuliert	Cumulé	누적	累计	累計
+購入金額の推移	Purchase spending trend	Verlauf der Kaufausgaben	Évolution des dépenses d’achat	구매 지출 추이	购买支出趋势	購買支出趨勢
+キャラクター別の合計	Totals by character	Summen je Charakter	Totaux par personnage	캐릭터별 합계	各角色合计	各角色合計
+CSV出力	Export CSV	CSV exportieren	Exporter en CSV	CSV 내보내기	导出CSV	匯出CSV
+出力範囲	Export range	Exportumfang	Étendue de l’export	내보내기 범위	导出范围	匯出範圍
+表示中のページ	Current page	Aktuelle Seite	Page actuelle	현재 페이지	当前页	目前頁面
+絞り込み結果すべて	All filtered results	Alle gefilterten Ergebnisse	Tous les résultats filtrés	필터링된 모든 결과	全部筛选结果	全部篩選結果
+マイセット	Presets	Vorlagen	Préréglages	프리셋	预设	預設
+マイセット名	Preset name	Vorlagenname	Nom du préréglage	프리셋 이름	预设名称	預設名稱
+表示列（デフォルト）	Displayed columns (default)	Angezeigte Spalten (Standard)	Colonnes affichées (défaut)	표시 열 (기본값)	显示列（默认）	顯示欄（預設）
+読み込む	Load	Laden	Charger	불러오기	加载	載入
+表示列に戻す	Reset to displayed columns	Angezeigte Spalten wiederherstellen	Rétablir les colonnes affichées	표시 열로 초기화	恢复显示列	還原顯示欄
+CSVを保存	Save CSV	CSV speichern	Enregistrer le CSV	CSV 저장	保存CSV	儲存CSV
+中止	Cancel	Abbrechen	Annuler	취소	取消	取消
+上へ	Move up	Nach oben	Monter	위로	上移	上移
+下へ	Move down	Nach unten	Descendre	아래로	下移	下移
+出力する列を選択し、矢印で順番を変更できます。	Select columns and use the arrows to reorder them.	Spalten auswählen und mit den Pfeilen anordnen.	Sélectionnez les colonnes et changez leur ordre avec les flèches.	열을 선택하고 화살표로 순서를 변경하세요.	选择要导出的列，并用箭头调整顺序。	選擇要匯出的欄位，並用箭頭調整順序。
+マイセットを保存しました。	Preset saved.	Vorlage gespeichert.	Préréglage enregistré.	프리셋을 저장했습니다.	预设已保存。	預設已儲存。
+名前と出力列を指定してください。	Enter a name and select columns.	Name eingeben und Spalten auswählen.	Saisissez un nom et sélectionnez les colonnes.	이름과 열을 지정하세요.	请输入名称并选择列。	請輸入名稱並選擇欄位。
+出力列を選択してください。	Select columns to export.	Exportspalten auswählen.	Sélectionnez les colonnes à exporter.	내보낼 열을 선택하세요.	请选择导出列。	請選擇匯出欄位。
+出力を中止しました。	Export cancelled.	Export abgebrochen.	Export annulé.	내보내기를 취소했습니다.	已取消导出。	已取消匯出。
+出力中にデータが更新されました。もう一度出力してください。	Data changed during export. Please export again.	Daten wurden während des Exports geändert. Bitte erneut exportieren.	Les données ont changé durant l’export. Veuillez réessayer.	내보내기 중 데이터가 변경되었습니다. 다시 시도하세요.	导出时数据已更新，请重新导出。	匯出時資料已更新，請重新匯出。
+Gil Ledgerの購入履歴が見つかりません。プラグインを導入して購入を記録してください。	Gil Ledger purchase history was not found. Install the plugin and record a purchase.	Kein Gil-Ledger-Kaufverlauf gefunden. Plugin installieren und einen Kauf aufzeichnen.	Historique Gil Ledger introuvable. Installez le plugin et enregistrez un achat.	Gil Ledger 구매 내역이 없습니다. 플러그인을 설치하고 구매를 기록하세요.	找不到Gil Ledger购买记录，请安装插件并记录购买。	找不到Gil Ledger購買記錄，請安裝插件並記錄購買。
+購入履歴を読み込めません。	Unable to load purchases.	Käufe konnten nicht geladen werden.	Impossible de charger les achats.	구매 내역을 불러올 수 없습니다.	无法加载购买记录。	無法載入購買記錄。
+グラフは最新366区間です。累積は表示範囲内の合計です。	The chart shows the latest 366 periods. Cumulative totals cover the displayed range.	Das Diagramm zeigt die letzten 366 Intervalle. Kumulierte Summen gelten für diesen Bereich.	Le graphique affiche les 366 dernières périodes. Le cumul couvre la plage affichée.	최근 366구간을 표시합니다. 누적은 표시 범위의 합계입니다.	图表显示最近366个区间，累计为显示范围内的合计。	圖表顯示最近366個區間，累計為顯示範圍內的合計。
+購入履歴元: Gil Ledger。購入履歴の利用にはGil Ledgerの導入と記録が必要です。通常の購入合計には未分類・資金移動を含めません。除外キャラクターは集計対象外です。	Source: Gil Ledger. Install it and record purchases to use this history. Default purchase totals exclude unclassified expenses, transfers and excluded characters.	Quelle: Gil Ledger. Installation und Kaufaufzeichnung sind erforderlich. Standard-Kaufsummen enthalten keine nicht zugeordneten Ausgaben, Übertragungen oder ausgeschlossenen Charaktere.	Source : Gil Ledger. Son installation et des achats enregistrés sont requis. Les totaux par défaut excluent les dépenses non classées, les transferts et les personnages exclus.	출처: Gil Ledger. 설치 후 구매 기록이 필요합니다. 기본 구매 합계에는 미분류 지출, 자금 이동, 제외 캐릭터를 포함하지 않습니다.	来源：Gil Ledger。需要安装并记录购买。默认购买合计不含未分类支出、资金转移和已排除角色。	來源：Gil Ledger。需要安裝並記錄購買。預設購買合計不含未分類支出、資金轉移和已排除角色。
+日時は日本時間（0:00〜24:00）。税額不明の支出は税抜・税額に含めず、支払総額にのみ含めます。未記録の購入は復元できません。	Dates use Japan time (00:00–24:00). Expenses with unknown tax are included only in total paid. Unrecorded purchases cannot be restored.	Japanische Zeit (00:00–24:00). Ausgaben mit unbekannter Steuer zählen nur zum gezahlten Gesamtbetrag. Nicht aufgezeichnete Käufe sind nicht wiederherstellbar.	Dates en heure du Japon (00:00–24:00). Les dépenses à taxe inconnue comptent uniquement dans le total payé. Les achats non enregistrés ne sont pas récupérables.	일시는 일본 시간(0:00~24:00)입니다. 세금 미상 지출은 총 지불액에만 포함됩니다. 미기록 구매는 복원할 수 없습니다.	时间为日本时间（0:00–24:00）。税额未知的支出仅计入支付总额，未记录的购买无法恢复。	時間為日本時間（0:00–24:00）。稅額未知的支出僅計入支付總額，未記錄的購買無法還原。
+Gil Ledgerが記録した購入・支出を、全体またはキャラクター別に確認。	View purchases and expenses recorded by Gil Ledger, overall or by character.	Gil-Ledger-Käufe und Ausgaben insgesamt oder je Charakter anzeigen.	Consultez les achats et dépenses Gil Ledger au total ou par personnage.	Gil Ledger 구매·지출을 전체 또는 캐릭터별로 확인합니다.	查看Gil Ledger记录的全部或各角色购买和支出。	查看Gil Ledger記錄的全部或各角色購買和支出。
+CSV出力に失敗しました。	CSV export failed.	CSV-Export fehlgeschlagen.	Échec de l’export CSV.	CSV 내보내기에 실패했습니다.	CSV导出失败。	CSV匯出失敗。
+マイセットを保存できません。このブラウザの保存設定を確認してください。	Cannot save the preset. Check browser storage settings.	Vorlage nicht gespeichert. Browser-Speichereinstellungen prüfen.	Impossible d’enregistrer le préréglage. Vérifiez le stockage du navigateur.	프리셋을 저장할 수 없습니다. 브라우저 저장 설정을 확인하세요.	无法保存预设，请检查浏览器存储设置。	無法儲存預設，請檢查瀏覽器儲存設定。
+マイセットは100件まで保存できます。	You can save up to 100 presets.	Bis zu 100 Vorlagen können gespeichert werden.	Vous pouvez enregistrer jusqu’à 100 préréglages.	프리셋은 최대 100개까지 저장할 수 있습니다.	最多可保存100个预设。	最多可儲存100個預設。
+出力が50MBを超えました。期間などを絞り込んでください。	Export exceeds 50 MB. Narrow the date range or filters.	Export über 50 MB. Zeitraum oder Filter eingrenzen.	L’export dépasse 50 Mo. Réduisez la période ou les filtres.	내보내기가 50MB를 초과했습니다. 기간이나 필터를 좁히세요.	导出超过50MB，请缩小时间范围或筛选条件。	匯出超過50MB，請縮小時間範圍或篩選條件。
+金額が不正です。	Invalid amount.	Ungültiger Betrag.	Montant non valide.	금액이 올바르지 않습니다.	金额无效。	金額無效。
+金額の範囲が不正です。	Invalid amount range.	Ungültiger Betragsbereich.	Plage de montants non valide.	금액 범위가 올바르지 않습니다.	金额范围无效。	金額範圍無效。
+フィルターが不正です。	Invalid filter.	Ungültiger Filter.	Filtre non valide.	필터가 올바르지 않습니다.	筛选条件无效。	篩選條件無效。
+購入履歴の保存形式に対応していません。	Unsupported purchase history format.	Nicht unterstütztes Kaufverlaufsformat.	Format d’historique des achats non pris en charge.	지원하지 않는 구매 내역 형식입니다.	不支持此购买记录格式。	不支援此購買記錄格式。
+{0}件 出力中	Exporting {0} records	{0} Einträge werden exportiert	Export de {0} entrées	{0}건 내보내는 중	正在导出{0}条	正在匯出{0}筆
+{0}件のCSVを保存しました。	Saved CSV with {0} records.	CSV mit {0} Einträgen gespeichert.	CSV de {0} entrées enregistré.	{0}건의 CSV를 저장했습니다.	已保存包含{0}条记录的CSV。	已儲存包含{0}筆記錄的CSV。
+記録ID	Record ID	Datensatz-ID	ID d’enregistrement	기록 ID	记录ID	記錄ID
+ホームワールド	Home world	Heimatwelt	Monde d’origine	홈 서버	所属服务器	所屬伺服器
+税額判明	Tax known	Steuer bekannt	Taxe connue	세금 확인됨	税额已知	稅額已知
+出品数量	Listed quantity	Angebotene Menge	Quantité en vente	출품 수량	上架数量	上架數量
+マーケット数量	Market quantity	Marktmenge	Quantité du marché	장터 수량	市场数量	市場數量
+換金アイテム金額	Cash item value	Wert der Verkaufsgegenstände	Valeur des objets à revendre	환금 아이템 금액	变现物品金额	變現物品金額
+リテイナー人数	Retainer count	Anzahl der Gehilfen	Nombre de servants	집사 수	雇员人数	雇員人數
+保管者名	Holder name	Besitzername	Nom du détenteur	보관자 이름	持有者名称	持有者名稱
+出品ID	Listing ID	Angebots-ID	ID d’annonce	출품 ID	上架ID	上架ID
+操作	Actions	Aktionen	Actions	작업	操作	操作
+表示中の表:	Displayed table:	Angezeigte Tabelle:	Tableau affiché :	표시 중인 표:	当前表格：	目前表格：

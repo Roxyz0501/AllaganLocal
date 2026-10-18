@@ -51,3 +51,11 @@ Referenced integrations by Critical-Impact: [Allagan Tools](https://github.com/C
 
 
 Version 1.0.0.0 uses the canonical Language settings and Support tabs. Change the global language in Language settings; the web language selector and live synchronization remain available. Native in-game acceptance remains unverified.
+
+## Purchase history and CSV export
+
+Purchase history reads the Gil Ledger (MarketLedger) SQLite database in read-only mode. Browse totals or individual characters from History or character details, with search, source/world/quality/date/amount filters, sorting and daily/monthly/cumulative charts. Excluded characters are omitted. Unknown tax stays unknown; unclassified expenses and transfers are not included in default purchase totals.
+
+CSV export supports column selection/order and multiple named presets stored in this browser. Display columns are selected initially. Paged data can export the current page or all filtered rows; rendered-table sources export only the displayed table. Choose inventory/storage sources for complete storage exports. Files use UTF-8 with BOM; export stops if the underlying revision changes between pages.
+
+Purchase history interoperates with [Gil Ledger / MarketLedger](https://github.com/Roxyz0501/MarketLedger) by Roxyz0501 (MIT), reading its saved SQLite schema without bundling its code or binaries.
