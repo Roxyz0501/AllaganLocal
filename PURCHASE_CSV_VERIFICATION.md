@@ -1,6 +1,6 @@
 # Purchase history / CSV verification — 2026-10-19
 
-Implemented in the existing Allagan Local project. Public release remains 1.0.0.2 until separately published.
+Implemented in the existing Allagan Local project. Published as 1.1.0.0; public ZIP and shared index verified on 2026-10-19.
 
 ## Behavior
 - Gil Ledger (`MarketLedger/market-ledger.db`) is opened read-only in a worker, schema 1/2. Purchase filters, character detail entry, aggregate summaries and charts; excluded characters omitted. Unknown tax is not invented. JST dates use inclusive start / exclusive next-day midnight.
@@ -29,3 +29,4 @@ Implemented in the existing Allagan Local project. Public release remains 1.0.0.
 ## 1.1.0.0 publication follow-up
 - Release preparation includes new export/error translations and localized CSV column headings, with 714 complete dictionary keys and 1,397 codepoints covered in all regional fonts.
 - Shared publication rule requires release/ZIP/index verification; the prior local-only completion and unpublished installed-file overwrite were incorrect. Future updates follow publication before installation.
+

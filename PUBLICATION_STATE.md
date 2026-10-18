@@ -115,3 +115,12 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Settings lists Gil Ledger installation/running status. Seven dictionaries include new purchase/export terms; 1,397 codepoints covered by all four font subsets.
 - Release rebuild zero warnings/errors; 54 Web/shared-tab checks, 485 localization checks, 44 font checks passed. Native game settings rendering remains unverified.
 - Public package excludes personal inventories, histories, databases, caches and local verification artifacts. Purchase history still requires recorded source data; a running older site must be restarted after updating.
+
+## 2026-10-19 Allagan Local 1.1.0.0 — published and verified
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.1.0.0
+- Source: 4060ea45948f2480f16de55131a4da0d9d52a9ca
+- Shared index: Roxyz0501/DalamudPluginRepo commit eac5ab40f7300ff56615b6767f0fbedc3e1ee408; other 10 entries unchanged.
+- Public ZIP SHA256: B623EE0CC47D6598E2089CFF48638A19781C987E3FBA3B657F29940F5E16DF54 (matches validated package).
+- Anonymous public ZIP download, live index version/URL, repository and icon HTTP 200 verified.
+- Packaged server, seven dictionaries (714 terms), fresh isolated data, manifest URLs and absence of bundled user data: PASS.
+- Purchase history and configurable CSV presets published. Use plugin update, then restart site from settings if the old server remains running.
