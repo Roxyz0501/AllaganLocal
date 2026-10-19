@@ -139,3 +139,10 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.1.0.2
 - Source 2b437e4; index 99f21c9a4468bcd34d5f179e42fb30f376cc2c6a.
 - Public ZIP SHA256 AEE9A01E5A4D377C48C560A379E083343BC061ACFF36693130CC22204B64E9AD matches tested package; anonymous ZIP/index/repository verified.
+
+## 2026-10-19 Allagan Local 1.2.0.0 — published and verified
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.2.0.0
+- Source 8a85d69; shared index c0f6f79d0d5a78950148327d511b45b95ea6a186; other plugin entries unchanged.
+- Public ZIP SHA256 A5EB368E43AD608A348F54C9384BF7265DC8F0830F89F03578738638BB60C851 matches tested package. Anonymous ZIP, commit-pinned index, repo and icon verified.
+- Job levels and capped battle-job badge, storage stack/quantity counts, retainer/character labels, verified existing-server adoption and explicit Stop action.
+- 58 Web tests, 14 host checks, 500 language checks, 44 font checks passed; Release clean and all packaged browser modules verified. Game UI rendering not visually tested. Installed server left unchanged.
