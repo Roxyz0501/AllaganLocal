@@ -712,5 +712,10 @@
   "保管者名": "Nom du détenteur",
   "出品ID": "ID d’annonce",
   "操作": "Actions",
-  "表示中の表:": "Tableau affiché :"
+  "表示中の表:": "Tableau affiché :",
+  "アイテム検索": "Recherche d’objet",
+  "アイテム名": "Nom de l’objet",
+  "検索中…": "Recherche…",
+  "検索に失敗しました。再試行してください。": "Échec de la recherche. Veuillez réessayer.",
+  "該当するアイテムはありません。": "Aucun objet correspondant."
 }

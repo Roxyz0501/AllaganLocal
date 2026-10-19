@@ -32,6 +32,14 @@ export function storageView(slots,owners,catalog,params){
   const ids=new Set(scope.map(o=>o.id));
   const ownedSlots=slots.filter(r=>ids.has(r.owner));
   const filtered=ownedSlots.filter(r=>!isCurrencyRecord(r)&&(!category||r.category===category));
+  if(params.has('search')){
+    const normalize=s=>String(s).normalize('NFKC').toLocaleLowerCase().trim();
+    const query=normalize((params.get('search')||'').slice(0,120)), categories=new Set((params.get('searchCategories')||'').split(',').filter(Boolean).map(Number));
+    const matches=query?filtered.filter(r=>r.id&&r.quantity>0&&(!categories.size||categories.has(r.category))&&(params.get('retainersOnly')!=='1'||scope.find(o=>o.id===r.owner)?.type==='リテイナー')&&normalize(catalog.get(r.id)?.name||`アイテム #${r.id}`).includes(query)):[];
+    const pages=Math.max(1,Math.ceil(matches.length/100)),page=Math.max(1,Math.min(pages,Math.floor(Number(params.get('searchPage')))||1));
+    const containers=[...Map.groupBy(matches.slice((page-1)*100,page*100),r=>`${r.owner}:${r.container}`).values()].map(rows=>({...containerInfo(rows[0].container,rows[0].category),owner:rows[0].owner,id:rows[0].container,category:rows[0].category,items:rows.map(r=>({...r,name:catalog.get(r.id)?.name||`アイテム #${r.id}`,highlighted:true}))}));
+    return {owners:scope,containers,matches:matches.length,page,pages};
+  }
   const groups=Map.groupBy(filtered,r=>`${r.owner}:${r.container}`);
   const containers=[...groups.values()].map(rows=>{
     const first=rows[0],info=containerInfo(first.container,first.category);

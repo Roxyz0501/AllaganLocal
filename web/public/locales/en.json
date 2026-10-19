@@ -712,5 +712,10 @@
   "保管者名": "Holder name",
   "出品ID": "Listing ID",
   "操作": "Actions",
-  "表示中の表:": "Displayed table:"
+  "表示中の表:": "Displayed table:",
+  "アイテム検索": "Item search",
+  "アイテム名": "Item name",
+  "検索中…": "Searching…",
+  "検索に失敗しました。再試行してください。": "Search failed. Please try again.",
+  "該当するアイテムはありません。": "No matching items."
 }

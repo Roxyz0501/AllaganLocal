@@ -1,3 +1,4 @@
+import {storageSearchForm,bindStorageSearch} from './storage-search.js';
 import {csvColumns,tableCsvSources} from './csv-export.js';
 import {pagedSource,ownerColumns,ownerRow,storageColumns,storageRow,salesColumns,salesRow} from './csv-sources.js';
 import {currencyPanels} from './currencies.js';
@@ -138,10 +139,11 @@ function sortedStorageItems(c){const id=c.owner+':'+(tabDefs.find(t=>t[2].includ
 }
 function sectionContents(owner,key,containers){const id=owner+':'+key,layout=sectionLayouts[id]||'grid';return `<div class="section-layout"><label>表示形式 <select data-section-layout="${esc(id)}" aria-label="${esc(tabDefs.find(t=>t[0]===key)?.[1]||'保管先')}の表示形式"><option value="grid" ${layout==='grid'?'selected':''}>バッグ</option><option value="list" ${layout==='list'?'selected':''}>リスト（詳細）</option></select></label>${layout==='list'?sectionSortControls(id):''}<button data-section-market="${esc(id)}" data-market-owner="${esc(owner)}" data-market-categories="${esc(JSON.stringify(tabDefs.find(t=>t[0]===key)?.[2]||[]))}">この保管先の価格を更新</button></div>`+containers.map(c=>containerHtml(c)).join('');}
 let disclosureScope='', disclosureState=new Map(), lazySections=new Map();
+bindStorageSearch($('storageContents'));
 function disclosure(key,title,body,defaultOpen=false,lazy=false){
  const open=highlight?true:(disclosureState.get(key)??defaultOpen);
  if(lazy)lazySections.set(key,body);
- return `<details class="storage-disclosure" data-storage-node="${esc(key)}" ${open?'open':''}><summary>${title}</summary><div class="${lazy?'bag-panels':'storage-branches'}" ${lazy&&open?'data-loaded="1"':''}>${!lazy||open?body():''}</div></details>`;
+ return `<details class="storage-disclosure" data-storage-node="${esc(key)}" ${open?'open':''}><summary>${title}</summary>${storageSearchForm(key,tabDefs)}<div class="${lazy?'bag-panels':'storage-branches'}" ${lazy&&open?'data-loaded="1"':''}>${!lazy||open?body():''}</div></details>`;
 }
 function embeddedSales(o){return `<details class="storage-disclosure embedded-sales" data-sales-scope="${esc(o.id)}" data-sales-type="${o.type==='キャラクター'?'character':'retainer'}"><summary>マーケット販売履歴${o.type==='キャラクター'?'（所属リテイナー合計）':''}</summary><div class="embedded-sales-body"><p class="muted">開くと販売履歴を読み込みます。</p></div></details>`;}
 async function loadEmbeddedSales(el,page=1){
@@ -245,7 +247,7 @@ $('storageContents').addEventListener('toggle',e=>{
  const el=e.target;if(!el.matches('[data-storage-node]')||!el.isConnected)return;
  disclosureState.set(el.dataset.storageNode,el.open);
  document.dispatchEvent(new Event('storage-state-changed'));
- const body=el.querySelector(':scope > div'),renderBody=lazySections.get(el.dataset.storageNode);
+ const body=el.querySelector(':scope > .bag-panels, :scope > .storage-branches'),renderBody=lazySections.get(el.dataset.storageNode);
  if(el.open&&renderBody&&!body.dataset.loaded){body.dataset.loaded='1';body.innerHTML=renderBody();}
 },true);
 

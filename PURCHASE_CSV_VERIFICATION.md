@@ -30,3 +30,10 @@ Implemented in the existing Allagan Local project. Published as 1.1.0.0; public 
 - Release preparation includes new export/error translations and localized CSV column headings, with 714 complete dictionary keys and 1,397 codepoints covered in all regional fonts.
 - Shared publication rule requires release/ZIP/index verification; the prior local-only completion and unpublished installed-file overwrite were incorrect. Future updates follow publication before installation.
 
+
+## 2026-10-19 Parent inventory search validation
+- Parent owner, retainer group and storage-category disclosures have scoped name search. Results open matching location disclosures and highlight item names; clearing restores original branches.
+- Full-width/case normalization, owner isolation, category scope, retainer-only scope, missing results and 205 dresser rows across 3 result pages covered by tests.
+- No source DB reads/writes or external lookups: query uses existing in-memory slots/catalog. Maximum 100 rows per response; current form retains one result for 30 seconds (WeakMap, released on rerender). No input polling. On data rerender the result cache is discarded.
+- UI adapter measurement: first submit 1 request, identical resubmit 0 additional requests, reset 0 requests. Background tests verify automatic opened results, highlighting, escaping and reset. Actual graphical browser rendering not checked.
+- Clean Release build and packaged server verification passed; seven dictionaries contain 719 keys.

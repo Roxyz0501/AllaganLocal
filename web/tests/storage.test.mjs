@@ -5,6 +5,17 @@ const chars=parseCharacters(`{"SavedCharacters":{"${a}":{"Name":"Same Name"},"${
 const slot=(owner,container,index,id,quantity,category=1)=>({owner,container,slot:index,id,quantity,category,nq:quantity,hq:false,collectable:false});
 const rows=[slot(a,0,3,5,2),slot(a,0,12,5,8),slot(a,4000,2,5,4,2),slot(r,10000,20,5,10,4),slot(b,0,3,5,11),slot(a,2000,0,1,0,12),slot(r,12000,0,1,345,12),slot(fc,22000,0,1,900,8),slot(fc,2502,0,80,123,8)];
 const catalog=new Map([[5,{id:5,name:'素材',sell:2,category:'素材'}]]);
+test('parent search scopes owners/categories and searches beyond dresser display pages with bounded results',()=>{
+ const extra=Array.from({length:205},(_,i)=>slot(a,2501,i,8,1,10));
+ const input=[...rows,...extra],owners=ownerDirectory(input,chars),names=new Map([...catalog,[8,{name:'Test Robe'}]]);
+ const find=p=>storageView(input,owners,names,new URLSearchParams(p));
+ assert.equal(find({owner:a,search:'素材'}).matches,3);
+ assert.equal(find({owner:a,children:'1',retainersOnly:'1',search:'素材'}).matches,1);
+ assert.equal(find({owner:a,search:'素材',searchCategories:'2,3'}).matches,1);
+ const first=find({owner:a,search:'ＴＥＳＴ'});assert.equal(first.matches,205);assert.equal(first.pages,3);assert.equal(first.containers[0].items.length,100);
+ const last=find({owner:a,search:'test',searchPage:'3'});assert.equal(last.containers[0].items.length,5);assert.equal(last.containers[0].items[0].slot,200);assert.ok(last.containers[0].items.every(r=>r.highlighted));
+ assert.equal(find({owner:b,search:'test'}).matches,0);assert.equal(find({owner:a,search:' '}).matches,0);
+});
 test('balance scopes preserve zero, missing data, FC points, and exact owner IDs',()=>{
  const owners=ownerDirectory(rows,chars);assert.equal(owners.find(o=>o.id===a).gil,0);assert.equal(owners.find(o=>o.id===b).gil,null);assert.equal(owners.find(o=>o.id===r).gil,345);assert.equal(owners.find(o=>o.id===fc).gil,900);assert.equal(owners.find(o=>o.id===fc).points,123);
  const view=storageView(rows,owners,catalog,new URLSearchParams({owner:a,children:'1',highlight:'5'}));assert.equal(view.owners.length,2);assert.equal(view.matches,4);assert.equal(view.quantity,24);assert.deepEqual(view.containers.find(c=>c.id===0).items.map(x=>x.slot),[3,12]);assert.equal(view.containers[0].columns,5);
