@@ -1,3 +1,4 @@
+import {createJobCache} from './jobs.mjs';
 import {createPurchaseService} from './purchases-service.mjs';
 import {loadHistory,saveHistory} from './history-store.mjs';
 import {historyOrigins} from './history-origins.mjs';
@@ -38,6 +39,7 @@ if(process.env.ALLAGAN_SEED_DIR)for(const name of ['catalog.json','worlds.json']
  try{await writeFile(path.join(data,name),await readFile(path.join(process.env.ALLAGAN_SEED_DIR,name)),{flag:'wx'});}catch(e){if(!['EEXIST','ENOENT'].includes(e.code))throw e;}
 }
 const getPortrait=createPortraitCache(path.join(data,'portraits'));
+const jobs=createJobCache(data,o=>getPortrait.profile(o));
 const getIcon=createIconCache(path.join(data,'icons'));
 const getItemLink=createItemLinkCache(path.join(data,'item-links'));
 const marketPrices=await createMarketPrices(path.join(data,'market-prices.json'));
@@ -137,7 +139,7 @@ async function refresh(force=false){
   }catch(e){sourceError=e.code==='ENOENT'?'保存ファイルが見つかりません。接続設定を確認してください。':e.message;}
   finally{refreshing=false;}
 }
-await loadCatalog();await refresh();await getPortrait.ready;
+await loadCatalog();await refresh();await getPortrait.ready;await jobs.ready;
 let timer;function scheduleRefresh(){clearInterval(timer);timer=setInterval(()=>refresh(),(state.refreshSeconds||60)*1000);timer.unref();}scheduleRefresh();
 async function persist(next){await writeFile(statePath+'.tmp',JSON.stringify(next,null,2));await rename(statePath+'.tmp',statePath);state=next;}
 let directoryCache;
@@ -148,8 +150,8 @@ function excludedGilKeys(params){
  return new Set([...excluded].map(id=>'character:'+id).concat(owners.filter(o=>o.type==='リテイナー'&&o.parentIds?.some(id=>excluded.has(id))).map(o=>'retainer:'+o.id)));
 }
 let lodestoneJob={running:false,done:0,total:0};
-async function refreshLodestone(){if(lodestoneJob.running)return;const owners=directory().filter(o=>['キャラクター','FC'].includes(o.type));lodestoneJob={running:true,done:0,total:owners.length};let index=0;try{await Promise.all(Array.from({length:2},async()=>{while(index<owners.length){const o=owners[index++];try{await getPortrait(o,true);}finally{lodestoneJob.done++;}}}));await captureMoney();}finally{lodestoneJob.running=false;}}
-function status(){return {refreshSeconds:state.refreshSeconds||60,lodestone:lodestoneJob,market:marketPrices.status(),source:state.source,sourceUpdated,lastRead,sourceError,charactersError,charactersStamp:charactersStamp+':portraits:'+getPortrait.revision()+':market:'+marketPrices.status().revision,records:records.length,owners:[...new Set(records.map(x=>x.owner))].map(id=>({id,...characters.get(id),name:state.owners[id]||characters.get(id)?.name||`保管者 · ${id.slice(-6)}`})),categories,catalogItems:catalog.items.length,catalogUpdated:catalog.updatedAt||null,catalogJob};}
+async function refreshLodestone(){if(lodestoneJob.running)return;const owners=directory().filter(o=>['キャラクター','FC'].includes(o.type));lodestoneJob={running:true,done:0,total:owners.length};let index=0;try{await Promise.all(Array.from({length:2},async()=>{while(index<owners.length){const o=owners[index++];try{await getPortrait(o,true);await jobs.refresh(o);}finally{lodestoneJob.done++;}}}));await captureMoney();}finally{lodestoneJob.running=false;}}
+function status(){return {refreshSeconds:state.refreshSeconds||60,lodestone:lodestoneJob,market:marketPrices.status(),source:state.source,sourceUpdated,lastRead,sourceError,charactersError,charactersStamp:charactersStamp+':portraits:'+getPortrait.revision()+':market:'+marketPrices.status().revision+':jobs:'+jobs.revision(),records:records.length,owners:[...new Set(records.map(x=>x.owner))].map(id=>({id,...characters.get(id),name:state.owners[id]||characters.get(id)?.name||`保管者 · ${id.slice(-6)}`})),categories,catalogItems:catalog.items.length,catalogUpdated:catalog.updatedAt||null,catalogJob};}
 function send(res,code,body){res.writeHead(code,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(body));}
 async function body(req){let size=0,parts=[];for await(const chunk of req){size+=chunk.length;if(size>1024*1024)throw new Error('リクエストが大きすぎます');parts.push(chunk);}return JSON.parse(Buffer.concat(parts).toString('utf8'));}
 function validName(value){if(typeof value!=='string'||!value.trim()||value.trim().length>80)throw new Error('名前は1〜80文字で入力してください。');return value.trim();}
@@ -227,15 +229,15 @@ const server=http.createServer(async(req,res)=>{
       res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','Cross-Origin-Resource-Policy':'same-origin'});
       return res.end('(()=>{try{const settings='+JSON.stringify(settings)+';for(const [key,value] of Object.entries(settings)){if(localStorage.getItem(key)===null)localStorage.setItem(key,value);}}catch{}})();');
     }
-    if(req.method==='GET'&&url.pathname==='/api/health')return send(res,200,{app:'allagan-local',version:'1.0.0'});
+    if(req.method==='GET'&&url.pathname==='/api/health')return send(res,200,{app:'allagan-local',version:'1.2.0.0',pid:process.pid});
     if(req.method==='GET'&&url.pathname==='/api/bootstrap')return send(res,200,{token,state,status:status()});
     if(req.method==='GET'&&url.pathname==='/api/status')return send(res,200,status());
     if(req.method==='GET'&&url.pathname==='/api/money-history'){const day=url.searchParams.get('day')||japanDay();if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||!Number.isFinite(Date.parse(day)))return send(res,400,{error:'日付が不正です。'});const selectedKey=url.searchParams.get('key')||'all:gil',itemScope=selectedKey.startsWith('item:')||selectedKey==='all:items';const totals=itemScope?itemMetricLedger(scopedItems(ledger,url.searchParams.get('character'),omitted,selectedKey),url.searchParams.get('metric')):withMoneyTotals(selectedKey.startsWith('list:')||selectedKey==='all:lists'?listMetricLedger(visibleHistory(ledger,excludedGilKeys(url.searchParams),new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),url.searchParams.get('metric')):visibleHistory(ledger,excludedGilKeys(url.searchParams)),excludedGilKeys(url.searchParams));return send(res,200,{...historyOrigins(moneyView(totals,selectedKey,day,url.searchParams.get('from')||'',url.searchParams.get('to')||''),ledger,directory(),omitted,selectedKey,url.searchParams.get('metric')||'count',url.searchParams.get('character')||'',new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),pricing:url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':state.lists.find(l=>'list:'+l.id===selectedKey)?.pricing||'npc',characters:directory().filter(o=>o.type==='キャラクター'&&!omitted.has(o.id)).map(o=>({id:o.id,name:o.name,world:o.world})),entities:Object.entries(totals.series).filter(([key])=>!itemScope||key===selectedKey).filter(([key])=>itemScope?(key.startsWith('item:')||key==='all:items'):/^(all:|character:|fc:|retainer:|list:|points:)/.test(key)&&key!=='all:items').map(([key,s])=>({key,label:s.label})).concat(itemScope&&!totals.series[selectedKey]?[{key:selectedKey,label:catalogMap.get(Number(selectedKey.slice(5)))?.name||'未記録のアイテム'}]:[]),today:japanDay(),error:ledgerError});}
-    if(req.method==='GET'&&url.pathname==='/api/owners')return send(res,200,{owners:withActivity(withOwnerAssets(withCashItems(directory(),records,catalogMap,state.cashItems||[]),records,catalogMap,state.cashItems||[],marketPrices),activityError?{entries:{}}:activity).map(o=>({...o,assetDayChanges:assetDayChanges(o),portraitStatus:o.type==='キャラクター'?getPortrait.status(o):null,pointChange:moneySummary(ledger,'points:'+o.id).change,dayChange:moneySummary(ledger,(o.type==='FC'?'fc:':o.type==='リテイナー'?'retainer:':'character:')+o.id).change})),updatedAt:sourceUpdated,activityWarning:activityError});
+    if(req.method==='GET'&&url.pathname==='/api/owners')return send(res,200,{owners:withActivity(withOwnerAssets(withCashItems(directory(),records,catalogMap,state.cashItems||[]),records,catalogMap,state.cashItems||[],marketPrices),activityError?{entries:{}}:activity).map(o=>({...o,jobs:jobs.snapshot(o)?{capped:jobs.snapshot(o).capped,updatedAt:jobs.snapshot(o).updatedAt}:null,assetDayChanges:assetDayChanges(o),portraitStatus:o.type==='キャラクター'?getPortrait.status(o):null,pointChange:moneySummary(ledger,'points:'+o.id).change,dayChange:moneySummary(ledger,(o.type==='FC'?'fc:':o.type==='リテイナー'?'retainer:':'character:')+o.id).change})),updatedAt:sourceUpdated,activityWarning:activityError});
     if(req.method==='GET'&&url.pathname==='/api/storage'){
  const owners=directory(),view=storageView(savedSlots.filter(r=>!omitted.has(r.owner)),owners,catalogMap,url.searchParams),byId=new Map(owners.map(o=>[o.id,o]));
  for(const c of view.containers)for(const r of c.items){r.sell=catalogMap.get(r.id)?.sell??null;r.buy=catalogMap.get(r.id)?.buy??null;r.market=marketPrices.item(r.id,byId.get(c.owner)?.world||'');r.cashItem=(state.cashItems||[]).includes(r.id);}
- return send(res,200,{...view,updatedAt:sourceUpdated});
+ return send(res,200,{...view,jobs:jobs.snapshot(owners.find(o=>o.id===url.searchParams.get('owner'))||{}),updatedAt:sourceUpdated});
 }
     if(req.method==='GET'&&url.pathname==='/api/storage-csv'){
       const p=new URLSearchParams(url.searchParams);p.delete('paged');const owners=directory(),byId=new Map(owners.map(o=>[o.id,o]));

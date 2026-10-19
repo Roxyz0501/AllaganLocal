@@ -81,6 +81,7 @@ public sealed class Plugin : IDalamudPlugin
  private void DrawSettings(){
      if(ImGui.Button(T("open")+"###open"))OpenSite();
      if(ImGui.Button(T("ui.8")+"###restart"))_=host.RestartAsync();
+     ImGui.SameLine();if(ImGui.Button(T("stop")+"###stop"))_=host.StopAsync();
      ImGui.TextWrapped(T("status."+host.Status));
      if(uiError!=null)ImGui.TextWrapped(T(uiError));
      DrawSources();

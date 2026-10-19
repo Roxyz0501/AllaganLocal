@@ -3,14 +3,14 @@ using System.Net.Http;
 using System.Text.Json;
 namespace AllaganLocalPlugin;
 
-// Own only processes created by this instance. An already-running dashboard is reused.
+// Adopt only the verified local listener running this plugin runtime.
 public sealed class DashboardHost : IDisposable
 {
  private readonly HttpClient http = new() { Timeout = TimeSpan.FromSeconds(3) };
  private readonly SemaphoreSlim gate = new(1);
  private readonly CancellationTokenSource lifetime = new();
  private readonly string web, runtime, data, address;
- private int failures;
+ private int failures, generation;
  private Process? owned;
  private Task? monitor;
  private readonly HashSet<Process> intentionalStops = [];
@@ -28,21 +28,32 @@ public sealed class DashboardHost : IDisposable
  }
  public Task StartAsync()=>RunStartAsync(false);
  public Task RestartAsync()=>RunStartAsync(true);
+ public async Task StopAsync(){
+  await gate.WaitAsync();try{generation++;await StopServerAsync();Status="Stopped";}catch(Exception e){Status="Error";log(e.ToString());}finally{gate.Release();}
+ }
+ private async Task AdoptAsync(){
+  using var response=await http.GetAsync(address+"api/health",lifetime.Token);using var json=JsonDocument.Parse(await response.Content.ReadAsStringAsync(lifetime.Token));
+  if(json.RootElement.GetProperty("app").GetString()!="allagan-local")throw new InvalidOperationException("Unexpected server");
+  var pid=TcpProcess.Find(new Uri(address).Port);
+  if(json.RootElement.TryGetProperty("pid",out var value)&&value.GetInt32()!=pid)throw new InvalidOperationException("Server identity changed");
+  var process=Process.GetProcessById(pid);var executable=process.MainModule?.FileName??"";
+  var currentRoot=Directory.GetParent(Path.GetDirectoryName(runtime)!)!;
+  var candidate=Directory.GetParent(Path.GetDirectoryName(executable)!)!;
+  if(!string.Equals(executable,runtime,StringComparison.OrdinalIgnoreCase)&&!(Path.GetFileName(executable).Equals("node.exe",StringComparison.OrdinalIgnoreCase)&&candidate.Parent?.FullName==currentRoot.Parent?.FullName&&System.Text.RegularExpressions.Regex.IsMatch(candidate.Name,@"^\d+\.\d+\.\d+\.\d+$")))throw new InvalidOperationException("Server executable is not this plugin's bundled runtime.");
+  owned=process;
+ }
+ private async Task StopServerAsync(){
+  if(owned is not {HasExited:false}){if(!await IsRunning(lifetime.Token))return;await AdoptAsync();}
+  var process=owned!;lock(lifetime){intentionalStops.Add(process);process.Kill(entireProcessTree:true);}
+  await process.WaitForExitAsync(lifetime.Token);owned=null;
+ }
+
  private async Task RunStartAsync(bool restart)
  {
   try{await gate.WaitAsync(lifetime.Token);}catch(OperationCanceledException){return;}
   try {
-   if(restart){
-    if(owned is {HasExited:false} previousProcess){
-     Status="Restarting";
-     lock(lifetime){intentionalStops.Add(previousProcess);previousProcess.Kill(entireProcessTree:true);}
-     await previousProcess.WaitForExitAsync(lifetime.Token);owned=null;
-    }else if(await IsRunning(lifetime.Token)){
-     Status="ExternalServer";return;
-    }
-    failures=0;
-   }
-   if(await IsRunning(lifetime.Token)){Status="Running";return;}
+   if(restart){generation++;Status="Restarting";await StopServerAsync();failures=0;}
+   if(await IsRunning(lifetime.Token)){if(owned is not {HasExited:false}){await AdoptAsync();monitor=MonitorAsync(owned!);}Status="Running";return;}
    if(owned is {HasExited:false}){Status="Starting";return;}
    if(!File.Exists(runtime)||!File.Exists(Path.Combine(web,"server.mjs"))||!File.Exists(Path.Combine(web,"server-runner.mjs")))throw new FileNotFoundException("Bundled website/runtime is missing. Install the complete ZIP.");
    Directory.CreateDirectory(data);
@@ -63,10 +74,11 @@ public sealed class DashboardHost : IDisposable
  private void WriteLog(string text){try{lock(http){File.AppendAllText(Path.Combine(data,"dashboard.log"),DateTimeOffset.Now.ToString("O")+" "+text+Environment.NewLine);}}catch{} }
  private async Task MonitorAsync(Process process)
  {
+  var epoch=generation;
   try{await process.WaitForExitAsync(lifetime.Token);WriteLog("Server exited: "+process.ExitCode);
    lock(lifetime){if(intentionalStops.Remove(process))return;}
    Status="Stopped";
-   if(!lifetime.IsCancellationRequested){if(++failures>5){Status="RepeatedExits";return;}await Task.Delay(5000,lifetime.Token);await StartAsync();}
+   if(!lifetime.IsCancellationRequested){if(++failures>5){Status="RepeatedExits";return;}await Task.Delay(5000,lifetime.Token);if(epoch==generation)await StartAsync();}
   }catch(OperationCanceledException){}catch(Exception e){log(e.ToString());}
  }
  public void Dispose()

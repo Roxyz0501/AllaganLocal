@@ -37,7 +37,7 @@ function toast(message){$('toast').textContent=message;$('toast').hidden=false;c
 async function api(url,body){const res=await fetch(url,body?{method:'POST',headers:{'Content-Type':'application/json','X-App-Token':token},body:JSON.stringify(body)}:{});const data=await res.json();if(!res.ok)throw new Error(data.error||'接続できません');return data;}
 function run(fn){return async e=>{try{await fn(e);}catch(err){toast(err.message);}};}
 async function action(body){const data=await api('/api/action',body);state=data.state;status=data.status;renderNav();renderStatus();await load();}
-function ownerName(id){const o=status.owners.find(x=>x.id===id);return o?`${o.name}${o.world?' @ '+o.world:''}`:id;}
+function ownerName(id){const o=status.owners.find(x=>x.id===id);return o?`${o.name}${o.type==='リテイナー'&&o.parentNames?.length?' - '+o.parentNames.join('・'):''}${o.world?' @ '+o.world:''}`:id;}
 function date(value){return value?new Date(value).toLocaleString('ja-JP',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'未読込';}
 $('excludeZero').checked=localStorage.getItem('allagan.excludeZero')!=='false';
 $('excludeArmoury').checked=localStorage.getItem('allagan.excludeArmoury')==='true';

@@ -15,7 +15,7 @@ bool ok=true;void Check(bool test,string name){Console.WriteLine(name+": "+(test
 async Task<string> Identity()=>await client.GetStringAsync($"http://127.0.0.1:{port}/api/health");
 using(var owner=new DashboardHost(work,data,Console.WriteLine,port)){
  await Task.WhenAll(owner.StartAsync(),owner.StartAsync());Check(owner.Status=="Running","Concurrent load starts one server");
- using(var borrowed=new DashboardHost(work,data,Console.WriteLine,port)){await borrowed.StartAsync();Check(borrowed.Status=="Running","Reuse existing server");var external=await Identity();await borrowed.RestartAsync();Check(await Identity()==external,"Restart does not kill borrowed server");}
+ using(var borrowed=new DashboardHost(work,data,Console.WriteLine,port)){await borrowed.StartAsync();Check(borrowed.Status=="Running","Reuse existing server");var external=await Identity();await borrowed.RestartAsync();Check(await Identity()!=external,"Restart replaces verified adopted server");}
  Check((await client.GetAsync($"http://127.0.0.1:{port}/api/health")).IsSuccessStatusCode,"Disposing borrower preserves server");
  var before=await Identity();await owner.RestartAsync();Check(owner.Status=="Running"&&before!=await Identity(),"Restart replaces owned process");
  await client.GetAsync($"http://127.0.0.1:{port}/exit");await Task.Delay(12000);
@@ -25,7 +25,7 @@ using(var owner=new DashboardHost(work,data,Console.WriteLine,port)){
 await Task.Delay(500);
 Check((await client.GetAsync($"http://127.0.0.1:{port}/api/health")).IsSuccessStatusCode,"Plugin disposal preserves owned server");
 var survivor=await Identity();
-using(var next=new DashboardHost(work,data,Console.WriteLine,port)){await next.StartAsync();Check(await Identity()==survivor,"Next plugin load reuses surviving server");}
+using(var next=new DashboardHost(work,data,Console.WriteLine,port)){await next.StartAsync();Check(await Identity()==survivor,"Next plugin load reuses surviving server");await next.StopAsync();await Task.Delay(6000);try{await Identity();Check(false,"Explicit stop stays stopped");}catch(Exception e) when(e is HttpRequestException or TaskCanceledException){Check(true,"Explicit stop stays stopped");}await next.StartAsync();}
 await client.GetAsync($"http://127.0.0.1:{port}/exit");await Task.Delay(500);
 using(var stopped=new DashboardHost(work,data,Console.WriteLine,port)){await stopped.RestartAsync();Check(stopped.Status=="Running","Restart starts a stopped server");}
 await client.GetAsync($"http://127.0.0.1:{port}/exit");await Task.Delay(500);

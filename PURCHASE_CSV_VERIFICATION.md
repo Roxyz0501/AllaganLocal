@@ -37,3 +37,11 @@ Implemented in the existing Allagan Local project. Published as 1.1.0.0; public 
 - No source DB reads/writes or external lookups: query uses existing in-memory slots/catalog. Maximum 100 rows per response; current form retains one result for 30 seconds (WeakMap, released on rerender). No input polling. On data rerender the result cache is discarded.
 - UI adapter measurement: first submit 1 request, identical resubmit 0 additional requests, reset 0 requests. Background tests verify automatic opened results, highlighting, escaping and reset. Actual graphical browser rendering not checked.
 - Clean Release build and packaged server verification passed; seven dictionaries contain 719 keys.
+
+## 2026-10-19 Jobs and server adoption validation
+- Real Lodestone class_job HTML parsed into 34 rows; profile name/world validated before accepting jobs. Battle cap uses the upstream capped-experience marker, including limited job caps, not a hard-coded expansion cap.
+- Explicit Lodestone refresh only: at most two workers; one jobs request per character after profile resolution. List/page views perform zero external jobs requests and zero jobs writes. Directory returns cap summary only; selected storage view returns full jobs.
+- Persistent cache: 200 characters, maximum 50 rows/character and 80 characters/name, 2 MB load limit. Failure retains previous data. Profile identity changes invalidate old results. No timer introduced.
+- Fixture measurements: two concurrent refreshes coalesce to one fetch; 10 snapshot reads cause zero extra fetches. Restart reload reads persisted cache with zero external fetches. 58 Web/shared tests passed.
+- 14 host lifecycle checks passed: adopt same server, restart adopted server, stop stays stopped, retain on disposal/game exit, no duplicate launch. Windows listener PID and bundled executable path are validated; unrelated processes are not killed. Native game UI not visually tested.
+- Release build zero errors/warnings; 500 language checks and 44 font lifecycle checks passed; 723 Web terms and all module HTTP/MIME checks passed.

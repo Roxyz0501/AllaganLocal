@@ -21,7 +21,7 @@ const worldPriority=o=>o.world==='Typhon'?0:elementalWorlds.has(o.world)?1:2;
 const isMainCharacter=o=>o.type==='キャラクター'&&(characterTags[o.id]||[]).includes('main');
 let characterTags={};try{characterTags=JSON.parse(localStorage.getItem('allagan.characterTags')||'{}')||{};}catch{}
 let subNumbers={};try{subNumbers=JSON.parse(localStorage.getItem('allagan.subNumbers')||'{}')||{};}catch{}
-const mainBadge=o=>(isMainCharacter(o)?'<span class="main-character-badge">★ メイン</span>':'')+(o.type==='キャラクター'?(characterTags[o.id]||[]).filter(t=>['sub','submarine'].includes(t)).map(t=>`<span class="main-character-badge tag-${t}">${t==='sub'?'サブ'+(subNumbers[o.id]?' №'+esc(subNumbers[o.id]):''):'潜水艦用'}</span>`).join(''):'');
+const mainBadge=o=>(o.jobs?.capped?'<span class="main-character-badge tag-capped">カンスト:'+fmt(o.jobs.capped)+'</span>':'')+(isMainCharacter(o)?'<span class="main-character-badge">★ メイン</span>':'')+(o.type==='キャラクター'?(characterTags[o.id]||[]).filter(t=>['sub','submarine'].includes(t)).map(t=>`<span class="main-character-badge tag-${t}">${t==='sub'?'サブ'+(subNumbers[o.id]?' №'+esc(subNumbers[o.id]):''):'潜水艦用'}</span>`).join(''):'');
 
 const tagRank=o=>isMainCharacter(o)?0:(characterTags[o.id]||[]).includes('sub')?1:(characterTags[o.id]||[]).includes('submarine')?2:3;
 function orderedCharacters(owners){
@@ -44,13 +44,13 @@ function orderedCharacters(owners){
 }
 function orderButtons(o){if(selectedOwner||mode!=='characters'||$('characterSort').value!=='manual')return '';const i=visibleCharacterIds.indexOf(o.id);return `<span class="order-buttons"><button data-move-owner="${esc(o.id)}" data-move="-1" aria-label="${esc(label(o))}を上へ" ${i<=0?'disabled':''}>↑</button><button data-move-owner="${esc(o.id)}" data-move="1" aria-label="${esc(label(o))}を下へ" ${i>=visibleCharacterIds.length-1?'disabled':''}>↓</button></span>`;}
 const money=n=>n==null?'未記録':fmt(n)+' G';
-const label=o=>o.name+(o.world?' @ '+o.world:'');
+const label=o=>o.name+(o.type==='リテイナー'&&o.parentNames?.length?' - '+o.parentNames.join('・'):'')+(o.world?' @ '+o.world:'');
 async function json(url){const r=await fetch(url),d=await r.json();if(!r.ok)throw new Error(d.error||'読込に失敗しました');return d;}
 let mode='characters',selectedOwner='',parentOwner='';
 export function resetStorage(next){mode=next;selectedOwner='';parentOwner='';highlight=0;sequence++;lastPayload='';$('storageSearch').value='';$('storageCategory').value='';}
 function portrait(o){if(o.type==='FC')return `<img class="character-portrait fc-crest" data-image="/api/avatar/${esc(o.id)}?v=${Date.now()}" alt="" width="56" height="56" title="ロドストのFC紋章">`;return o.type==='キャラクター'?`<img class="character-portrait" data-image="/api/avatar/${esc(o.id)}?v=${Date.now()}" alt="" width="56" height="56" loading="lazy" title="ロドストの顔アイコン（取得できない場合は代替表示）">`:`<span class="owner-symbol" aria-hidden="true">${o.type==='FC'?'◇':'▣'}</span>`;}
 function activityText(o){return o.lastChangedAt?'変更検出: '+new Date(o.lastChangedAt).toLocaleString('ja-JP'):'更新日時不明'+(o.observedSince?' / 観測開始 '+new Date(o.observedSince).toLocaleDateString('ja-JP'):'');}
-function ownerExtra(o){return o.type==='FC'?'FCポイント '+(o.points==null?'未記録':fmt(o.points)+' pt'):o.type==='キャラクター'?'リテイナー '+directory.filter(r=>r.type==='リテイナー'&&r.parentIds?.includes(o.id)).length+'人':o.stacks+'スタック';}
+function ownerExtra(o){return o.type==='FC'?'FCポイント '+(o.points==null?'未記録':fmt(o.points)+' pt'):o.type==='キャラクター'?'リテイナー '+directory.filter(r=>r.type==='リテイナー'&&r.parentIds?.includes(o.id)).length+'人':fmt(o.inventoryStacks||0)+'枠 / '+fmt(o.inventoryQuantity||0)+'個';}
 function cashText(o){return `${fmt(o.cashValue||0)} G${o.cashUnknown?'（価格判明分）':''} / ${fmt(o.cashQuantity||0)}個`;}
 function characterAssets(o){return o.type==='キャラクター'?`<span class="character-assets"><span>リテイナー出品 <b>${fmt(o.retainerListedStacks||0)}枠 / ${fmt(o.retainerListedQuantity||0)}個</b></span><span>NPC売却（合計）・換金アイテム数量 <b>${cashText(o)}</b></span></span>`:'';}
 function renderCharacterOverview(){
@@ -154,6 +154,7 @@ async function loadEmbeddedSales(el,page=1){
 }
 $('storageContents').addEventListener('toggle',e=>{if(e.target.matches('.embedded-sales')&&e.target.open&&!e.target.dataset.loaded)loadEmbeddedSales(e.target);},true);
 $('storageContents').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.embeddedPage)loadEmbeddedSales(b.closest('.embedded-sales'),Number(b.dataset.embeddedPage));if(b.dataset.embeddedItem)document.dispatchEvent(new CustomEvent('open-item-detail',{detail:{id:Number(b.dataset.embeddedItem)}}));});
+function inventoryCount(containers){return fmt(containers.reduce((n,c)=>n+(c.total??c.items.length),0))+'枠 / '+fmt(containers.reduce((n,c)=>n+(c.quantity??c.items.reduce((sum,r)=>sum+r.quantity,0)),0))+'個';}
 function renderStorageTree(){
  const scope=selectedOwner+':'+highlight;
  if(disclosureScope!==scope){disclosureScope=scope;disclosureState.clear();}
@@ -163,7 +164,7 @@ function renderStorageTree(){
   if(highlight&&!containers.length)return '';
   const groups=tabDefs.filter(t=>containers.some(c=>t[2].includes(c.category)));
   const listing=o.type==='リテイナー'?` · 出品 ${fmt(o.listedStacks||0)}枠 / ${fmt(o.listedQuantity||0)}個`:'';
-  return disclosure('owner:'+o.id,`<span translate="no">${esc(label(o))}</span> <small>${esc(o.type)} · ${money(o.gil)}${listing}</small>`,()=>groups.map(([key,title,categories])=>disclosure(o.id+':'+key,title,()=>sectionContents(o.id,key,containers.filter(c=>categories.includes(c.category))),(o.type!=='リテイナー'||o.id===selectedOwner)&&(key==='inventory'||key==='saddle'),true)+(o.type==='リテイナー'&&o.id===selectedOwner&&key==='market'?embeddedSales(o):'')).join('')+(o.type==='リテイナー'&&o.id===selectedOwner&&!groups.some(g=>g[0]==='market')?embeddedSales(o):'')||'<p class="muted">この条件の保管先は記録されていません。</p>',o.type!=='リテイナー'||o.id===selectedOwner);
+  return disclosure('owner:'+o.id,`<span translate="no">${esc(label(o))}</span> <small>${esc(o.type)} · ${money(o.gil)}${listing} · ${inventoryCount(containers.filter(c=>c.category!==9))}</small>`,()=>groups.map(([key,title,categories])=>disclosure(o.id+':'+key,title+' <small>'+inventoryCount(containers.filter(c=>categories.includes(c.category)))+'</small>',()=>sectionContents(o.id,key,containers.filter(c=>categories.includes(c.category))),(o.type!=='リテイナー'||o.id===selectedOwner)&&(key==='inventory'||key==='saddle'),true)+(o.type==='リテイナー'&&o.id===selectedOwner&&key==='market'?embeddedSales(o):'')).join('')+(o.type==='リテイナー'&&o.id===selectedOwner&&!groups.some(g=>g[0]==='market')?embeddedSales(o):'')||'<p class="muted">この条件の保管先は記録されていません。</p>',o.type!=='リテイナー'||o.id===selectedOwner);
  };
  const selected=directory.find(o=>o.id===selectedOwner);
  if(selected?.type==='キャラクター'){
@@ -191,6 +192,9 @@ function containerHtml(c,expanded=false){
 }
 function render(){
   renderBalances();
+  let jobsPanel=$('characterJobs');if(!jobsPanel){jobsPanel=document.createElement('section');jobsPanel.id='characterJobs';$('storageCurrencySection').before(jobsPanel);}
+  const owner=directory.find(o=>o.id===selectedOwner),snapshot=data.jobs;jobsPanel.hidden=owner?.type!=='キャラクター';
+  jobsPanel.innerHTML='<h3>ジョブ・レベル</h3>'+(snapshot?.jobs?'<div class="character-job-grid">'+snapshot.jobs.map(j=>`<div class="character-job ${j.capped?'job-capped':''}"><span>${esc(j.name)}</span><strong>${j.level??'—'}</strong></div>`).join('')+'</div>':'<p class="muted">ロドスト情報を更新すると表示されます。</p>')+(snapshot?.error?'<p class="warning">'+esc(snapshot.error)+'</p>':'');
   const currencies=(data.currencies||[]).filter(r=>!selectedOwner||r.owner===selectedOwner);$('storageCurrencySection').hidden=!currencies.some(r=>r.id!==1&&r.id!==80);$('storageCurrencyCount').textContent=currencies.filter(r=>r.id!==1&&r.id!==80).length+'種類';$('storageCurrencyTable').innerHTML=currencyPanels(currencies);
   $('storageHighlight').hidden=!highlight;
   $('storageMatchText').textContent=`${data.highlightName}：${fmt(data.matches)}スタック / ${fmt(data.quantity)}個をハイライト（表示中の範囲）`;

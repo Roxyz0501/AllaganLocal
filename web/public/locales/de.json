@@ -717,5 +717,9 @@
   "アイテム名": "Gegenstandsname",
   "検索中…": "Suche läuft…",
   "検索に失敗しました。再試行してください。": "Suche fehlgeschlagen. Bitte erneut versuchen.",
-  "該当するアイテムはありません。": "Keine passenden Gegenstände."
+  "該当するアイテムはありません。": "Keine passenden Gegenstände.",
+  "ジョブ・レベル": "Jobs und Stufen",
+  "ロドスト情報を更新すると表示されます。": "Lodestone-Daten aktualisieren, um Jobs anzuzeigen.",
+  "ジョブ情報を取得できませんでした。": "Jobdaten konnten nicht abgerufen werden.",
+  "カンスト:{0}": "Maximalstufe: {0}"
 }

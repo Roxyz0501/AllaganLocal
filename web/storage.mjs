@@ -20,7 +20,8 @@ export function ownerDirectory(slots,characters,aliases={}){
     const rows=byOwner.get(id)||[],gilContainer=c.type==='FC'?22000:c.type==='リテイナー'?12000:2000;
     const balance=(container,item)=>{const found=rows.filter(r=>r.container===container&&r.id===item);return found.length?found.reduce((n,r)=>n+r.quantity,0):null;};
     const listed=rows.filter(r=>(r.category===9||r.container===12002)&&r.id&&r.quantity>0);
-    return {...c,listedStacks:listed.length,listedQuantity:listed.reduce((n,r)=>n+r.quantity,0),name:aliases[id]||c.name,gil:balance(gilContainer,1)??(c.type==='リテイナー'?c.retainerGilSnapshot??null:null),points:c.type==='FC'?balance(2502,80):null,stacks:rows.filter(r=>r.id&&r.quantity).length};
+    const inventory=rows.filter(r=>r.id&&r.quantity>0&&!isCurrencyRecord(r)&&r.category!==9);
+    return {...c,inventoryStacks:inventory.length,inventoryQuantity:inventory.reduce((n,r)=>n+r.quantity,0),listedStacks:listed.length,listedQuantity:listed.reduce((n,r)=>n+r.quantity,0),name:aliases[id]||c.name,gil:balance(gilContainer,1)??(c.type==='リテイナー'?c.retainerGilSnapshot??null:null),points:c.type==='FC'?balance(2502,80):null,stacks:rows.filter(r=>r.id&&r.quantity).length};
   }).sort((a,b)=>a.name.localeCompare(b.name,'ja')||a.id.localeCompare(b.id));
   return result.map(o=>{if(o.type!=='キャラクター')return o;const children=result.filter(r=>r.type==='リテイナー'&&r.parentIds?.includes(o.id)),unknown=children.filter(r=>r.gil==null).length,known=children.reduce((n,r)=>n+(r.gil??0),0);return {...o,retainerGil:unknown?null:known,retainerKnownGil:known,retainerUnknown:unknown,totalGil:o.gil==null?null:o.gil+known};});
 }
@@ -44,7 +45,7 @@ export function storageView(slots,owners,catalog,params){
   const containers=[...groups.values()].map(rows=>{
     const first=rows[0],info=containerInfo(first.container,first.category);
     const items=rows.filter(r=>r.id&&r.quantity).map(r=>({...r,name:catalog.get(r.id)?.name||`アイテム #${r.id}`,itemCategory:catalog.get(r.id)?.category||'分類不明',highlighted:r.id===highlight})).sort((a,b)=>a.slot-b.slot);
-    return {...info,owner:first.owner,id:first.container,category:first.category,size:Math.max(info.capacity,...rows.map(r=>r.slot+1)),items,matches:items.filter(r=>r.highlighted).length};
+    return {...info,owner:first.owner,id:first.container,category:first.category,size:Math.max(info.capacity,...rows.map(r=>r.slot+1)),items,quantity:items.reduce((n,r)=>n+r.quantity,0),matches:items.filter(r=>r.highlighted).length};
   }).filter(c=>!highlight||c.matches).sort((a,b)=>a.owner.localeCompare(b.owner)||a.category-b.category||a.id-b.id);
   const displayed=params.get('paged')==='1'?containers.map(c=>[2500,2501].includes(c.id)?dresserPage(c,params.get(c.id===2500?'cabinetPage':'dresserPage')):c):containers;
   return {owners:scope,currencies:currencyRows(ownedSlots,scope,catalog),containers:displayed,highlight,highlightName:catalog.get(highlight)?.name||`アイテム #${highlight}`,matches:containers.reduce((n,c)=>n+c.matches,0),quantity:containers.reduce((n,c)=>n+c.items.filter(r=>r.highlighted).reduce((s,r)=>s+r.quantity,0),0),categories:[...new Set(ownedSlots.filter(r=>!isCurrencyRecord(r)).map(r=>r.category))].map(id=>({id,name:categories[id]||'その他'}))};
