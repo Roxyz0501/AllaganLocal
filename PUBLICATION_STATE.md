@@ -124,3 +124,10 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Anonymous public ZIP download, live index version/URL, repository and icon HTTP 200 verified.
 - Packaged server, seven dictionaries (714 terms), fresh isolated data, manifest URLs and absence of bundled user data: PASS.
 - Purchase history and configurable CSV presets published. Use plugin update, then restart site from settings if the old server remains running.
+
+## 2026-10-19 Allagan Local 1.1.0.1 — published
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.1.0.1
+- Parent inventory name search, scoped results opened and highlighted; 100 results/page and 30-second unchanged result reuse.
+- Source commit 8d6645d; shared index d057d3061d5857f72cb1178376adef231f99ccf7. Other entries preserved.
+- Public ZIP SHA256 8C938BF6E07C6C8D5F310B98FB59A0084037B88481090E8C8731DCE646DA3363 matches local package. Anonymous commit-pinned index, repository and icon verified; raw main CDN initially returned cached 1.1.0.0.
+- 55 full-suite tests plus new UI adapter test passed. Release build zero warnings/errors; packaged server and 719-term dictionaries passed. No user data bundled, no installed files overwritten.
