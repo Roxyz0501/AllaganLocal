@@ -303,7 +303,7 @@ const server=http.createServer(async(req,res)=>{
         return send(res,202,catalogJob);
       }
     }
-    const assets={'/translation.js':'translation.js','/i18n.js':'i18n.js',...Object.fromEntries(['ja','en','de','fr','ko','zh-Hans','zh-Hant'].map(l=>['/locales/'+l+'.json','locales/'+l+'.json'])),'/':'index.html','/theme.js':'theme.js','/app.js':'app.js','/csv-export.js':'csv-export.js','/csv-sources.js':'csv-sources.js','/purchases.js':'purchases.js','/sales.js':'sales.js','/storage.js':'storage.js','/images.js':'images.js','/currencies.js':'currencies.js','/money.js':'money.js','/style.css':'style.css','/favicon.svg':'favicon.svg'};
+    const assets={'/translation.js':'translation.js','/i18n.js':'i18n.js',...Object.fromEntries(['ja','en','de','fr','ko','zh-Hans','zh-Hant'].map(l=>['/locales/'+l+'.json','locales/'+l+'.json'])),'/':'index.html','/theme.js':'theme.js','/app.js':'app.js','/csv-export.js':'csv-export.js','/csv-sources.js':'csv-sources.js','/purchases.js':'purchases.js','/sales.js':'sales.js','/storage.js':'storage.js','/storage-search.js':'storage-search.js','/images.js':'images.js','/currencies.js':'currencies.js','/money.js':'money.js','/style.css':'style.css','/favicon.svg':'favicon.svg'};
     if(req.method==='GET'&&assets[url.pathname]){
       const file=assets[url.pathname],types={json:'application/json',html:'text/html',js:'text/javascript',css:'text/css',svg:'image/svg+xml'};
       res.writeHead(200,{'Content-Type':types[file.split('.').at(-1)]+'; charset=utf-8','Cache-Control':'no-cache'});res.end(await readFile(path.join(root,'public',file)));return;

@@ -17,7 +17,14 @@ try{
  for(let i=0;i<50;i++){try{ready=(await fetch(base+'/api/health')).ok;if(ready)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  assert(ready,output);assert.equal((await (await fetch(base+'/api/health')).json()).app,'allagan-local');
  assert((await (await fetch(base+'/')).text()).includes('/i18n.js'));
- assert((await fetch(base+'/translation.js')).ok);
+ // Every shipped browser module must be served with JavaScript MIME, including imported modules.
+ for(const file of await readdir(path.join(stage,'web','public'))){
+  if(!file.endsWith('.js'))continue;
+  const response=await fetch(base+'/'+file);
+  assert.equal(response.status,200,'Browser module unavailable: '+file);
+  assert.match(response.headers.get('content-type'),/javascript/,'Invalid module MIME: '+file);
+ }
+
  assert((await fetch(base+'/language-policy.js')).ok);
  assert.deepEqual(await (await fetch(base+'/api/ui-language')).json(),{});
  await writeFile(path.join(data,'ui-language.json'),JSON.stringify({language:'ko',revision:'test'}));
@@ -35,7 +42,7 @@ try{
  let keys;
  for(const code of ['ja','en','de','fr','ko','zh-Hans','zh-Hant']){const response=await fetch(base+'/locales/'+code+'.json');assert(response.ok);const dictionary=await response.json();const current=Object.keys(dictionary).sort();if(keys)assert.deepEqual(current,keys);keys=current;assert(Object.values(dictionary).every(s=>typeof s==='string'&&s.length));}
  const bootstrap=await (await fetch(base+'/api/bootstrap')).json();assert.equal(bootstrap.state.source,path.join(data,'missing.csv'));assert.equal(bootstrap.state.favorites.length,0);
- const manifest=JSON.parse(await readFile(path.join(stage,'AllaganLocalPlugin.json'),'utf8'));assert.equal(manifest.Author,'Roxyz0501');assert.equal(manifest.AssemblyVersion,'1.1.0.1');assert(manifest.RepoUrl&&manifest.IconUrl);
+ const manifest=JSON.parse(await readFile(path.join(stage,'AllaganLocalPlugin.json'),'utf8'));assert.equal(manifest.Author,'Roxyz0501');assert.equal(manifest.AssemblyVersion,'1.1.0.2');assert(manifest.RepoUrl&&manifest.IconUrl);
  assert(!(await readdir(path.join(stage,'web'))).includes('data'));
  console.log(`PASS: packaged server, seven dictionaries (${keys.length} terms), isolated fresh data, manifest URLs, no bundled user data`);
 }finally{child.kill();}
