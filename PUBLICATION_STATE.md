@@ -131,3 +131,11 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Source commit 8d6645d; shared index d057d3061d5857f72cb1178376adef231f99ccf7. Other entries preserved.
 - Public ZIP SHA256 8C938BF6E07C6C8D5F310B98FB59A0084037B88481090E8C8731DCE646DA3363 matches local package. Anonymous commit-pinned index, repository and icon verified; raw main CDN initially returned cached 1.1.0.0.
 - 55 full-suite tests plus new UI adapter test passed. Release build zero warnings/errors; packaged server and 719-term dictionaries passed. No user data bundled, no installed files overwritten.
+
+## 2026-10-19 Allagan Local 1.1.0.2 — loading fix published
+- Cause: storage.js imported storage-search.js but server static allowlist omitted that module, returning 404 and preventing app initialization.
+- Fixed the route. Package verification now requests every browser JS module and asserts status 200 and JavaScript MIME.
+- Clean Release build and full packaged asset verification passed. No installed files overwritten or running server interrupted.
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.1.0.2
+- Source 2b437e4; index 99f21c9a4468bcd34d5f179e42fb30f376cc2c6a.
+- Public ZIP SHA256 AEE9A01E5A4D377C48C560A379E083343BC061ACFF36693130CC22204B64E9AD matches tested package; anonymous ZIP/index/repository verified.
