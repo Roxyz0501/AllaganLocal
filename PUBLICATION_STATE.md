@@ -146,3 +146,13 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Public ZIP SHA256 A5EB368E43AD608A348F54C9384BF7265DC8F0830F89F03578738638BB60C851 matches tested package. Anonymous ZIP, commit-pinned index, repo and icon verified.
 - Job levels and capped battle-job badge, storage stack/quantity counts, retainer/character labels, verified existing-server adoption and explicit Stop action.
 - 58 Web tests, 14 host checks, 500 language checks, 44 font checks passed; Release clean and all packaged browser modules verified. Game UI rendering not visually tested. Installed server left unchanged.
+
+## 2026-10-23 Allagan Local 1.3.0.0 — published and verified
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.0
+- Source/tag: `7b3c656788ab2a52690ab074f12885e3238dad7e`. ZIP 38,208,996 bytes; SHA-256 `81D1B3118BAACA16FA9D21A0AD30F7E960C94DD2F6AF7A312F76A4964957A98B`; anonymous download and GitHub asset digest match.
+- Shared index commit `6f5726abd6c79582ece3e7bb94cb68e98e4c550c`; only AllaganLocalPlugin changed, 12 other entries preserved. Connector and anonymous commit-pinned index return 1.3.0.0; public repo and image/png icon return HTTP 200.
+- JST daily SQLite delta history, idempotent migration preserving originals, bounded range cache, changed-only 60-second settings with three backups/recovery, canonical History files tab and browser counts, dirty-item price-cache persistence, graceful host control and cleanup. Gil Ledger SQLite and daily archive compatibility retained. Existing standalone Web app updated in its original folder; automatic startup remains disabled.
+- Clean Release: 0 warnings/errors. Passed: 62 Web/API/tab checks, 44 standalone Web checks, 8 native persistence checks, 14 host lifecycle checks, 680 localization checks, 44 font lifecycle checks. Four font subsets cover 1,429 codepoints without missing glyphs. Packaged server/assets/seven dictionaries (735 terms)/manifest/no-user-data checks pass.
+- Synthetic old history 10,123 bytes: one further event commits 145 logical record bytes including its ID in one transaction. Unchanged history/settings commits zero. Seven native setting commits: 664 primary/temporary payload bytes and 1,406 backup-copy bytes. These are logical payloads, not physical SSD writes.
+- No production migration, installed DLL replacement or running production server changes. Live-game rendering/logout timing, real large-history migration and SSD physical writes remain unverified. A running old 1.2 server must be stopped using the previous plugin before upgrading because it lacks graceful host control. See PERSISTENCE_IMPLEMENTATION.md for limits and measurements.
