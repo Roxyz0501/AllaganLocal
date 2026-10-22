@@ -13,3 +13,4 @@ test('canonical trailing tabs remain last and ordered Settings, Language, Suppor
  assert.match(plugin,/DrawStandardTrailingTabs\(\s*T\("ui\.7"\),"settings",DrawSettings,\s*T\("language-tab"\),DrawLanguageSettings,\s*T\("ui\.12"\),DrawSupport\);\s*ImGui.EndTabBar\(\)/);
  assert(!plugin.slice(plugin.indexOf('private void DrawSettings'),plugin.indexOf('private void DrawLanguageSettings')).includes('DrawLanguageSelector'));
 });
+test('history tab is a byte-identical canonical copy before trailing tabs',async()=>{assert.deepEqual(await readFile(new URL('./StandardHistoryFilesTab.cs',import.meta.url)),await readFile(new URL('../templates/Dalamud/StandardHistoryFilesTab.cs',import.meta.url)));const plugin=await readFile(new URL('./Plugin.cs',import.meta.url),'utf8');assert(plugin.indexOf('StandardHistoryFilesTab.Draw(')<plugin.indexOf('StandardPluginTabs.DrawStandardTrailingTabs('));});

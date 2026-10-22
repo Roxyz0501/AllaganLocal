@@ -52,3 +52,9 @@ Releaseビルド、サイトの自動テスト、同梱ランタイムによる�
 ## ジョブ情報とサーバー操作
 「ロドスト情報を更新」でジョブ・レベルを取得し、キャラクター詳細の通貨・トークンの上に表示します。未取得時は案内を表示し、取得失敗時は最後の成功データを保持します。閲覧だけでは外部へ取得しません。「カンスト:n」はロドストで経験値が上限表示となっているバトルジョブ数です（青魔道士は固有の上限、クラス・クラフター・ギャザラーは対象外）。
 設定の「サイトを終了」「再起動」は、以前のプラグインや手動起動でも、同プラグインの実行ファイルと待受プロセスを確認して操作します。ゲーム終了時は引き続きサイトを維持します。
+
+## Persistence / 保存方式 (1.3)
+
+Settings save changed content every 60 seconds and flush on logout/unload. Up to 60 seconds of unsaved settings may be lost in a crash. Three validated backups are retained. History uses JST daily SQLite journals; original legacy files are preserved during automatic, idempotent migration on the next server start. Do not downgrade to the legacy history writer after new records have been created.
+
+設定は60秒ごとの変更時保存、ログアウト・終了時フラッシュ、正常3世代バックアップに対応します。履歴はJSTの日別差分保存です。旧履歴は次回のサーバー起動時に検証しながら移行し、元ファイルを保持します。実行中の旧1.2サーバーは更新前に旧プラグインの「停止」で終了してください。詳細は [保存処理の検証記録](PERSISTENCE_IMPLEMENTATION.md) を参照してください。

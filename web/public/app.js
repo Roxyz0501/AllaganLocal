@@ -73,7 +73,7 @@ function renderStatus(){
   const locationKey=JSON.stringify(status.categories);if(locationKey!==renderedLocations){renderedLocations=locationKey;
   const loc=$('location').value;$('location').innerHTML='<option value="">すべての保管場所</option>'+Object.entries(status.categories).map(([id,name])=>`<option value="${id}">${esc(name)}</option>`).join('');$('location').value=loc;}
   $('connectionDot').classList.toggle('error',!!status.sourceError);$('connectionText').textContent=status.sourceError?'保存データを確認してください':'Allagan Tools 接続済み';
-  const warnings=[status.sourceError,status.charactersError,!status.catalogItems?'アイテム辞書がありません。「接続・データ設定」で日本語名・NPC価格を更新してください。':''].filter(Boolean);
+  const warnings=[status.persistenceError,status.sourceError,status.charactersError,!status.catalogItems?'アイテム辞書がありません。「接続・データ設定」で日本語名・NPC価格を更新してください。':''].filter(Boolean);
   $('warning').hidden=!warnings.length;$('warning').textContent=warnings.join(' ');
   if(view!=='list'){$('thirdLabel').textContent='データ保存日時';$('thirdValue').textContent=date(status.sourceUpdated);$('thirdUnit').textContent='';}
   $('catalogInfo').textContent=`${fmt(status.catalogItems)}アイテム · 更新 ${date(status.catalogUpdated)}${status.catalogJob.message?' · '+status.catalogJob.message:''}`;
@@ -264,3 +264,6 @@ function csvSources(){
  return [pagedSource('items-'+$('group').value,$('title').textContent,columns,'/api/items',csvItemParams,result,row)];
 }
 $('exportCsv').onclick=()=>openCsvExport(csvSources());
+
+const historyFilesButton=document.createElement('button');historyFilesButton.textContent='履歴ファイル';$('settingsButton').after(historyFilesButton);
+historyFilesButton.onclick=run(async()=>{const d=await api('/api/history-files?refresh=1');let dialog=$('historyFilesDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='historyFilesDialog';document.body.append(dialog);dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});}dialog.innerHTML=`<h2>履歴ファイル</h2><p><span>総ファイル数</span>: ${fmt(d.fileCount)}</p><p><span>総サイズ（バイト）</span>: ${fmt(d.bytes)} B</p><p><span>保存場所</span>: <span translate="no">${esc(d.directory)}</span></p><p>${esc(d.scope)}</p><p>論理ファイル長の合計です。SSDの物理使用量・累積書き込み量ではありません。</p><form method="dialog"><button>閉じる</button></form>`;dialog.showModal();});

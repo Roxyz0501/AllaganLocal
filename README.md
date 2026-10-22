@@ -61,3 +61,9 @@ CSV export supports column selection/order and multiple named presets stored in 
 Purchase history interoperates with [Gil Ledger / MarketLedger](https://github.com/Roxyz0501/MarketLedger) by Roxyz0501 (MIT), reading its saved SQLite schema without bundling its code or binaries.
 
 Job levels are retrieved by the explicit Lodestone refresh action and cached locally. Character details show the last successful job list above currencies; directory badges count capped combat jobs, including the limited job at its own cap but excluding base classes, crafting and gathering. Directory responses carry only summaries; full job rows are returned for the selected character. Website Stop/Restart can adopt a verified existing bundled server, including an older installed version. Game exit continues to preserve the website.
+
+## Persistence / 保存方式 (1.3)
+
+Settings save changed content every 60 seconds and flush on logout/unload. Up to 60 seconds of unsaved settings may be lost in a crash. Three validated backups are retained. History uses JST daily SQLite journals; original legacy files are preserved during automatic, idempotent migration on the next server start. Do not downgrade to the legacy history writer after new records have been created.
+
+設定は60秒ごとの変更時保存、ログアウト・終了時フラッシュ、正常3世代バックアップに対応します。履歴はJSTの日別差分保存です。旧履歴は次回のサーバー起動時に検証しながら移行し、元ファイルを保持します。実行中の旧1.2サーバーは更新前に旧プラグインの「停止」で終了してください。詳細は [保存処理の検証記録](PERSISTENCE_IMPLEMENTATION.md) を参照してください。

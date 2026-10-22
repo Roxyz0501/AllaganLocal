@@ -15,15 +15,15 @@ function combinedTimeline(sources,sum){
  return changes;
 }
 export function recordMoney(ledger,observations,now=new Date()){
- const day=japanDay(now),at=now.toISOString();let changed=false;const series={...ledger.series};
+ const day=japanDay(now),at=now.toISOString();let changed=false;const patches=[];const series={...ledger.series};
  for(const observation of observations){
-  const {key,label,...amounts}=observation;const old=series[key];const previous=old?.changes.at(-1);
+  const {key,label,...amounts}=observation;const old=series[key];const previous=old?.changes.findLast(p=>p.at<=at);
   const signature=JSON.stringify(amounts),different=!previous||JSON.stringify(previous.amounts)!==signature;
   if(!old||!old.days[day]||different||old.label!==label){
-   const point={at,amounts};series[key]={label,days:{...old?.days,[day]:point},changes:different?[...(old?.changes||[]),point]:old.changes};changed=true;
+   const point={at,amounts};const daily=!old?.days[day]||old.days[day].at<=at;patches.push({key,label,point,changed:different,daily});series[key]={label,days:daily?{...old?.days,[day]:point}:old.days,changes:different?[...(old?.changes||[]),point].sort((a,b)=>a.at.localeCompare(b.at)):old.changes};changed=true;
   }
  }
- return {changed,ledger:{version:1,startedAt:ledger.startedAt||at,series}};
+ return {changed,patches,ledger:{version:1,startedAt:ledger.startedAt||at,series}};
 }
 export function moneySummary(ledger,key,day=japanDay()){
  const s=ledger.series[key],today=s?.days[day],prior=s?.days[previousDay(day)];const value=today?.amounts.value??null,previous=prior?.amounts.value??null;

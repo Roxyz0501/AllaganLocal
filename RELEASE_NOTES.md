@@ -1,3 +1,13 @@
+## 1.3.0.0 — Persistence audit fixes (2026-10-23)
+
+- JST daily SQLite journals append only changed history events; idempotent legacy migration preserves originals. Range reads and a bounded period cache replace full-history startup expansion.
+- Settings apply immediately and save changed content every 60 seconds, flush on logout/disposal, keep three validated backups and recover corruption. Three consecutive failures pause saving with retry.
+- Canonical History files tab and browser totals report exact logical file sizes and scope in seven languages.
+- Price cache saves dirty item rows, reuses identical quotes, and stops/drains work on server shutdown. Disposable media/link caches and logs have size/age limits.
+- Gil Ledger compatibility DB and daily archives are readable. Plugin disposal leaves the independent server running while releasing host resources.
+- Synthetic data only; installed DLL and production history were not changed. Live-game shutdown/UI integration remains unverified. Full details: PERSISTENCE_IMPLEMENTATION.md.
+- Before upgrading a running 1.2 server, stop it using the previous plugin's Stop button. The old server has no authenticated graceful-control endpoint. This release does not force-kill it or migrate data in the running installation.
+
 # Allagan Local 1.2.0.0
 
 - ロドストからジョブ・レベル一覧を取得。「通貨・トークン」の上に簡潔な一覧を表示。

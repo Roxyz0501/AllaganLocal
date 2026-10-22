@@ -268,5 +268,113 @@
     "ko": "사이트 종료",
     "zh-Hans": "停止网站",
     "zh-Hant": "停止網站"
+  },
+  "history-tab": {
+    "ja": "履歴ファイル",
+    "en": "History files",
+    "de": "Verlaufsdateien",
+    "fr": "Fichiers d’historique",
+    "ko": "기록 파일",
+    "zh-Hans": "历史文件",
+    "zh-Hant": "歷史檔案"
+  },
+  "history-count": {
+    "ja": "総ファイル数",
+    "en": "Total files",
+    "de": "Dateien insgesamt",
+    "fr": "Nombre de fichiers",
+    "ko": "총 파일 수",
+    "zh-Hans": "文件总数",
+    "zh-Hant": "檔案總數"
+  },
+  "history-size": {
+    "ja": "総サイズ（バイト）",
+    "en": "Total size (bytes)",
+    "de": "Gesamtgröße (Bytes)",
+    "fr": "Taille totale (octets)",
+    "ko": "총 크기(바이트)",
+    "zh-Hans": "总大小（字节）",
+    "zh-Hant": "總大小（位元組）"
+  },
+  "history-directory": {
+    "ja": "保存場所",
+    "en": "Storage directory",
+    "de": "Speicherverzeichnis",
+    "fr": "Dossier de stockage",
+    "ko": "저장 위치",
+    "zh-Hans": "保存位置",
+    "zh-Hant": "儲存位置"
+  },
+  "history-open": {
+    "ja": "保存ディレクトリを開く",
+    "en": "Open storage directory",
+    "de": "Speicherverzeichnis öffnen",
+    "fr": "Ouvrir le dossier",
+    "ko": "저장 폴더 열기",
+    "zh-Hans": "打开保存目录",
+    "zh-Hant": "開啟儲存目錄"
+  },
+  "history-refresh": {
+    "ja": "更新",
+    "en": "Refresh",
+    "de": "Aktualisieren",
+    "fr": "Actualiser",
+    "ko": "새로 고침",
+    "zh-Hans": "刷新",
+    "zh-Hant": "重新整理"
+  },
+  "history-scope": {
+    "ja": "集計範囲",
+    "en": "Scope",
+    "de": "Umfang",
+    "fr": "Périmètre",
+    "ko": "집계 범위",
+    "zh-Hans": "统计范围",
+    "zh-Hant": "統計範圍"
+  },
+  "history-range": {
+    "ja": "日別履歴・旧形式・バックアップ・破損退避・DB付随ファイル。外部プラグインとキャッシュは除外。",
+    "en": "Daily history, legacy files, backups, corrupt copies and DB sidecars. External plugins and caches excluded.",
+    "de": "Tagesverlauf, Altdateien, Sicherungen, beschädigte Kopien und DB-Begleitdateien. Ohne externe Plugins und Caches.",
+    "fr": "Historique quotidien, anciens fichiers, sauvegardes, copies corrompues et fichiers annexes DB. Hors plugins externes et caches.",
+    "ko": "일별 기록, 이전 형식, 백업, 손상 보관본 및 DB 부속 파일. 외부 플러그인과 캐시는 제외.",
+    "zh-Hans": "每日历史、旧格式、备份、损坏副本及数据库附属文件。不含外部插件和缓存。",
+    "zh-Hant": "每日歷史、舊格式、備份、損壞副本及資料庫附屬檔案。不含外部外掛和快取。"
+  },
+  "history-note": {
+    "ja": "論理ファイル長の合計です。SSDの物理使用量・累積書き込み量ではありません。",
+    "en": "Sum of logical file lengths, not SSD physical usage or cumulative writes.",
+    "de": "Summe logischer Dateilängen, kein physischer SSD-Verbrauch oder Schreibvolumen.",
+    "fr": "Somme des tailles logiques, pas l’espace physique SSD ni les écritures cumulées.",
+    "ko": "논리 파일 크기의 합계입니다. SSD 물리 사용량이나 누적 쓰기량이 아닙니다.",
+    "zh-Hans": "逻辑文件长度之和，并非SSD物理占用或累计写入量。",
+    "zh-Hant": "邏輯檔案長度總和，並非SSD實體用量或累計寫入量。"
+  },
+  "history-error": {
+    "ja": "履歴ファイルを計測できませんでした。更新して再試行してください。",
+    "en": "Could not measure history files. Refresh to retry.",
+    "de": "Verlaufsdateien konnten nicht gemessen werden. Erneut aktualisieren.",
+    "fr": "Mesure impossible. Actualisez pour réessayer.",
+    "ko": "기록 파일을 측정하지 못했습니다. 새로 고침으로 재시도하세요.",
+    "zh-Hans": "无法统计历史文件，请刷新重试。",
+    "zh-Hant": "無法統計歷史檔案，請重新整理重試。"
+  },
+  "settings-error": {
+    "ja": "設定を保存できません。保存先を確認し、再試行してください。",
+    "en": "Could not save settings. Check the directory and retry.",
+    "de": "Einstellungen konnten nicht gespeichert werden. Verzeichnis prüfen und erneut versuchen.",
+    "fr": "Enregistrement impossible. Vérifiez le dossier et réessayez.",
+    "ko": "설정을 저장하지 못했습니다. 저장 위치를 확인하고 재시도하세요.",
+    "zh-Hans": "无法保存设置，请检查目录并重试。",
+    "zh-Hant": "無法儲存設定，請檢查目錄並重試。"
+  },
+  "settings-recovered": {
+    "ja": "設定を正常なバックアップから復元しました。",
+    "en": "Settings recovered from a valid backup.",
+    "de": "Einstellungen aus gültiger Sicherung wiederhergestellt.",
+    "fr": "Paramètres restaurés depuis une sauvegarde valide.",
+    "ko": "정상 백업에서 설정을 복원했습니다.",
+    "zh-Hans": "已从有效备份恢复设置。",
+    "zh-Hant": "已從有效備份還原設定。"
   }
 }

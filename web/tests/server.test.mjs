@@ -16,7 +16,7 @@ test('local API: lists, favorites, persistence, filters, partial writes, and req
   await writeFile(path.join(dir,'AllaganMarket.json'),'{"Characters":{"18014398549107457":{"Name":"Test Character"},"33776997240863917":{"Name":"Test Retainer","OwnerId":18014398549107457}}}');
   const probe=net.createServer();await new Promise(resolve=>probe.listen(0,'127.0.0.1',resolve));const port=probe.address().port;await new Promise(resolve=>probe.close(resolve));const base='http://127.0.0.1:'+port;
   async function start(){child=spawn(process.execPath,['server.mjs'],{cwd:root,windowsHide:true,env:{...process.env,PORT:String(port),ALLAGAN_SOURCE:source,ALLAGAN_DATA_DIR:dir,ALLAGAN_CATALOG_DIR:dir,ALLAGAN_SALES_SOURCE:salesFile},stdio:['ignore','pipe','pipe']});let stderr='';child.stderr.on('data',chunk=>stderr+=chunk);await new Promise((resolve,reject)=>{child.once('error',reject);child.once('exit',code=>reject(new Error('test server exit '+code+' '+stderr)));child.stdout.once('data',resolve);});}
-  async function stop(){await new Promise(resolve=>{child.once('exit',resolve);child.kill();});}
+  async function stop(){const key=await readFile(path.join(dir,'server-control.key'),'utf8');const exited=new Promise(resolve=>child.once('exit',resolve));const response=await fetch(base+'/api/host-stop',{method:'POST',headers:{'X-Allagan-Control':key}});assert.equal(response.status,200);await exited;}
   try{
     await start();let boot=await(await fetch(base+'/api/bootstrap')).json();const headers={'Content-Type':'application/json','X-App-Token':boot.token};
     const post=(url,body,extra={})=>fetch(base+url,{method:'POST',headers:{...headers,...extra},body:JSON.stringify(body)});
@@ -68,6 +68,6 @@ test('local API: lists, favorites, persistence, filters, partial writes, and req
     await stop();await start();boot=await(await fetch(base+'/api/bootstrap')).json();headers['X-App-Token']=boot.token;assert.equal(boot.state.lists.find(x=>x.id===listId).items[0].target,12);assert.ok(boot.state.favorites.includes(5));
     assert.deepEqual(boot.state.lists.find(x=>x.id===listId).items[0].excludedLocations,[{owner:'90000000000000001',category:8}]);
     await post('/api/action',{action:'remove-item',listId,itemId:5});await post('/api/action',{action:'delete-list',listId});await post('/api/action',{action:'favorite',itemId:5,enabled:false});
-    const disk=JSON.parse(await readFile(path.join(dir,'state.json'),'utf8'));assert.equal(disk.lists.some(x=>x.id===listId),false);assert.equal(disk.favorites.length,0);
+    const control=await readFile(path.join(dir,'server-control.key'),'utf8');assert.equal((await fetch(base+'/api/host-flush',{method:'POST',headers:{'X-Allagan-Control':control}})).status,200);const disk=JSON.parse(await readFile(path.join(dir,'state.json'),'utf8'));assert.equal(disk.lists.some(x=>x.id===listId),false);assert.equal(disk.favorites.length,0);
   }finally{if(child&&child.exitCode===null)await stop();}
 });

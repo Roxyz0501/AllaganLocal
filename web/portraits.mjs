@@ -1,3 +1,4 @@
+import {trimCache} from './cache-budget.mjs';
 import {createCrestCache} from './crests.mjs';
 import {mkdir,readFile,writeFile,rename,stat} from 'node:fs/promises';import path from 'node:path';import {createHash} from 'node:crypto';
 export const portraitFallback=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="40" fill="#e5ece5"/><circle cx="40" cy="29" r="14" fill="#8b9f91"/><path d="M13 72c0-29 54-29 54 0" fill="#8b9f91"/></svg>');
@@ -53,7 +54,7 @@ export function createPortraitCache(dir,fetcher=fetch,clock=Date.now){
     }
     const image=await fetcher(portrait.url,{signal:AbortSignal.timeout(15000),redirect:'error'});if(!image.ok||!image.headers.get('content-type')?.startsWith('image/jpeg'))throw new Error('Image unavailable');
     const chunks=[];let size=0;for await(const chunk of image.body){size+=chunk.length;if(size>1024*1024)throw new Error('Image too large');chunks.push(chunk);}const bytes=Buffer.concat(chunks);if(bytes[0]!==255||bytes[1]!==216||bytes[2]!==255)throw new Error('Invalid JPEG');
-    await mkdir(dir,{recursive:true});await writeFile(path.join(dir,key+'.profile.json'),JSON.stringify({id:portrait.id}));await writeFile(file+'.tmp',bytes);await rename(file+'.tmp',file);revision++;if(states[stateKey]){delete states[stateKey];await save();}return {bytes,type:'image/jpeg'};
+    await mkdir(dir,{recursive:true});await writeFile(path.join(dir,key+'.profile.json'),JSON.stringify({id:portrait.id}));await writeFile(file+'.tmp',bytes);await rename(file+'.tmp',file);await trimCache(dir);revision++;if(states[stateKey]){delete states[stateKey];await save();}return {bytes,type:'image/jpeg'};
    }catch{states[stateKey]={firstFailure:states[stateKey]?.firstFailure||clock(),lastAttempt:clock()};await save();return{bytes:portraitFallback,type:'image/svg+xml'};}finally{const next=queue.shift();if(next)next();else active--;}
   })().finally(()=>pending.delete(key)));
   return pending.get(key);

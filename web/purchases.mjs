@@ -1,3 +1,5 @@
+import {resolvePurchaseSource,indexPurchaseArchive} from './purchase-archive.mjs';
+import path from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 import {statSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -20,9 +22,12 @@ export class PurchaseStore{
  constructor(file){this.file=file;this.cache=new Map();this.summaries=new Map();this.metrics={reads:0,rows:0,writes:0};this.generation=0;}
  close(){this.db?.close();this.db=null;this.cache.clear();this.summaries.clear();}
  fresh(){
-  let info;try{info=statSync(this.file);}catch{this.close();throw new Error('Gil Ledgerの購入履歴が見つかりません。プラグインを導入して購入を記録してください。');}
+  if(this.archiveUntil>Date.now()&&this.db)return;
+  let source=resolvePurchaseSource(this.file);if(source.file===this.file){try{statSync(this.file);}catch{source=resolvePurchaseSource(path.join(path.dirname(this.file),path.basename(this.file,path.extname(this.file))+'-history'));}}
+  if(source.root){const next=indexPurchaseArchive(source.root);this.close();this.db=next.db;this.identity=next.identity;this.schema=2;this.generation++;this.archiveUntil=Date.now()+120000;return;}
+  const resolved=source.file;let info;try{info=statSync(resolved);}catch{this.close();throw new Error('Gil Ledgerの購入履歴が見つかりません。プラグインを導入して購入を記録してください。');}
   const identity=info.dev+':'+info.ino+':'+info.birthtimeMs;
-  if(!this.db||this.identity!==identity){this.close();this.db=new DatabaseSync(this.file,{readOnly:true,timeout:2000});this.identity=identity;this.db.exec('PRAGMA query_only=ON');const version=this.db.prepare('PRAGMA user_version').get().user_version;if(![1,2].includes(version)){this.close();throw new Error('購入履歴の保存形式に対応していません。');}this.schema=version;this.generation++;this.version=null;}
+  if(!this.db||this.identity!==identity){this.close();this.db=new DatabaseSync(resolved,{readOnly:true,timeout:2000});this.identity=identity;this.db.exec('PRAGMA query_only=ON');const version=this.db.prepare('PRAGMA user_version').get().user_version;if(![1,2].includes(version)){this.close();throw new Error('購入履歴の保存形式に対応していません。');}this.schema=version;this.generation++;this.version=null;}
   const version=this.db.prepare('PRAGMA data_version').get().data_version;
   if(version!==this.version){this.version=version;this.generation++;this.cache.clear();this.summaries.clear();}
  }

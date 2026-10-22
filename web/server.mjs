@@ -1,6 +1,8 @@
+import {createHistoryFiles} from './history-files.mjs';
+import {loadSettings,SettingsWriter} from './settings-store.mjs';
+import {DailyHistory} from './daily-history.mjs';
 import {createJobCache} from './jobs.mjs';
 import {createPurchaseService} from './purchases-service.mjs';
-import {loadHistory,saveHistory} from './history-store.mjs';
 import {historyOrigins} from './history-origins.mjs';
 import {createTranslator} from './public/translation.js';
 import {normalize as normalizeLanguage} from './public/language-policy.js';
@@ -46,11 +48,15 @@ const marketPrices=await createMarketPrices(path.join(data,'market-prices.json')
 const purchaseHistory=createPurchaseService(process.env.ALLAGAN_PURCHASE_SOURCE||path.join(process.env.APPDATA||'', 'XIVLauncher','pluginConfigs','MarketLedger','market-ledger.db'));
 const statePath=path.join(data,'state.json');
 const ledgerPath=path.join(data,'money-history.json');let ledger={version:1,series:{}},ledgerError='';
-try{ledger=(await loadHistory(ledgerPath)).ledger;}catch{ledgerError='金額履歴を読み込めません。元ファイルを保持し、追記を停止しています。';}
-let moneyQueue=Promise.resolve(),moneyStamp='',moneyState;
-function captureMoney(){const job=moneyQueue.then(captureMoneyNow);moneyQueue=job.catch(()=>{});return job;}
+const historyFiles=createHistoryFiles(data);
+const dailyHistory=new DailyHistory(ledgerPath);let ledgerReady=false;
+try{ledger=await dailyHistory.load({latestOnly:true});ledgerReady=true;}catch{ledgerError='金額履歴を読み込めません。元ファイルを保持し、追記を停止しています。';}
+let moneyQueue=Promise.resolve(),moneyStamp='',moneyState,pendingMoney;
+let moneyRunning=false,moneyRequested=false;function captureMoney(){moneyRequested=true;if(moneyRunning)return moneyQueue;moneyRunning=true;const job=(async()=>{try{do{moneyRequested=false;await captureMoneyNow();}while(moneyRequested);}finally{moneyRunning=false;}})();moneyQueue=job;return job;}
+function commitMoney(next,stamp,capturedState){ledger=next.ledger;for(const s of Object.values(ledger.series)){s.changes=s.changes.slice(-1);for(const day of Object.keys(s.days))if(day<previousDay(japanDay()))delete s.days[day];}moneyStamp=stamp;moneyState=capturedState;ledgerError='';pendingMoney=null;historyFiles.invalidate();}
 async function captureMoneyNow(){
- if(ledgerError||!savedSlots.length)return;
+ if(!ledgerReady||dailyHistory.failures>=3||!savedSlots.length)return;
+ if(pendingMoney){const {next,stamp,capturedState}=pendingMoney;try{await dailyHistory.append(next.patches,next.ledger.startedAt);commitMoney(next,stamp,capturedState);}catch(e){ledgerError=e.message;}return;}
  const stamp=sourceStamp+charactersStamp+(catalog.updatedAt||'')+japanDay()+marketPrices.status().updatedAt+getPortrait.revision();if(stamp===moneyStamp&&moneyState===state)return;
  const owners=ownerDirectory(savedSlots,characters,state.owners),all=aggregate(records),observations=owners.filter(o=>['キャラクター','FC'].includes(o.type)).map(o=>({key:(o.type==='FC'?'fc:':o.type==='リテイナー'?'retainer:':'character:')+o.id,label:o.name+' @ '+o.world,value:o.type==='FC'?o.gil:o.totalGil,personal:o.gil,retainers:o.type==='FC'?null:o.retainerGil}));
  for(const o of owners.filter(o=>o.type==='リテイナー'))observations.push({key:'retainer:'+o.id,label:o.name+' / '+(o.parentNames?.join('・')||'所有者不明')+' @ '+(o.world||''),value:o.gil,personal:null,retainers:o.gil});
@@ -84,7 +90,7 @@ async function captureMoneyNow(){
  observations.push({key:'all:items',label:'全アイテム',value:itemCount,price:unknownItemPrices?null:itemPrice,personal:null,retainers:null});
  const listInventory=aggregate(records);
  for(const list of state.lists){const valued=list.items.filter(i=>!currencyIds.has(i.id)).map(i=>valueItem(applyExclusions({...catalogMap.get(i.id),...i,...(listInventory.get(i.id)||{quantity:0,locations:[]})},i.excludedLocations)));const summary=summarize(valued),byOwner={},byPlace={};for(const item of valued)for(const l of item.locations||[]){if(l.excluded)continue;const placeKey=l.owner+':'+l.category+':'+item.id,z=byPlace[placeKey]||(byPlace[placeKey]={market:0,itemId:item.id,itemName:item.name||`アイテム #${item.id}`,owner:l.owner,category:l.category,quantity:0,value:0});z.quantity+=l.quantity;const mv=marketValue({...l,locations:[l]},marketPrices.item(item.id,'').region,cashTags.has(item.id),marketPrices.item(item.id,'').marketable).value;z.market+=mv;if(l.quantity&&item.sell==null)z.value=null;else if(z.value!=null)z.value+=l.quantity*(item.sell||0);const a=byOwner[l.owner]||(byOwner[l.owner]={value:0,quantity:0,market:0});a.quantity+=l.quantity;a.market+=mv;if(l.quantity&&item.sell==null)a.value=null;else if(a.value!=null)a.value+=l.quantity*(item.sell||0);}observations.push({locations:Object.values(byPlace),owners:byOwner,key:'list:'+list.id,label:list.name,quantity:summary.quantity,value:summary.unknownPrices?null:summary.sellTotal,personal:null,retainers:null});}
- moneyStamp=stamp;moneyState=state;const next=recordMoney(ledger,observations);if(next.changed){try{await saveHistory(ledgerPath,next.ledger);ledger=next.ledger;}catch{ledgerError='金額履歴を保存できません。保存先を確認してください。';}}
+ const next=recordMoney(ledger,observations);if(next.changed){pendingMoney={next,stamp,capturedState:state};try{await dailyHistory.append(next.patches,next.ledger.startedAt);commitMoney(next,stamp,pendingMoney.capturedState);}catch{ledgerError='金額履歴を保存できません。保存先を確認してください。';}}
 }
 
 function assetDayChanges(o){
@@ -99,10 +105,11 @@ async function trackActivity(){if(activityError)return;const next=updateActivity
 
 const defaultSource=process.env.ALLAGAN_SOURCE||path.join(process.env.APPDATA||'','XIVLauncher','pluginConfigs','InventoryTools','inventories.csv');
 let state;
-try{state=JSON.parse(await readFile(statePath,'utf8'));if(!Array.isArray(state.lists)||!Array.isArray(state.favorites))throw new Error('保存形式が不正です');}
+const validateState=s=>{if(!Array.isArray(s.lists)||!Array.isArray(s.favorites))throw new Error('保存形式が不正です');};
+try{const loaded=await loadSettings(statePath,validateState);if(!loaded){const e=new Error();e.code='ENOENT';throw e;}state=loaded.value;}
 catch(e){if(e.code!=='ENOENT')throw new Error(`state.jsonを読み込めません。元ファイルを保持しました: ${e.message}`);state={source:defaultSource,lists:[{id:randomUUID(),name:'マイリスト',items:[]}],favorites:[],owners:{}};}
 let catalog={items:[]},catalogMap=new Map(),records=[],savedSlots=[],sourceStamp='',sourceUpdated=null,sourceError='',lastRead=null;
-let catalogJob={running:false,message:''},refreshing=false;
+let catalogJob={running:false,message:''},refreshing=false,closing=false;
 let characters=new Map(),charactersStamp='',charactersError='',worlds={};
 try{worlds=JSON.parse(await readFile(path.join(process.env.ALLAGAN_CATALOG_DIR||data,'worlds.json'),'utf8'));}catch{}
 const exportRevision=()=>createHash('sha256').update(sourceStamp+charactersStamp+JSON.stringify(state)+(marketPrices.status().updatedAt||'')).digest('hex');
@@ -125,7 +132,7 @@ async function loadCharacters(){
 }
 async function loadCatalog(){try{catalog=JSON.parse(await readFile(path.join(process.env.ALLAGAN_CATALOG_DIR||data,'catalog.json'),'utf8'));catalogMap=new Map(catalog.items.map(x=>[x.id,x]));}catch(e){if(e.code!=='ENOENT')console.error('Catalog:',e.message);}}
 async function refresh(force=false){
-  if(refreshing)return;refreshing=true;
+  if(closing||refreshing)return;refreshing=true;
   try{
     await loadCharacters();
     await refreshSales();
@@ -141,7 +148,8 @@ async function refresh(force=false){
 }
 await loadCatalog();await refresh();await getPortrait.ready;await jobs.ready;
 let timer;function scheduleRefresh(){clearInterval(timer);timer=setInterval(()=>refresh(),(state.refreshSeconds||60)*1000);timer.unref();}scheduleRefresh();
-async function persist(next){await writeFile(statePath+'.tmp',JSON.stringify(next,null,2));await rename(statePath+'.tmp',statePath);state=next;}
+const settingsWriter=new SettingsWriter(statePath,state,validateState);
+async function persist(next){settingsWriter.set(next);state=next;}
 let directoryCache;
 function directory(){if(!directoryCache||directoryCache.slots!==savedSlots||directoryCache.chars!==characters||directoryCache.aliases!==state.owners)directoryCache={slots:savedSlots,chars:characters,aliases:state.owners,value:ownerDirectory(savedSlots,characters,state.owners)};return directoryCache.value;}
 function excludedGilKeys(params){
@@ -151,7 +159,7 @@ function excludedGilKeys(params){
 }
 let lodestoneJob={running:false,done:0,total:0};
 async function refreshLodestone(){if(lodestoneJob.running)return;const owners=directory().filter(o=>['キャラクター','FC'].includes(o.type));lodestoneJob={running:true,done:0,total:owners.length};let index=0;try{await Promise.all(Array.from({length:2},async()=>{while(index<owners.length){const o=owners[index++];try{await getPortrait(o,true);await jobs.refresh(o);}finally{lodestoneJob.done++;}}}));await captureMoney();}finally{lodestoneJob.running=false;}}
-function status(){return {refreshSeconds:state.refreshSeconds||60,lodestone:lodestoneJob,market:marketPrices.status(),source:state.source,sourceUpdated,lastRead,sourceError,charactersError,charactersStamp:charactersStamp+':portraits:'+getPortrait.revision()+':market:'+marketPrices.status().revision+':jobs:'+jobs.revision(),records:records.length,owners:[...new Set(records.map(x=>x.owner))].map(id=>({id,...characters.get(id),name:state.owners[id]||characters.get(id)?.name||`保管者 · ${id.slice(-6)}`})),categories,catalogItems:catalog.items.length,catalogUpdated:catalog.updatedAt||null,catalogJob};}
+function status(){return {persistenceError:settingsWriter.error||ledgerError,refreshSeconds:state.refreshSeconds||60,lodestone:lodestoneJob,market:marketPrices.status(),source:state.source,sourceUpdated,lastRead,sourceError,charactersError,charactersStamp:charactersStamp+':portraits:'+getPortrait.revision()+':market:'+marketPrices.status().revision+':jobs:'+jobs.revision(),records:records.length,owners:[...new Set(records.map(x=>x.owner))].map(id=>({id,...characters.get(id),name:state.owners[id]||characters.get(id)?.name||`保管者 · ${id.slice(-6)}`})),categories,catalogItems:catalog.items.length,catalogUpdated:catalog.updatedAt||null,catalogJob};}
 function send(res,code,body){res.writeHead(code,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(body));}
 async function body(req){let size=0,parts=[];for await(const chunk of req){size+=chunk.length;if(size>1024*1024)throw new Error('リクエストが大きすぎます');parts.push(chunk);}return JSON.parse(Buffer.concat(parts).toString('utf8'));}
 function validName(value){if(typeof value!=='string'||!value.trim()||value.trim().length>80)throw new Error('名前は1〜80文字で入力してください。');return value.trim();}
@@ -188,6 +196,10 @@ async function action(input){
   }
   await persist(next);if(input.action==='refresh-interval')scheduleRefresh();await captureMoney();if(input.action==='source')await refresh(true);return state;
 }
+const controlFile=path.join(data,'server-control.key');let controlKey;
+try{controlKey=await readFile(controlFile,'utf8');}catch(e){if(e.code!=='ENOENT')throw e;controlKey=randomUUID();await writeFile(controlFile,controlKey,{flag:'wx'});}
+async function flushServer(){await mutation;await moneyQueue;if(pendingMoney){await captureMoney();if(pendingMoney)throw Error(ledgerError||'Pending history could not be flushed');}await dailyHistory.flush();await settingsWriter.flush();}
+async function stopServer(){if(closing)return;closing=true;clearInterval(timer);clearInterval(portraitTimer);const drained=new Promise(resolve=>server.close(resolve));server.closeIdleConnections();await marketPrices.close?.();await drained;while(refreshing||checkingPortraits||lodestoneJob.running||catalogJob.running)await new Promise(r=>setTimeout(r,20));await flushServer();await settingsWriter.close();await dailyHistory.close();await purchaseHistory.close();process.exit(0);}
 const server=http.createServer(async(req,res)=>{
   res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','no-referrer');
   res.setHeader('Content-Security-Policy',"default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
@@ -196,6 +208,11 @@ const server=http.createServer(async(req,res)=>{
   if(req.headers.origin&&!hosts.some(h=>req.headers.origin===`http://${h}`)){send(res,403,{error:'他のサイトからは操作できません。'});return;}
   try{
     const url=new URL(req.url,`http://127.0.0.1:${port}`);
+    if(req.method==='POST'&&['/api/host-flush','/api/host-stop','/api/host-retry'].includes(url.pathname)){
+     if(req.headers['x-allagan-control']!==controlKey)return send(res,403,{error:'Unauthorized'});
+     if(url.pathname.endsWith('retry')){dailyHistory.retry();await settingsWriter.retry();await captureMoney();}await flushServer();send(res,200,{ok:true});if(url.pathname.endsWith('stop'))setImmediate(()=>stopServer().catch(e=>console.error(e.message)));return;
+    }
+    if(closing)return send(res,503,{error:'Server stopping'});
     const omitted=new Set([...excludedGilKeys(url.searchParams)].map(key=>key.split(':')[1]));const activeRecords=records.filter(r=>!omitted.has(r.owner));
     if(req.method==='GET'&&/^\/api\/item-link\/\d+$/.test(url.pathname)){
       const id=Number(url.pathname.split('/').at(-1)),item=catalogMap.get(id);if(!item)return directError(req,res,404,'アイテムが見つかりません。');
@@ -229,10 +246,11 @@ const server=http.createServer(async(req,res)=>{
       res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','Cross-Origin-Resource-Policy':'same-origin'});
       return res.end('(()=>{try{const settings='+JSON.stringify(settings)+';for(const [key,value] of Object.entries(settings)){if(localStorage.getItem(key)===null)localStorage.setItem(key,value);}}catch{}})();');
     }
-    if(req.method==='GET'&&url.pathname==='/api/health')return send(res,200,{app:'allagan-local',version:'1.2.0.0',pid:process.pid});
+    if(req.method==='GET'&&url.pathname==='/api/history-files')return send(res,200,await historyFiles.read(url.searchParams.get('refresh')==='1'));
+    if(req.method==='GET'&&url.pathname==='/api/health')return send(res,200,{app:'allagan-local',version:'1.3.0.0',pid:process.pid,control:true});
     if(req.method==='GET'&&url.pathname==='/api/bootstrap')return send(res,200,{token,state,status:status()});
     if(req.method==='GET'&&url.pathname==='/api/status')return send(res,200,status());
-    if(req.method==='GET'&&url.pathname==='/api/money-history'){const day=url.searchParams.get('day')||japanDay();if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||!Number.isFinite(Date.parse(day)))return send(res,400,{error:'日付が不正です。'});const selectedKey=url.searchParams.get('key')||'all:gil',itemScope=selectedKey.startsWith('item:')||selectedKey==='all:items';const totals=itemScope?itemMetricLedger(scopedItems(ledger,url.searchParams.get('character'),omitted,selectedKey),url.searchParams.get('metric')):withMoneyTotals(selectedKey.startsWith('list:')||selectedKey==='all:lists'?listMetricLedger(visibleHistory(ledger,excludedGilKeys(url.searchParams),new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),url.searchParams.get('metric')):visibleHistory(ledger,excludedGilKeys(url.searchParams)),excludedGilKeys(url.searchParams));return send(res,200,{...historyOrigins(moneyView(totals,selectedKey,day,url.searchParams.get('from')||'',url.searchParams.get('to')||''),ledger,directory(),omitted,selectedKey,url.searchParams.get('metric')||'count',url.searchParams.get('character')||'',new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),pricing:url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':state.lists.find(l=>'list:'+l.id===selectedKey)?.pricing||'npc',characters:directory().filter(o=>o.type==='キャラクター'&&!omitted.has(o.id)).map(o=>({id:o.id,name:o.name,world:o.world})),entities:Object.entries(totals.series).filter(([key])=>!itemScope||key===selectedKey).filter(([key])=>itemScope?(key.startsWith('item:')||key==='all:items'):/^(all:|character:|fc:|retainer:|list:|points:)/.test(key)&&key!=='all:items').map(([key,s])=>({key,label:s.label})).concat(itemScope&&!totals.series[selectedKey]?[{key:selectedKey,label:catalogMap.get(Number(selectedKey.slice(5)))?.name||'未記録のアイテム'}]:[]),today:japanDay(),error:ledgerError});}
+    if(req.method==='GET'&&url.pathname==='/api/money-history'){const requestedDay=url.searchParams.get('day')||japanDay(),ledger=await dailyHistory.read({from:previousDay(url.searchParams.get('from')||requestedDay),to:url.searchParams.get('to')||requestedDay});const day=url.searchParams.get('day')||japanDay();if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||!Number.isFinite(Date.parse(day)))return send(res,400,{error:'日付が不正です。'});const selectedKey=url.searchParams.get('key')||'all:gil',itemScope=selectedKey.startsWith('item:')||selectedKey==='all:items';const totals=itemScope?itemMetricLedger(scopedItems(ledger,url.searchParams.get('character'),omitted,selectedKey),url.searchParams.get('metric')):withMoneyTotals(selectedKey.startsWith('list:')||selectedKey==='all:lists'?listMetricLedger(visibleHistory(ledger,excludedGilKeys(url.searchParams),new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),url.searchParams.get('metric')):visibleHistory(ledger,excludedGilKeys(url.searchParams)),excludedGilKeys(url.searchParams));return send(res,200,{...historyOrigins(moneyView(totals,selectedKey,day,url.searchParams.get('from')||'',url.searchParams.get('to')||''),ledger,directory(),omitted,selectedKey,url.searchParams.get('metric')||'count',url.searchParams.get('character')||'',new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),pricing:url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':state.lists.find(l=>'list:'+l.id===selectedKey)?.pricing||'npc',characters:directory().filter(o=>o.type==='キャラクター'&&!omitted.has(o.id)).map(o=>({id:o.id,name:o.name,world:o.world})),entities:Object.entries(totals.series).filter(([key])=>!itemScope||key===selectedKey).filter(([key])=>itemScope?(key.startsWith('item:')||key==='all:items'):/^(all:|character:|fc:|retainer:|list:|points:)/.test(key)&&key!=='all:items').map(([key,s])=>({key,label:s.label})).concat(itemScope&&!totals.series[selectedKey]?[{key:selectedKey,label:catalogMap.get(Number(selectedKey.slice(5)))?.name||'未記録のアイテム'}]:[]),today:japanDay(),error:ledgerError});}
     if(req.method==='GET'&&url.pathname==='/api/owners')return send(res,200,{owners:withActivity(withOwnerAssets(withCashItems(directory(),records,catalogMap,state.cashItems||[]),records,catalogMap,state.cashItems||[],marketPrices),activityError?{entries:{}}:activity).map(o=>({...o,jobs:jobs.snapshot(o)?{capped:jobs.snapshot(o).capped,updatedAt:jobs.snapshot(o).updatedAt}:null,assetDayChanges:assetDayChanges(o),portraitStatus:o.type==='キャラクター'?getPortrait.status(o):null,pointChange:moneySummary(ledger,'points:'+o.id).change,dayChange:moneySummary(ledger,(o.type==='FC'?'fc:':o.type==='リテイナー'?'retainer:':'character:')+o.id).change})),updatedAt:sourceUpdated,activityWarning:activityError});
     if(req.method==='GET'&&url.pathname==='/api/storage'){
  const owners=directory(),view=storageView(savedSlots.filter(r=>!omitted.has(r.owner)),owners,catalogMap,url.searchParams),byId=new Map(owners.map(o=>[o.id,o]));
@@ -313,7 +331,9 @@ const server=http.createServer(async(req,res)=>{
     send(res,404,{error:'見つかりません。'});
   }catch(e){send(res,400,{error:e.message});}
 });
-let checkingPortraits=false;async function retryPortraits(){if(checkingPortraits)return;checkingPortraits=true;try{for(const owner of characters.values()){const status=getPortrait.status(owner);if(owner.type==='キャラクター'&&status.excluded&&!status.stopped&&status.nextRetry<=Date.now())await getPortrait(owner);}}finally{checkingPortraits=false;}}
+let checkingPortraits=false;async function retryPortraits(){if(closing||checkingPortraits)return;checkingPortraits=true;try{for(const owner of characters.values()){if(closing)break;const status=getPortrait.status(owner);if(owner.type==='キャラクター'&&status.excluded&&!status.stopped&&status.nextRetry<=Date.now())await getPortrait(owner);}}finally{checkingPortraits=false;}}
 const portraitTimer=setInterval(()=>retryPortraits().catch(()=>{}),60000);portraitTimer.unref();retryPortraits().catch(()=>{});
 server.listen(port,'127.0.0.1',()=>console.log(`Allagan Local: http://127.0.0.1:${port}`));
 server.on('error',e=>{console.error(e.code==='EADDRINUSE'?'このポートは使用中です。既に起動していないか確認してください。':e.message);process.exitCode=1;});
+
+process.once('SIGINT',()=>stopServer().catch(e=>console.error(e.message)));process.once('SIGTERM',()=>stopServer().catch(e=>console.error(e.message)));

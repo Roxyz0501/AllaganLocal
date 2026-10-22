@@ -1,3 +1,4 @@
+import {trimCache} from './cache-budget.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 export function exactItemLink(html,name){
@@ -17,7 +18,7 @@ export function createItemLinkCache(directory){
    if(!res.ok)throw new Error('公式サイトに接続できませんでした。時間をおいて再度お試しください。');
    const url=exactItemLink(await res.text(),name);
    if(!url)throw new Error('このアイテムの公式個別ページを特定できませんでした。');
-   await mkdir(directory,{recursive:true});await writeFile(file,JSON.stringify({name,url}));return url;
+   await mkdir(directory,{recursive:true});await writeFile(file,JSON.stringify({name,url}));await trimCache(directory,{maxFiles:20000,maxBytes:16*1024*1024});return url;
   })();pending.set(id,job);try{return await job;}finally{pending.delete(id);}
  };
 }

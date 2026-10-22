@@ -721,5 +721,17 @@
   "ジョブ・レベル": "Jobs und Stufen",
   "ロドスト情報を更新すると表示されます。": "Lodestone-Daten aktualisieren, um Jobs anzuzeigen.",
   "ジョブ情報を取得できませんでした。": "Jobdaten konnten nicht abgerufen werden.",
-  "カンスト:{0}": "Maximalstufe: {0}"
+  "カンスト:{0}": "Maximalstufe: {0}",
+  "履歴ファイル": "Verlaufsdateien",
+  "総ファイル数": "Dateien insgesamt",
+  "総サイズ（バイト）": "Gesamtgröße (Bytes)",
+  "保存場所": "Speicherverzeichnis",
+  "保存ディレクトリを開く": "Speicherverzeichnis öffnen",
+  "集計範囲": "Umfang",
+  "日別履歴・旧形式・バックアップ・破損退避・DB付随ファイル。外部プラグインとキャッシュは除外。": "Tagesverlauf, Altdateien, Sicherungen, beschädigte Kopien und DB-Begleitdateien. Ohne externe Plugins und Caches.",
+  "論理ファイル長の合計です。SSDの物理使用量・累積書き込み量ではありません。": "Summe logischer Dateilängen, kein physischer SSD-Verbrauch oder Schreibvolumen.",
+  "履歴ファイルを計測できませんでした。更新して再試行してください。": "Verlaufsdateien konnten nicht gemessen werden. Erneut aktualisieren.",
+  "設定を保存できません。保存先を確認し、再試行してください。": "Einstellungen konnten nicht gespeichert werden. Verzeichnis prüfen und erneut versuchen.",
+  "ファイル数": "Dateien insgesamt",
+  "合計サイズ": "Gesamtgröße (Bytes)"
 }

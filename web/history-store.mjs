@@ -8,6 +8,7 @@ export function parseHistory(text){
  return value;
 }
 
+// Offline legacy recovery only. Normal capture MUST use DailyHistory.append.
 // A flushed immutable snapshot, plus one previous snapshot. Hard links avoid
 // rewriting the previous large file on local NTFS; copy is a fallback only.
 export async function saveHistory(file,ledger){
