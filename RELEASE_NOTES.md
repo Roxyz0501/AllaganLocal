@@ -1,3 +1,9 @@
+## 1.3.0.1 — Sales card layout (2026-10-23)
+
+- Sales cards keep the character/world on a dedicated first row and amount/count on a consistent second row. Long names show an ellipsis with full text on hover; financial values and counts remain visible.
+- Nested retainer and purchase-summary buttons use the same layout, with an intentional stacked layout in narrow containers.
+- Headless Edge verified 15 theme/viewport combinations (1920, 1280, 768, 390 and 320 px; dark, green and light), equal summary heights and no clipped financial values or horizontal overflow. Four sales/purchase UI/data regression tests passed. No production data or installed DLL was changed.
+
 ## 1.3.0.0 — Persistence audit fixes (2026-10-23)
 
 - JST daily SQLite journals append only changed history events; idempotent legacy migration preserves originals. Range reads and a bounded period cache replace full-history startup expansion.
