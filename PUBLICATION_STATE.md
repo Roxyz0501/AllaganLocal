@@ -156,3 +156,12 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Clean Release: 0 warnings/errors. Passed: 62 Web/API/tab checks, 44 standalone Web checks, 8 native persistence checks, 14 host lifecycle checks, 680 localization checks, 44 font lifecycle checks. Four font subsets cover 1,429 codepoints without missing glyphs. Packaged server/assets/seven dictionaries (735 terms)/manifest/no-user-data checks pass.
 - Synthetic old history 10,123 bytes: one further event commits 145 logical record bytes including its ID in one transaction. Unchanged history/settings commits zero. Seven native setting commits: 664 primary/temporary payload bytes and 1,406 backup-copy bytes. These are logical payloads, not physical SSD writes.
 - No production migration, installed DLL replacement or running production server changes. Live-game rendering/logout timing, real large-history migration and SSD physical writes remain unverified. A running old 1.2 server must be stopped using the previous plugin before upgrading because it lacks graceful host control. See PERSISTENCE_IMPLEMENTATION.md for limits and measurements.
+
+## 2026-10-23 Allagan Local 1.3.0.1 — sales card layout
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.1
+- Source/tag: `6374adefa48223dc98429b869c5ee397f48941d5`. ZIP 38,209,242 bytes; SHA-256 `933E2D82CF8DC99672A9F66F58BF29F3C6BF96EE71539A0624D68D7F22CAE55C`; anonymous redownload matches.
+- Shared index `87ba980f7e7dc62468a1fbc8ff3e3e19f4059167`; only AllaganLocalPlugin changed and 12 other entries preserved. Connector and anonymous commit-pinned index return 1.3.0.1. Public repo and image/png icon return HTTP 200.
+- Sales summaries separate identity from amount/count in fixed grid rows. Long identities ellipsize with full hover titles; narrow containers intentionally stack values. Retainer/purchase summary buttons follow the same layout.
+- Headless Edge: 15 combinations of three themes and widths 1920/1280/768/390/320 px; equal summary heights, no clipped financial/count values and no horizontal overflow. Four sales/purchase regressions pass. Clean Release (0 warnings/errors); packaged server, browser assets, seven dictionaries and manifest checks pass.
+- Synthetic layout fixtures only. Production data, installed DLL and running site were not modified. Update the plugin, restart its website, then reload the browser to apply the new assets. Live-game UI remains unverified.
