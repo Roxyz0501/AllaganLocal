@@ -1,3 +1,11 @@
+## 1.3.0.2 — Recovery and lifecycle recheck (2026-10-25)
+
+- A lost legacy-migration marker can be rebuilt without rejecting newer appended history. Imported immutable IDs and full contents are checked; conflicting records are never silently accepted.
+- A corrupt backup no longer blocks saving a valid current Web/native configuration. Healthy generations are retained and damaged backups are preserved separately.
+- An old purchase worker's exit cannot reject a replacement worker's requests. Closed services reject new work immediately, and CSV readers report an unexpected normal worker exit instead of waiting forever.
+- Corrupt disposable market-price SQLite/JSON caches are preserved and rebuilt, allowing the dashboard to start. Purchase/history source data is never rebuilt or deleted as a cache.
+- Verified with synthetic records and isolated servers; no installed DLL, production data or running production site was changed. Details: RECHECK_2026-10-25.md.
+
 ## 1.3.0.1 — Sales card layout (2026-10-23)
 
 - Sales cards keep the character/world on a dedicated first row and amount/count on a consistent second row. Long names show an ellipsis with full text on hover; financial values and counts remain visible.

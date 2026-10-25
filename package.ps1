@@ -12,7 +12,7 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'runtime/node.exe'),(Join-Path $
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.md'),(Join-Path $PSScriptRoot 'LICENSE'),(Join-Path $PSScriptRoot 'THIRD_PARTY_NOTICES.md') -Destination $stage
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'images') -Destination $stage -Recurse
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'fonts') -Destination $stage -Recurse
-Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'PERSISTENCE_IMPLEMENTATION.md'),(Join-Path $PSScriptRoot 'README.ja.md'),(Join-Path $PSScriptRoot 'LOCALIZATION_IMPLEMENTATION.md') -Destination $stage
-$zip=Join-Path $PSScriptRoot 'artifacts/AllaganLocalPlugin-1.3.0.1.zip'
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'RECHECK_2026-10-25.md'),(Join-Path $PSScriptRoot 'PERSISTENCE_IMPLEMENTATION.md'),(Join-Path $PSScriptRoot 'README.ja.md'),(Join-Path $PSScriptRoot 'LOCALIZATION_IMPLEMENTATION.md') -Destination $stage
+$zip=Join-Path $PSScriptRoot 'artifacts/AllaganLocalPlugin-1.3.0.2.zip'
 Compress-Archive -Path ($stage+'/*') -DestinationPath $zip -Force
 Write-Output $zip
