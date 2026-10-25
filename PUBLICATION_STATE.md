@@ -165,3 +165,12 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Sales summaries separate identity from amount/count in fixed grid rows. Long identities ellipsize with full hover titles; narrow containers intentionally stack values. Retainer/purchase summary buttons follow the same layout.
 - Headless Edge: 15 combinations of three themes and widths 1920/1280/768/390/320 px; equal summary heights, no clipped financial/count values and no horizontal overflow. Four sales/purchase regressions pass. Clean Release (0 warnings/errors); packaged server, browser assets, seven dictionaries and manifest checks pass.
 - Synthetic layout fixtures only. Production data, installed DLL and running site were not modified. Update the plugin, restart its website, then reload the browser to apply the new assets. Live-game UI remains unverified.
+
+## 2026-10-25 Allagan Local 1.3.0.2 — whole-application recheck
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.2
+- Source/tag: `b0cddd2dac36e3720a4df3426eb55e19d721103c`. ZIP 38,213,450 bytes; SHA-256 `CD8B4B3DE023353D0C6ACDDBC5AC08CDAAA6B95A8E5ABEFD44ABF5832D643F50`; anonymous redownload and GitHub asset digest match.
+- Shared index commit `50883e2a241137bcc11fcae942cf1c3a0dbd7147`; AllaganLocalPlugin only, 13 other entries preserved. Connector and anonymous commit-pinned index return 1.3.0.2; public repository and image/png icon return HTTP 200.
+- Corrected marker-loss recovery after subsequent history appends, corrupt-backup save blocking, post-commit backup-promotion retry, purchase worker replacement/shutdown/early CSV exit, and disposable price-cache corruption preventing startup. Eight added regression cases; no history or purchase DB is rebuilt as a cache.
+- Passed: 70 Web/API/common-tab tests; 49 standalone Web tests; 14 native settings checks; 14 host lifecycle checks; 680 localization checks; 44 font lifecycle checks. Headless populated server: 18 menu/history/detail/CSV/list flows; layout: 15 theme/viewport cases. Clean Release (0 warnings/errors) and packaged runtime/assets/seven dictionaries/manifest checks pass.
+- Shared template remains byte-identical. Synthetic data and isolated ports only; no production migration, installed DLL replacement or running production-site change. Real in-game UI/logout timing, live external-service behavior, large production migration and SSD physical writes remain unverified. See RECHECK_2026-10-25.md.
