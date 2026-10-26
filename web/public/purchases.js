@@ -25,7 +25,7 @@ const fields=['purchaseSearch','purchaseCharacter','purchaseSource','purchaseWor
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 $('purchaseDay').value=today();let page=1,direction='desc',sequence=0,controller,lastData,timer;const cache=new Map();
 export const purchaseNavigation=()=>({page,direction,fields:Object.fromEntries(fields.map(k=>[k,$(k).type==='checkbox'?$(k).checked:$(k).value]))});
-export function cancelPurchaseLoad(){sequence++;controller?.abort();controller=null;}
+export function cancelPurchaseLoad(){sequence++;clearTimeout(timer);controller?.abort();controller=null;}
 export function purchaseParams(){
  const mode=$('purchasePeriod').value;let from='',to='';
  if(mode==='range'){from=$('purchaseFrom').value;to=$('purchaseTo').value;}else if(mode==='day')from=to=$('purchaseDay').value;else if(mode==='today')from=to=today();else if(mode==='yesterday')from=to=new Date(Date.parse(today()+'T00:00:00Z')-86400000).toISOString().slice(0,10);

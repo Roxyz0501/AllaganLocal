@@ -2,6 +2,7 @@ import {pagedSource,salesColumns,salesRow} from './csv-sources.js';
 const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('ja-JP').format(n),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let csvData,csvParams;
 let page=1,seq=0,timer,lastPayload='',activeQuery='',activeController;
+export function cancelSalesLoad(){seq++;clearTimeout(timer);activeController?.abort();activeController=null;activeQuery='';}
 function select(id,options){const value=$(id).value;$(id).innerHTML='<option value="">すべて</option>'+options.map(x=>`<option value="${esc(x.id)}">${esc(x.name)} @ ${esc(x.world)}</option>`).join('');if(value&&!options.some(x=>x.id===value))$(id).add(new Option('選択した対象（履歴なし）',value));$(id).value=value;}
 export async function loadSales(){
   let request,controller;
@@ -12,7 +13,7 @@ export async function loadSales(){
     const query=p.toString();if(activeController&&activeQuery===query)return;activeController?.abort();controller=new AbortController();activeController=controller;activeQuery=query;request=++seq;
     const res=await fetch('/api/sales?'+p,{signal:AbortSignal.any([controller.signal,AbortSignal.timeout(15000)])}),data=await res.json();if(!res.ok)throw new Error(data.error||'販売履歴を読み込めません。');if(request!==seq)return;
     $('salesWarning').hidden=!data.error&&!data.nameWarning;$('salesWarning').textContent=[data.error,data.nameWarning].filter(Boolean).join(' ');
-    const signature=JSON.stringify(data);if(signature===lastPayload)return;
+    csvParams=p;const signature=JSON.stringify(data);if(signature===lastPayload)return;
     csvData=data;csvParams=p;page=data.page;select('salesCharacter',data.characters);select('salesRetainer',data.retainers);
     $('salesWarning').hidden=!data.error&&!data.nameWarning;$('salesWarning').textContent=[data.error,data.nameWarning].filter(Boolean).join(' ');
     $('salesCount').textContent=fmt(data.summary.count);$('salesQuantity').textContent=fmt(data.summary.quantity);$('salesGross').textContent=fmt(data.summary.gross);const fee=Math.floor(data.summary.gross*0.1);$('salesFee').textContent=`手数料10%（概算） ${fmt(fee)} G ／ 差引 ${fmt(data.summary.gross-fee)} G`;
