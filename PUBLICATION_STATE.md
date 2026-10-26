@@ -174,3 +174,13 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Corrected marker-loss recovery after subsequent history appends, corrupt-backup save blocking, post-commit backup-promotion retry, purchase worker replacement/shutdown/early CSV exit, and disposable price-cache corruption preventing startup. Eight added regression cases; no history or purchase DB is rebuilt as a cache.
 - Passed: 70 Web/API/common-tab tests; 49 standalone Web tests; 14 native settings checks; 14 host lifecycle checks; 680 localization checks; 44 font lifecycle checks. Headless populated server: 18 menu/history/detail/CSV/list flows; layout: 15 theme/viewport cases. Clean Release (0 warnings/errors) and packaged runtime/assets/seven dictionaries/manifest checks pass.
 - Shared template remains byte-identical. Synthetic data and isolated ports only; no production migration, installed DLL replacement or running production-site change. Real in-game UI/logout timing, live external-service behavior, large production migration and SSD physical writes remain unverified. See RECHECK_2026-10-25.md.
+
+
+## 2026-10-26 Allagan Local 1.3.0.3 — follow-up recheck
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.3
+- Source/tag: `e2ab21cf26b3712307fd059c79325bc6b59c6d94`. ZIP 38,215,624 bytes; SHA-256 `A5279BAEFC07E35E81EAFF87589605BF0D886470AF0D8C313449A1700AA244C5`; anonymous redownload matches.
+- Shared index commit `d8038652a947c47fd7c2ab418b4a7a817b25bfd7`; AllaganLocalPlugin only, 13 other entries preserved. Connector, anonymous commit-pinned index and normal raw main index return 1.3.0.3. Public repo and image/png icon return HTTP 200.
+- Corrected parent-search cached-query races/clear, stale currency errors and unchanged recovery warnings, currency/sales CSV query snapshots, and pending searches after navigation. Five additional regressions include numeric/tag sorting. No schema or translation-key changes.
+- Passed: 75 Web/API/common-tab tests; 14 native settings checks; 14 host lifecycle checks; 680 language checks; 44 font checks; 18 headless browser flows; 15 theme/viewport layouts. Release zero warnings/errors; package runtime/assets/seven dictionaries/no-user-data checks pass. Shared History files template remains byte-identical.
+- Synthetic data only. Production history, installed DLL and running site were not modified. Live-game UI/logout timing, live external services and production-scale behavior remain unverified. Update the plugin, restart the site from settings and reload the browser. See RECHECK_2026-10-26.md.
