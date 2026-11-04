@@ -184,3 +184,14 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Corrected parent-search cached-query races/clear, stale currency errors and unchanged recovery warnings, currency/sales CSV query snapshots, and pending searches after navigation. Five additional regressions include numeric/tag sorting. No schema or translation-key changes.
 - Passed: 75 Web/API/common-tab tests; 14 native settings checks; 14 host lifecycle checks; 680 language checks; 44 font checks; 18 headless browser flows; 15 theme/viewport layouts. Release zero warnings/errors; package runtime/assets/seven dictionaries/no-user-data checks pass. Shared History files template remains byte-identical.
 - Synthetic data only. Production history, installed DLL and running site were not modified. Live-game UI/logout timing, live external services and production-scale behavior remain unverified. Update the plugin, restart the site from settings and reload the browser. See RECHECK_2026-10-26.md.
+
+
+## 2026-11-04 Allagan Local 1.3.0.4 — whole-application recheck
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.4
+- Source/tag: `013760b51ad15f575a7d678482219f7323625b1d`. ZIP 38,217,841 bytes; SHA-256 `A7304707DC4213C56720D8B41B44CC1754A5F2710946E72A19E1670EC2C3252F`; anonymous redownload matches.
+- Shared index commit `64e45413f7acd4a2fe7746a0f38149909ded7f25`; AllaganLocalPlugin only, 15 other entries preserved. Connector, anonymous pinned index and normal raw main index return 1.3.0.4. Public repository, release and image/png icon return HTTP 200.
+- Fixed mylist market-price day changes, export snapshot revisions across exclusions and data changes, invalid history dates/ranges, storage recovery warnings and late item-detail responses/errors after navigation. No schema or translation-key changes.
+- Passed: 82 Web/API/common-tab/localization tests; 14 native persistence checks; 14 host lifecycle checks; 680 language checks; 44 font checks; 19 headless browser flows; 15 theme/viewport layouts. Release zero warnings/errors; package/runtime/seven dictionaries/no-user-data checks pass. Canonical HistoryFiles template is byte-identical.
+- Persistence counters: seven commits, 664 primary payload bytes, 664 temporary bytes, 1,406 backup-copy bytes; unchanged saves add zero commits. These are logical payload counters, not physical SSD writes.
+- Synthetic data only. Production history, installed DLL and running production site were not modified. Live-game UI/logout timing, live external services and prolonged production-scale behavior remain unverified. Update the plugin, restart its website from settings, then reload the browser. See RECHECK_2026-11-04.md.
