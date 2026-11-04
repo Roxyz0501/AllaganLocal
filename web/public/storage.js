@@ -210,6 +210,7 @@ export async function loadStorage(){
     const cabinet=dresserPages.get(selectedOwner+':'+highlight+':2500');if(cabinet)p.set('cabinetPage',String(cabinet));
     const savedPage=dresserPages.get(selectedOwner+':'+highlight);if(savedPage)p.set('dresserPage',String(savedPage));
     const next=selectedOwner||highlight?await json('/api/storage?'+p):{owners:[],containers:[],categories:[],updatedAt:index.updatedAt};if(seq!==sequence)return;
+    $('storageWarning').hidden=!index.activityWarning;$('storageWarning').textContent=index.activityWarning||'';
     const signature=JSON.stringify([mode,selectedOwner,highlight,index.owners,index.activityWarning,{...next,updatedAt:null}]);if(signature===lastPayload){$('storageDate').textContent='データ保存日時：'+(next.updatedAt?new Date(next.updatedAt).toLocaleString('ja-JP'):'未記録');return;}lastPayload=signature;data=next;committedCategory=p.get('category')||'';
     const category=$('storageCategory').value;$('storageCategory').innerHTML='<option value="">すべて</option>'+data.categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');$('storageCategory').value=category;
     $('storageWarning').hidden=!index.activityWarning;$('storageWarning').textContent=index.activityWarning||'';render();

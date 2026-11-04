@@ -1,6 +1,11 @@
 const japanDateFormat=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'});
 export function japanDay(date=new Date()){return japanDateFormat.format(date);}
 export function previousDay(day){return new Date(Date.parse(day+'T00:00:00Z')-86400000).toISOString().slice(0,10);}
+export function validHistoryDate(day){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(day))return false;
+ const value=new Date(day+'T00:00:00Z');
+ return Number.isFinite(value.getTime())&&value.toISOString().slice(0,10)===day;
+}
 function combinedTimeline(sources,sum){
  const events=new Map();
  sources.forEach((s,i)=>{for(const p of [...s.changes,...Object.values(s.days)]){if(!events.has(p.at))events.set(p.at,new Map());events.get(p.at).set(i,p);}});
