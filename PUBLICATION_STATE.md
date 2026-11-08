@@ -195,3 +195,9 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Passed: 82 Web/API/common-tab/localization tests; 14 native persistence checks; 14 host lifecycle checks; 680 language checks; 44 font checks; 19 headless browser flows; 15 theme/viewport layouts. Release zero warnings/errors; package/runtime/seven dictionaries/no-user-data checks pass. Canonical HistoryFiles template is byte-identical.
 - Persistence counters: seven commits, 664 primary payload bytes, 664 temporary bytes, 1,406 backup-copy bytes; unchanged saves add zero commits. These are logical payload counters, not physical SSD writes.
 - Synthetic data only. Production history, installed DLL and running production site were not modified. Live-game UI/logout timing, live external services and prolonged production-scale behavior remain unverified. Update the plugin, restart its website from settings, then reload the browser. See RECHECK_2026-11-04.md.
+
+## 2026-11-08 Allagan Local 1.3.0.5
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.5
+- Source 37bccb74c2f9e775eeebd7d8be5ce00157f1a249, index 17c9e8736f07c9b88fcb2fa55160686c3f38acc3. Public ZIP matches the local file. Pinned index and GitHub main report 1.3.0.5. The raw main CDN still served 1.3.0.4 during verification.
+- History navigation preserves the selected target and metric across submenu clicks, Back and reload. Synthetic Edge navigation and package checks passed. Release build had zero warnings/errors. Game UI untested.
