@@ -112,7 +112,13 @@ function renderItems(){
   $('empty').hidden=result.total>0;$('emptyText').textContent=$('search').value?'検索語や保管者・保管場所の条件を変えてください。':view==='market'?'現在の条件に一致する出品中アイテムはありません。':view==='inventory'?'Allagan Tools の保存ファイルを接続すると、ここに表示されます。':view==='favorites'?'アイテムの ☆ を押すと、ここに登録されます。':'「所持アイテム」で検索し、追加先を選んで「＋ 追加」を押してください。';
   $('browseCatalog').hidden=['catalog','market'].includes(view);$('pageInfo').textContent=`${result.page} / ${result.pages} ページ`;$('prev').disabled=result.page<=1;$('next').disabled=result.page>=result.pages;
 }
-async function navigate(next,id=''){saveListFilters();saveHistory();const leavingList=view==='list';if(next==='money')$('moneyEntity').value='all:gil';if(['characters','companies'].includes(next))resetStorage(next);if(next!=='catalog')addingTo='';view=next;listId=id;page=1;if(next==='list')restoreListFilters(id);else{$('search').value='';if(leavingList){$('owner').value=$('location').value=$('retainer').value='';$('excludeMarket').checked=localStorage.getItem('allagan.excludeMarket')==='true';}}renderNav();renderStatus();await load();pushHistory();}
+function selectHistoryTarget(key,label){
+  const select=$('moneyEntity');
+  if(!Array.from(select.options).some(option=>option.value===key))
+    select.add(new Option(label||document.querySelector('[data-view="money"]').textContent,key));
+  select.value=key;
+}
+async function navigate(next,id=''){saveListFilters();saveHistory();const leavingList=view==='list';if(next==='money')selectHistoryTarget('all:gil');if(['characters','companies'].includes(next))resetStorage(next);if(next!=='catalog')addingTo='';view=next;listId=id;page=1;if(next==='list')restoreListFilters(id);else{$('search').value='';if(leavingList){$('owner').value=$('location').value=$('retainer').value='';$('excludeMarket').checked=localStorage.getItem('allagan.excludeMarket')==='true';}}renderNav();renderStatus();pushHistory();await load();}
 function openName(mode){nameMode=mode;$('nameTitle').textContent=mode==='create'?'マイリストを作成':'リスト名を変更';$('nameInput').value=mode==='create'?'':state.lists.find(l=>l.id===listId)?.name||'';$('nameDialog').showModal();$('nameInput').focus();}
 document.addEventListener('click',run(async e=>{
   const b=e.target.closest('button');if(!b)return;
@@ -121,7 +127,22 @@ document.addEventListener('click',run(async e=>{
   if(b.dataset.close){$(b.dataset.close).close();return;}
   if(b.dataset.purchaseCharacter){saveHistory();view='purchases';renderNav();await openPurchases(b.dataset.purchaseCharacter);pushHistory();return;}
   if(b.dataset.retainerSales){saveHistory();view='sales';renderNav();await openRetainerSales(b.dataset.retainerSales,b.dataset.salesOwner||'');pushHistory();return;}
-  if(b.dataset.moneyHistory){$('itemHistoryMetric').value=b.dataset.itemMetric||(b.dataset.moneyHistory.startsWith('list:')||b.dataset.moneyHistory==='all:lists'?'list':'count');if(b.dataset.historyCharacter&&!Array.from($('itemHistoryCharacter').options).some(o=>o.value===b.dataset.historyCharacter))$('itemHistoryCharacter').add(new Option(ownerName(b.dataset.historyCharacter),b.dataset.historyCharacter));$('itemHistoryCharacter').value=b.dataset.historyCharacter||'';for(const d of document.querySelectorAll('dialog[open]'))d.close();saveHistory();view='money';renderNav();await loadMoney(b.dataset.moneyHistory);pushHistory();return;}
+  if(b.dataset.moneyHistory){
+    saveHistory();
+    const key=b.dataset.moneyHistory;
+    selectHistoryTarget(key, b.textContent);
+    $('itemHistoryMetric').value=b.dataset.itemMetric||(key.startsWith('list:')||key==='all:lists'?'list':'count');
+    const character=b.dataset.historyCharacter||'';
+    if(character&&!Array.from($('itemHistoryCharacter').options).some(o=>o.value===character))
+      $('itemHistoryCharacter').add(new Option(ownerName(character),character));
+    $('itemHistoryCharacter').value=character;
+    for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
+    view='money';
+    renderNav();
+    pushHistory();
+    await loadMoney(key);
+    return;
+  }
   if(b.dataset.view)return navigate(b.dataset.view);
   if(b.dataset.list)return navigate('list',b.dataset.list);
   if(b.dataset.favorite){b.disabled=true;try{const id=Number(b.dataset.favorite);await action({action:'favorite',itemId:id,enabled:!state.favorites.includes(id)});}finally{b.disabled=false;}return;}
