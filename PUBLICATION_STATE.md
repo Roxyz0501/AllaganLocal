@@ -213,3 +213,9 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.7
 - Source bc235588c7da7830f65807ca9523ceb35fe7fef5, index 1a7a5bf63c8d8d6501bb2e9adbf52adad2f0b781. Anonymous ZIP matches local package. Public repository, icon and release returned HTTP 200.
 - Listed Character Archive among data sources. Character detail shows recorded play time and main scenario only. Verified with synthetic records and a headless browser. Release build and package checks passed. In-game settings UI untested.
+
+## 2026-11-17 Allagan Local 1.3.0.8
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.8
+- Source 48af11777d76bc81bae25d5eac41b9e86866c7bc, index 91ebeed481fe9ce8fc04d6450286af52e87a14be. Anonymous ZIP matches local package. Public repository, icon and release returned HTTP 200.
+- Plugin load replaces an existing verified dashboard through its graceful stop endpoint. When stopped, the site starts according to AutoStart. Host lifecycle checks, Release build and packaged runtime checks passed. Live Dalamud update untested.
