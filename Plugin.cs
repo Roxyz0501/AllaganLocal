@@ -40,7 +40,7 @@ public sealed class Plugin : IDalamudPlugin
   command=new CommandInfo((_,_)=>Open()){HelpMessage=T("command-help")};commands.AddHandler("/allaganlocal",command);
   client.Logout+=OnLogout;
   PublishLanguage();
-  if(config.AutoStart)_=host.StartAsync();
+  _=host.OnPluginLoadAsync(config.AutoStart);
  }
  private void OnLogout(int type,int code){settings.Flush();_=host.FlushAsync();}
  private void Open(){visible=true;historyFiles.Refresh();}

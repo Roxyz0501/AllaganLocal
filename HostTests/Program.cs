@@ -25,15 +25,15 @@ using(var owner=new DashboardHost(work,data,Console.WriteLine,port)){
 await Task.Delay(500);
 Check((await client.GetAsync($"http://127.0.0.1:{port}/api/health")).IsSuccessStatusCode,"Plugin disposal preserves owned server");
 var survivor=await Identity();
-using(var next=new DashboardHost(work,data,Console.WriteLine,port)){await next.StartAsync();Check(await Identity()==survivor,"Next plugin load reuses surviving server");await next.StopAsync();await Task.Delay(6000);try{await Identity();Check(false,"Explicit stop stays stopped");}catch(Exception e) when(e is HttpRequestException or TaskCanceledException){Check(true,"Explicit stop stays stopped");}await next.StartAsync();}
+using(var next=new DashboardHost(work,data,Console.WriteLine,port)){await next.OnPluginLoadAsync(false);Check(await Identity()!=survivor,"Reload replaces surviving server even with auto-start off");await next.StopAsync();await Task.Delay(6000);try{await Identity();Check(false,"Explicit stop stays stopped");}catch(Exception e) when(e is HttpRequestException or TaskCanceledException){Check(true,"Explicit stop stays stopped");}await next.StartAsync();}
 await client.GetAsync($"http://127.0.0.1:{port}/exit");await Task.Delay(500);
-using(var stopped=new DashboardHost(work,data,Console.WriteLine,port)){await stopped.RestartAsync();Check(stopped.Status=="Running","Restart starts a stopped server");}
+using(var stopped=new DashboardHost(work,data,Console.WriteLine,port)){await stopped.OnPluginLoadAsync(false);Check(stopped.Status=="Stopped","Disabled auto-start preserves stopped state");await stopped.OnPluginLoadAsync(true);Check(stopped.Status=="Running","Plugin load starts a stopped server");}
 await client.GetAsync($"http://127.0.0.1:{port}/exit");await Task.Delay(500);
 var childStart=new ProcessStartInfo(Environment.ProcessPath!){UseShellExecute=false,CreateNoWindow=true};
 foreach(var arg in new[]{"child",work,data,port.ToString()})childStart.ArgumentList.Add(arg);
 using(var child=Process.Start(childStart)!){await child.WaitForExitAsync();Check(child.ExitCode==0,"Launching parent exits normally");}
 try{
  Check((await client.GetAsync($"http://127.0.0.1:{port}/api/health")).IsSuccessStatusCode,"Server survives actual parent process exit");
- using var nextGame=new DashboardHost(work,data,Console.WriteLine,port);var before=await Identity();await nextGame.StartAsync();Check(await Identity()==before,"New game session does not duplicate surviving process");
+ using var nextGame=new DashboardHost(work,data,Console.WriteLine,port);var before=await Identity();await nextGame.OnPluginLoadAsync(true);Check(await Identity()!=before,"New game session replaces surviving process");
 }finally{await client.GetAsync($"http://127.0.0.1:{port}/exit");}
 Environment.ExitCode=ok?0:1;

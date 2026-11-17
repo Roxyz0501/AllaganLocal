@@ -30,6 +30,7 @@ public sealed class DashboardHost : IDisposable
   } catch(HttpRequestException) { return false; } catch(TaskCanceledException) when(!ct.IsCancellationRequested) { return false; }
  }
  public Task StartAsync()=>disposed?Task.CompletedTask:RunStartAsync(false);
+ public Task OnPluginLoadAsync(bool autoStart) => disposed ? Task.CompletedTask : RunStartAsync(true, onlyIfRunning: !autoStart);
  public Task RestartAsync()=>disposed?Task.CompletedTask:RunStartAsync(true);
  public async Task StopAsync(){
   if(disposed)return;
@@ -60,10 +61,11 @@ public sealed class DashboardHost : IDisposable
   await process.WaitForExitAsync(lifetime.Token).WaitAsync(TimeSpan.FromSeconds(30)).ConfigureAwait(false);process.Dispose();owned=null;
  }
 
- private async Task RunStartAsync(bool restart)
+ private async Task RunStartAsync(bool restart, bool onlyIfRunning = false)
  {
   try{await gate.WaitAsync(lifetime.Token).ConfigureAwait(false);}catch(OperationCanceledException){return;}
   try {
+   if (onlyIfRunning && !await IsRunning(lifetime.Token).ConfigureAwait(false)) return;
    if(restart){generation++;Status="Restarting";await StopServerAsync().ConfigureAwait(false);failures=0;}
    if(await IsRunning(lifetime.Token).ConfigureAwait(false)){if(owned is not {HasExited:false}){await AdoptAsync().ConfigureAwait(false);monitors.Add(MonitorAsync(owned!));}Status="Running";return;}
    if(owned is {HasExited:false}){Status="Starting";return;}
