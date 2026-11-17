@@ -201,3 +201,9 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.5
 - Source 37bccb74c2f9e775eeebd7d8be5ce00157f1a249, index 17c9e8736f07c9b88fcb2fa55160686c3f38acc3. Public ZIP matches the local file. Pinned index and GitHub main report 1.3.0.5. The raw main CDN still served 1.3.0.4 during verification.
 - History navigation preserves the selected target and metric across submenu clicks, Back and reload. Synthetic Edge navigation and package checks passed. Release build had zero warnings/errors. Game UI untested.
+
+## 2026-11-17 Allagan Local 1.3.0.6
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.6
+- Source bb6cdef85b0097af0fdc48bf0b69a889e5f2ac29, index d95b0ed8cde1d057bfb17ef53b7673783afce557. Public ZIP and local package match (38,221,664 bytes, SHA256 482e1e08e60e9118cf3f31f6ec7b7394bcda7d9d466f1a37d23841995b76442f). Repository, release and icon HTTP 200. Pinned index verified.
+- Optional archive reader and focused synthetic browser checks passed for matched and missing records. Release build and packaged runtime checks passed. An extended navigation run timed out on the unrelated catalog item step. Live game unverified.
