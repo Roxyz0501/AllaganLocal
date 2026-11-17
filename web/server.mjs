@@ -1,3 +1,4 @@
+import {characterArchiveReader} from './character-archive.mjs';
 import {createHistoryFiles} from './history-files.mjs';
 import {loadSettings,SettingsWriter} from './settings-store.mjs';
 import {DailyHistory} from './daily-history.mjs';
@@ -45,6 +46,7 @@ const jobs=createJobCache(data,o=>getPortrait.profile(o));
 const getIcon=createIconCache(path.join(data,'icons'));
 const getItemLink=createItemLinkCache(path.join(data,'item-links'));
 const marketPrices=await createMarketPrices(path.join(data,'market-prices.json'));
+const archiveForCharacter = characterArchiveReader(process.env.ALLAGAN_CHARACTER_ARCHIVE || path.join(process.env.APPDATA || '', 'XIVLauncher', 'pluginConfigs', 'CharacterArchive.json'));
 const purchaseHistory=createPurchaseService(process.env.ALLAGAN_PURCHASE_SOURCE||path.join(process.env.APPDATA||'', 'XIVLauncher','pluginConfigs','MarketLedger','market-ledger.db'));
 const statePath=path.join(data,'state.json');
 const ledgerPath=path.join(data,'money-history.json');let ledger={version:1,series:{}},ledgerError='';
@@ -247,7 +249,7 @@ const server=http.createServer(async(req,res)=>{
       return res.end('(()=>{try{const settings='+JSON.stringify(settings)+';for(const [key,value] of Object.entries(settings)){if(localStorage.getItem(key)===null)localStorage.setItem(key,value);}}catch{}})();');
     }
     if(req.method==='GET'&&url.pathname==='/api/history-files')return send(res,200,await historyFiles.read(url.searchParams.get('refresh')==='1'));
-    if(req.method==='GET'&&url.pathname==='/api/health')return send(res,200,{app:'allagan-local',version:'1.3.0.5',pid:process.pid,control:true});
+    if(req.method==='GET'&&url.pathname==='/api/health')return send(res,200,{app:'allagan-local',version:'1.3.0.6',pid:process.pid,control:true});
     if(req.method==='GET'&&url.pathname==='/api/bootstrap')return send(res,200,{token,state,status:status()});
     if(req.method==='GET'&&url.pathname==='/api/status')return send(res,200,status());
     if(req.method==='GET'&&url.pathname==='/api/money-history'){const day=url.searchParams.get('day')||japanDay(),from=url.searchParams.get('from')||'',to=url.searchParams.get('to')||'';if(!validHistoryDate(day)||(from&&!validHistoryDate(from))||(to&&!validHistoryDate(to))||(from&&from>(to||day)))return send(res,400,{error:'日付が不正です。'});const ledger=await dailyHistory.read({from:previousDay(from||day),to:to||day});const selectedKey=url.searchParams.get('key')||'all:gil',itemScope=selectedKey.startsWith('item:')||selectedKey==='all:items';const totals=itemScope?itemMetricLedger(scopedItems(ledger,url.searchParams.get('character'),omitted,selectedKey),url.searchParams.get('metric')):withMoneyTotals(selectedKey.startsWith('list:')||selectedKey==='all:lists'?listMetricLedger(visibleHistory(ledger,excludedGilKeys(url.searchParams),new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),url.searchParams.get('metric')):visibleHistory(ledger,excludedGilKeys(url.searchParams)),excludedGilKeys(url.searchParams));return send(res,200,{...historyOrigins(moneyView(totals,selectedKey,day,url.searchParams.get('from')||'',url.searchParams.get('to')||''),ledger,directory(),omitted,selectedKey,url.searchParams.get('metric')||'count',url.searchParams.get('character')||'',new Map(state.lists.map(l=>['list:'+l.id,url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':l.pricing||'npc']))),pricing:url.searchParams.get('metric')==='market'?'market':url.searchParams.get('metric')==='price'?'npc':state.lists.find(l=>'list:'+l.id===selectedKey)?.pricing||'npc',characters:directory().filter(o=>o.type==='キャラクター'&&!omitted.has(o.id)).map(o=>({id:o.id,name:o.name,world:o.world})),entities:Object.entries(totals.series).filter(([key])=>!itemScope||key===selectedKey).filter(([key])=>itemScope?(key.startsWith('item:')||key==='all:items'):/^(all:|character:|fc:|retainer:|list:|points:)/.test(key)&&key!=='all:items').map(([key,s])=>({key,label:s.label})).concat(itemScope&&!totals.series[selectedKey]?[{key:selectedKey,label:catalogMap.get(Number(selectedKey.slice(5)))?.name||'未記録のアイテム'}]:[]),today:japanDay(),error:ledgerError});}
@@ -255,7 +257,9 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==='GET'&&url.pathname==='/api/storage'){
  const owners=directory(),view=storageView(savedSlots.filter(r=>!omitted.has(r.owner)),owners,catalogMap,url.searchParams),byId=new Map(owners.map(o=>[o.id,o]));
  for(const c of view.containers)for(const r of c.items){r.sell=catalogMap.get(r.id)?.sell??null;r.buy=catalogMap.get(r.id)?.buy??null;r.market=marketPrices.item(r.id,byId.get(c.owner)?.world||'');r.cashItem=(state.cashItems||[]).includes(r.id);}
- return send(res,200,{...view,jobs:jobs.snapshot(owners.find(o=>o.id===url.searchParams.get('owner'))||{}),updatedAt:sourceUpdated});
+ const selected = byId.get(url.searchParams.get('owner'));
+ const archive = selected?.type === 'キャラクター' ? await archiveForCharacter(selected.id) : undefined;
+ return send(res,200,{...view,archive,jobs:jobs.snapshot(owners.find(o=>o.id===url.searchParams.get('owner'))||{}),updatedAt:sourceUpdated});
 }
     if(req.method==='GET'&&url.pathname==='/api/storage-csv'){
       const p=new URLSearchParams(url.searchParams);p.delete('paged');const owners=directory(),byId=new Map(owners.map(o=>[o.id,o]));

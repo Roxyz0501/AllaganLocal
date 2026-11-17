@@ -733,5 +733,15 @@
   "履歴ファイルを計測できませんでした。更新して再試行してください。": "Could not measure history files. Refresh to retry.",
   "設定を保存できません。保存先を確認し、再試行してください。": "Could not save settings. Check the directory and retry.",
   "ファイル数": "Total files",
-  "合計サイズ": "Total size (bytes)"
+  "合計サイズ": "Total size (bytes)",
+  "現在のワールド": "Current world",
+  "種族・部族": "Race and clan",
+  "性別": "Gender",
+  "所属グランドカンパニー": "Grand Company",
+  "守護神": "Guardian deity",
+  "開始都市": "Starting city",
+  "記録時のジョブ": "Job when recorded",
+  "プレイ時間（時・分）": "Play time (hours and minutes)",
+  "メインクエスト": "Main scenario quest",
+  "初回記録": "First recorded"
 }

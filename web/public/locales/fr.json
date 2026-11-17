@@ -733,5 +733,15 @@
   "履歴ファイルを計測できませんでした。更新して再試行してください。": "Mesure impossible. Actualisez pour réessayer.",
   "設定を保存できません。保存先を確認し、再試行してください。": "Enregistrement impossible. Vérifiez le dossier et réessayez.",
   "ファイル数": "Nombre de fichiers",
-  "合計サイズ": "Taille totale (octets)"
+  "合計サイズ": "Taille totale (octets)",
+  "現在のワールド": "Monde actuel",
+  "種族・部族": "Race et ethnie",
+  "性別": "Genre",
+  "所属グランドカンパニー": "Grande compagnie",
+  "守護神": "Divinité tutélaire",
+  "開始都市": "Ville de départ",
+  "記録時のジョブ": "Job lors du relevé",
+  "プレイ時間（時・分）": "Temps de jeu (heures et minutes)",
+  "メインクエスト": "Quête de l’épopée",
+  "初回記録": "Premier relevé"
 }

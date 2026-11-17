@@ -231,3 +231,5 @@ html[lang=ja],html[lang=en],html[lang=de],html[lang=fr]{font-family:AllaganJP,'Y
 .sales-groups summary>small,.retainer-sales button>small{justify-self:end;white-space:nowrap;font-variant-numeric:tabular-nums}
 .retainer-sales{container-type:inline-size}
 @container (max-width:300px){.sales-groups summary,.retainer-sales button{grid-template-columns:minmax(0,1fr)}.sales-groups summary>small,.retainer-sales button>small{justify-self:start}}
+
+.archive-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:1rem}.archive-fields dt{font-weight:bold}.archive-fields dd{margin:.3rem 0;overflow-wrap:anywhere}

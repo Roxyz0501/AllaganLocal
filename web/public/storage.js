@@ -195,6 +195,17 @@ function render(){
   let jobsPanel=$('characterJobs');if(!jobsPanel){jobsPanel=document.createElement('section');jobsPanel.id='characterJobs';$('storageCurrencySection').before(jobsPanel);}
   const owner=directory.find(o=>o.id===selectedOwner),snapshot=data.jobs;jobsPanel.hidden=owner?.type!=='キャラクター';
   jobsPanel.innerHTML='<h3>ジョブ・レベル</h3>'+(snapshot?.jobs?'<div class="character-job-grid">'+snapshot.jobs.map(j=>`<div class="character-job ${j.capped?'job-capped':''}"><span>${esc(j.name)}</span><strong>${j.level??'—'}</strong></div>`).join('')+'</div>':'<p class="muted">ロドスト情報を更新すると表示されます。</p>')+(snapshot?.error?'<p class="warning">'+esc(snapshot.error)+'</p>':'');
+  let archivePanel=$('characterArchive');
+  if(!archivePanel){
+    archivePanel=document.createElement('section');
+    archivePanel.id='characterArchive';
+    jobsPanel.before(archivePanel);
+  }
+  const rows=owner?.type==='キャラクター' && data.archive;
+  archivePanel.hidden=!rows?.length;
+  archivePanel.innerHTML=rows?.length ? '<h3>Character Archive</h3><dl class="archive-fields">'+rows.map(([label,value])=>
+    `<div><dt>${esc(label)}</dt><dd translate="no">${esc(value)}</dd></div>`
+  ).join('')+'</dl>' : '';
   const currencies=(data.currencies||[]).filter(r=>!selectedOwner||r.owner===selectedOwner);$('storageCurrencySection').hidden=!currencies.some(r=>r.id!==1&&r.id!==80);$('storageCurrencyCount').textContent=currencies.filter(r=>r.id!==1&&r.id!==80).length+'種類';$('storageCurrencyTable').innerHTML=currencyPanels(currencies);
   $('storageHighlight').hidden=!highlight;
   $('storageMatchText').textContent=`${data.highlightName}：${fmt(data.matches)}スタック / ${fmt(data.quantity)}個をハイライト（表示中の範囲）`;

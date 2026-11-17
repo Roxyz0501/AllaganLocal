@@ -733,5 +733,15 @@
   "履歴ファイルを計測できませんでした。更新して再試行してください。": "Verlaufsdateien konnten nicht gemessen werden. Erneut aktualisieren.",
   "設定を保存できません。保存先を確認し、再試行してください。": "Einstellungen konnten nicht gespeichert werden. Verzeichnis prüfen und erneut versuchen.",
   "ファイル数": "Dateien insgesamt",
-  "合計サイズ": "Gesamtgröße (Bytes)"
+  "合計サイズ": "Gesamtgröße (Bytes)",
+  "現在のワールド": "Aktuelle Welt",
+  "種族・部族": "Volk und Stamm",
+  "性別": "Geschlecht",
+  "所属グランドカンパニー": "Staatliche Gesellschaft",
+  "守護神": "Schutzgottheit",
+  "開始都市": "Startstadt",
+  "記録時のジョブ": "Job bei Erfassung",
+  "プレイ時間（時・分）": "Spielzeit (Stunden und Minuten)",
+  "メインクエスト": "Hauptszenario-Quest",
+  "初回記録": "Erste Erfassung"
 }
