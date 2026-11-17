@@ -207,3 +207,9 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.6
 - Source bb6cdef85b0097af0fdc48bf0b69a889e5f2ac29, index d95b0ed8cde1d057bfb17ef53b7673783afce557. Public ZIP and local package match (38,221,664 bytes, SHA256 482e1e08e60e9118cf3f31f6ec7b7394bcda7d9d466f1a37d23841995b76442f). Repository, release and icon HTTP 200. Pinned index verified.
 - Optional archive reader and focused synthetic browser checks passed for matched and missing records. Release build and packaged runtime checks passed. An extended navigation run timed out on the unrelated catalog item step. Live game unverified.
+
+## 2026-11-17 Allagan Local 1.3.0.7
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.7
+- Source bc235588c7da7830f65807ca9523ceb35fe7fef5, index 1a7a5bf63c8d8d6501bb2e9adbf52adad2f0b781. Anonymous ZIP matches local package. Public repository, icon and release returned HTTP 200.
+- Listed Character Archive among data sources. Character detail shows recorded play time and main scenario only. Verified with synthetic records and a headless browser. Release build and package checks passed. In-game settings UI untested.
