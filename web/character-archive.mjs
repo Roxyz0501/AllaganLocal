@@ -11,21 +11,10 @@ function decode(text) {
     function add(label, value) {
       if (typeof value === 'string' && value.trim()) rows.push([label, value]);
     }
-    add('現在のワールド', c.CurrentWorld);
-    add('種族・部族', [c.Race, c.Tribe].filter(Boolean).join(' / '));
-    add('性別', c.Sex);
-    add('所属グランドカンパニー', c.GrandCompany);
-    add('守護神', c.GuardianDeity);
-    add('開始都市', c.StartTown);
-    add('記録時のジョブ', [c.ClassJob, c.Level > 0 ? 'Lv. ' + c.Level : ''].filter(Boolean).join(' '));
-    add('ジョブ・レベル', (Array.isArray(c.Jobs) ? c.Jobs : []).filter(j => j?.Name && j.Level > 0).map(j => j.Name + ' Lv. ' + j.Level).join(' / '));
     if (Number.isSafeInteger(c.PlayTimeMinutes) && c.PlayTimeMinutes >= 0)
       add('プレイ時間（時・分）', Math.floor(c.PlayTimeMinutes / 60) + ' h ' + c.PlayTimeMinutes % 60 + ' min');
     const scenario = c.MainScenario;
     add('メインクエスト', [scenario?.ExpansionProgress?.Name, scenario?.Chapter, scenario?.QuestName].filter(Boolean).join(' / '));
-    for (const [label, date] of [['初回記録', c.FirstSeenAt], ['最終記録', c.LastSeenAt]]) {
-      if (date && !date.startsWith('0001-') && Number.isFinite(Date.parse(date))) add(label, date);
-    }
     if (rows.length) records.set(c.ContentId, rows);
   }
   return records;
