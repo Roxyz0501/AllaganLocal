@@ -219,3 +219,9 @@ In-game acceptance remains unverified and some detailed text is not translated; 
 - Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.8
 - Source 48af11777d76bc81bae25d5eac41b9e86866c7bc, index 91ebeed481fe9ce8fc04d6450286af52e87a14be. Anonymous ZIP matches local package. Public repository, icon and release returned HTTP 200.
 - Plugin load replaces an existing verified dashboard through its graceful stop endpoint. When stopped, the site starts according to AutoStart. Host lifecycle checks, Release build and packaged runtime checks passed. Live Dalamud update untested.
+
+## 2026-11-23 Allagan Local 1.3.0.9
+
+- Release: https://github.com/Roxyz0501/AllaganLocal/releases/tag/v1.3.0.9
+- Source 0a2267e61d6c24c987b617c3c5d5ee423ea21d88, index ae8794695becdb888b1b6d6871999497aa6a5124. Anonymous ZIP matches local build, SHA256 a9886f8d5c2d9a763cd19fbe9ed0fa053bb09936b55ed14c65c6225e8e23eb2a. Public repository, icon and release returned HTTP 200.
+- Shared Information tab lists Allagan Tools, AllaganMarket, Gil Ledger and Character Archive. Both common sources match the canonical files byte for byte. Tab order tests, Release build and packaged runtime checks passed. In-game installer interaction untested.
