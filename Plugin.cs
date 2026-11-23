@@ -11,6 +11,15 @@ namespace AllaganLocalPlugin;
 
 public sealed class Plugin : IDalamudPlugin
 {
+ private readonly StandardPluginInfo info = new(
+  new PluginDependency("InventoryTools", "Allagan Tools", true,
+   new("Inventory and gil", "所持品・所持金", "Inventar und Gil", "Inventaire et gils", "소지품 및 길", "物品与金币", "物品與金幣")),
+  new PluginDependency("AllaganMarket", "AllaganMarket", false,
+   new("Retainer sales history", "リテイナー販売履歴", "Verkaufsverlauf der Gehilfen", "Historique des ventes des servants", "집사 판매 내역", "雇员销售记录", "雇員銷售記錄")),
+  new PluginDependency("MarketLedger", "Gil Ledger", false,
+   new("Purchase history", "購入履歴", "Kaufverlauf", "Historique des achats", "구매 내역", "购买记录", "購買記錄"), Guide: "https://github.com/Roxyz0501/DalamudPluginRepo"),
+  new PluginDependency("CharacterArchive", "Character Archive", false,
+   new("Play time and main scenario", "プレイ時間・メインクエスト", "Spielzeit und Hauptszenario", "Temps de jeu et épopée", "플레이 시간 및 주요 퀘스트", "游戏时间与主线任务", "遊戲時間與主線任務"), Guide: "https://github.com/Roxyz0501/CharacterArchive"));
  private readonly IDalamudPluginInterface pi;
  private readonly ICommandManager commands;
  private readonly Configuration config;
@@ -83,7 +92,8 @@ public sealed class Plugin : IDalamudPlugin
     StandardPluginTabs.DrawStandardTrailingTabs(
      T("ui.7"),"settings",DrawSettings,
      T("language-tab"),DrawLanguageSettings,
-     T("ui.12"),DrawSupport);
+     T("ui.12"),DrawSupport,
+     StandardPluginInfo.Title(config.Language!), () => info.Draw(pi, config.Language!));
     ImGui.EndTabBar();
    }
   }ImGui.End();
